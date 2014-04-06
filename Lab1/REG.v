@@ -2,15 +2,15 @@ module REG_6 (dataOut, dataIn, reset, clk);
 
 	output [5:0] dataOut; 
 	input  [5:0] dataIn; 
-	input writeEnable;
+	input reset;
 	input clk;
-	wire [3:0] D;
 
-	D_FF lsba (dataOut[0], D[0] , reset, clk); 
-	D_FF lsbb (dataOut[1], D[1] , reset, clk); 
-	D_FF lsbc (dataOut[2], D[2] , reset, clk); 
-	D_FF lsbd (dataOut[3], D[3] , reset, clk); 
-
+	D_FF lsba (dataOut[0], dataIn[0] , reset, clk); 
+	D_FF lsbb (dataOut[1], dataIn[1] , reset, clk); 
+	D_FF lsbc (dataOut[2], dataIn[2] , reset, clk); 
+	D_FF lsbd (dataOut[3], dataIn[3] , reset, clk); 
+	D_FF lsbe (dataOut[4], dataIn[4] , reset, clk); 
+	D_FF lsbf (dataOut[5], dataIn[5] , reset, clk); 
 
 endmodule 
 
