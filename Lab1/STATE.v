@@ -15,11 +15,7 @@ module STATE(
   output reg increment, latch, dataValid;
   output reg chipSelect, outputEnable, readEnable;
 
-  chipSelect = 0;
-
   input read, write, clock, reset;
-
-  reg [2:0] state;
 
   parameter [3:0] R1 = 4'd0, R2 = 4'd1, R3 = 4'd2; 
   parameter [3:0] R4 = 4'd3, R5 = 4'd4, R6 = 4'd5; 
@@ -51,79 +47,118 @@ module STATE(
 
     endcase
 
+  always @(PS)
+    chipSelect = 0;
+
   always @(PS) 
     case(PS)
-      R1: increment     = 0;
+      R1: 
+      begin  
+          increment     = 0;
           readEnable    = 1;
           latch         = 0;
           outputEnable  = 1;
           dataValid     = 1;
+      end
 
-      R2: increment     = 1;
+      R2:
+      begin
+          increment     = 1;
           readEnable    = 1;
           latch         = 0;
           outputEnable  = 1;
           dataValid     = 1;
+      end 
 
-      R3: increment     = 0;
+      R3:
+      begin
+          increment     = 0;
           readEnable    = 1;
           latch         = 1;
           outputEnable  = 1;
           dataValid     = 1;
+      end
 
-      R4: increment     = 0;
+      R4: 
+      begin
+          increment     = 0;
           readEnable    = 1;
           latch         = 0;
           outputEnable  = 0;
           dataValid     = 1;
+      end
 
-      R5: increment     = 0;
+      R5: 
+      begin
+          increment     = 0;
           readEnable    = 1;
           latch         = 0;
           outputEnable  = 0;
           dataValid     = 0;
+      end
 
-      R6: increment     = 0;
+      R6: 
+      begin
+          increment     = 0;
           readEnable    = 1;
           latch         = 0;
           outputEnable  = 0;
           dataValid     = 1;
+      end
 
-      W1: increment     = 0;
+      W1: 
+      begin
+          increment     = 0;
           readEnable    = 0;
           latch         = 0;
           outputEnable  = 1;
           dataValid     = 0;
+      end
 
-      W2: increment     = 1;
+      W2: 
+      begin
+          increment     = 1;
           readEnable    = 0;
           latch         = 0;
           outputEnable  = 1;
           dataValid     = 0;
+      end
 
-      W3: increment     = 0;
+      W3: 
+      begin
+          increment     = 0;
           readEnable    = 0;
           latch         = 1;
           outputEnable  = 1;
           dataValid     = 0;
+      end
 
-      W3: increment     = 0;
+      W3: 
+      begin
+          increment     = 0;
           readEnable    = 0;
           latch         = 0;
           outputEnable  = 1;
           dataValid     = 0;
+      end
 
-      W5: increment     = 0;
+      W5: 
+      begin
+          increment     = 0;
           readEnable    = 0;
           latch         = 0;
           outputEnable  = 1;
           dataValid     = 1;
+      end
 
-      W6: increment     = 0;
+      W6: 
+      begin
+          increment     = 0;
           readEnable    = 0;
           latch         = 0;
           outputEnable  = 1;
           dataValid     = 0;
+      end
 
     endcase
 
