@@ -58,19 +58,72 @@ module STATE(
           latch         = 0;
           outputEnable  = 1;
           dataValid     = 1;
-      R2: NS = R3;
-      R3: NS = R4;
-      R4: NS = R5;
-      R5: NS = R6;
-      R6: NS = R1;
 
-      W1: if(write) NS = W2;
-          else      NS = R1;
-      W2: NS = W3;
-      W3: NS = W4;
-      W4: NS = W5;
-      W5: NS = W6;
-      W6: NS = W1;
+      R2: increment     = 1;
+          readEnable    = 1;
+          latch         = 0;
+          outputEnable  = 1;
+          dataValid     = 1;
+
+      R3: increment     = 0;
+          readEnable    = 1;
+          latch         = 1;
+          outputEnable  = 1;
+          dataValid     = 1;
+
+      R4: increment     = 0;
+          readEnable    = 1;
+          latch         = 0;
+          outputEnable  = 0;
+          dataValid     = 1;
+
+      R5: increment     = 0;
+          readEnable    = 1;
+          latch         = 0;
+          outputEnable  = 0;
+          dataValid     = 0;
+
+      R6: increment     = 0;
+          readEnable    = 1;
+          latch         = 0;
+          outputEnable  = 0;
+          dataValid     = 1;
+
+      W1: increment     = 0;
+          readEnable    = 0;
+          latch         = 0;
+          outputEnable  = 1;
+          dataValid     = 0;
+
+      W2: increment     = 1;
+          readEnable    = 0;
+          latch         = 0;
+          outputEnable  = 1;
+          dataValid     = 0;
+
+      W3: increment     = 0;
+          readEnable    = 0;
+          latch         = 1;
+          outputEnable  = 1;
+          dataValid     = 0;
+
+      W3: increment     = 0;
+          readEnable    = 0;
+          latch         = 0;
+          outputEnable  = 1;
+          dataValid     = 0;
+
+      W5: increment     = 0;
+          readEnable    = 0;
+          latch         = 0;
+          outputEnable  = 1;
+          dataValid     = 1;
+
+      W6: increment     = 0;
+          readEnable    = 0;
+          latch         = 0;
+          outputEnable  = 1;
+          dataValid     = 0;
 
     endcase
 
