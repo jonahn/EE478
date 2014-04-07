@@ -133,7 +133,7 @@ module STATE(
           dataValid     = 0;
       end
 
-      W3: 
+      W4: 
       begin
           increment     = 0;
           readEnable    = 0;
@@ -161,6 +161,11 @@ module STATE(
       end
 
     endcase
+
+D_FF d1 (PS[0], NS[0], reset, clock);
+D_FF d2 (PS[1], NS[1], reset, clock);
+D_FF d3 (PS[2], NS[2], reset, clock);
+D_FF d4 (PS[3], NS[3], reset, clock);
 
 endmodule
 
