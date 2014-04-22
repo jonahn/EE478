@@ -18,12 +18,9 @@
 
 #pragma config WDTEN = OFF
 
-//Interrupt
-#pragma code
-#pragma interruptlow low_vector
+#include "uart_interrupts.h"
 
 // needs to go after above config
-#include "uart_interrupts.h"
 
 volatile int i;
 unsigned char temp;
@@ -43,6 +40,11 @@ void main(void)
     /* Make RB0 - RB2 outputs (LEDs) */
     TRISB = 0;
 
+    ADCON1 = 0b00001110;
+    ADCON0 = 0x00;
+    ADCON2 = 0b00001000;
+
+
     /* Reset Push Buttons and LEDs */
     PORTA = 0x07;
     PORTB = 0x07;
@@ -55,8 +57,11 @@ void main(void)
     TRISCbits.TRISC6 = 0; // TX
     TRISCbits.TRISC7 = 1; // RX
 
+    ANSELCbits.ANSC6 = 0;
+    ANSELCbits.ANSC7 = 0;
+
     Open1USART(USART_TX_INT_OFF & USART_RX_INT_ON & USART_ASYNCH_MODE & 
-        USART_EIGHT_BIT & USART_BRGH_HIGH, 9600);
+        USART_EIGHT_BIT & USART_BRGH_HIGH, 129);
  
     while(1)
     {

@@ -16,6 +16,8 @@ void setupInterrupts(void);
 
 void low_isr(void);
 
+void low_vector(void);
+
 #ifdef	__cplusplus
 }
 #endif
