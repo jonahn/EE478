@@ -9,82 +9,70 @@
 #include <stdlib.h>
 #include <p18f25k22.h>
 #include <usart.h>
-#include "uart_interrupts.h"
 
-#pragma config FOSC = XT
+#pragma config FOSC = ECHPIO6   // Select external oscillator (EC) - high power
+#pragma config PLLCFG = OFF     // Using oscillator directly.
+#pragma config PRICLKEN = ON    // Primary Clock Enable
+#pragma config FCMEN = OFF      // Fail Safe Clock Monitor Enable
+#pragma config IESO = OFF       // External/Internal Oscillator Switchover
+
 #pragma config WDTEN = OFF
-#pragma config PLLCFG = OFF
-#pragma config PRICLKEN = OFF   // Primary clock enable bit (Primary clock enabled)
-#pragma config FCMEN = OFF      // Fail-Safe Clock Monitor Enable bit (Fail-Safe Clock Monitor disabled)
-#pragma config IESO = ON        // Internal/External Oscillator Switchover bit
+
+//Interrupt
+#pragma code
+#pragma interruptlow low_vector
+
+// needs to go after above config
+#include "uart_interrupts.h"
 
 volatile int i;
 unsigned char temp;
 
 void delay(long delayTime);
-void USART_putc (unsigned char c);
 
 extern char Rx1buffer; 
 
 void main(void)
 {
-
- /* Make RA0 - RA2 inputs (Push Buttons) */
- TRISA = 0x07;
+    /* Make RA0 - RA2 inputs (Push Buttons) */
+    TRISA = 0x07;
  
- /* Enable Digital Inputs */
- ANSELA = 0xE0;
+    /* Enable Digital Inputs */
+    ANSELA = 0xE0;
 
- /* Make RB0 - RB2 outputs (LEDs) */
- TRISB = 0;
+    /* Make RB0 - RB2 outputs (LEDs) */
+    TRISB = 0;
 
- /* Reset Push Buttons and LEDs */
- PORTA = 0x07;
- PORTB = 0x07;
+    /* Reset Push Buttons and LEDs */
+    PORTA = 0x07;
+    PORTB = 0x07;
 
- temp = PORTA;
+    temp = PORTA;
 
- //TRISC = 0B11000000;
- //ANSELC = 0x00;
+    setupInterrupts();
 
- //TXSTA1bits.TX9  = 0; // Select 8-bit transmission
- TXSTA1bits.BRGH = 1; // Select highspeed baud rate. Divide by 4.
- //TXSTA1bits.SYNC = 0; // Async mode
- TXSTA1bits.TXEN = 1; // enable transmission
+    // #2: set RX/TX TRIS
+    TRISCbits.TRISC6 = 0; // TX
+    TRISCbits.TRISC7 = 1; // RX
 
- RCSTA1bits.SPEN = 1; //
- //RCSTA1bits.RX9  = 0; // Select 8-bit transmission
- RCSTA1bits.CREN = 1; // enable continuous recieve
-
- // #1: initialize SPBRG and BRG for desired baud rate
- SPBRG  = 129; // 71=56000. 69=57600. 104=38400.
- SPBRGH = 1;
- //BAUDCON1bits.BRG16 = 0;
- ANSELCbits.ANSC6 = 1;
-
- // #2: set RX/TX TRIS
- TRISCbits.TRISC6 = 1; // TX
- TRISCbits.TRISC7 = 1; // RX
-
- Open1USART(USART_TX_INT_OFF & USART_RX_INT_OFF & USART_ASYNCH_MODE
-         &USART_EIGHT_BIT & USART_CONT_RX & USART_BRGH_HIGH, SPBRG);
+    Open1USART(USART_TX_INT_OFF & USART_RX_INT_ON & USART_ASYNCH_MODE & 
+        USART_EIGHT_BIT & USART_BRGH_HIGH, 9600);
  
- setupInterrupts();
- while(1)
- {
- /* Output Button Presses to LEDs */
-     //delay(100);
-     //temp = ~temp;
+    while(1)
+    {
+        /* Output Button Presses to LEDs */
+        //delay(100);
+        //temp = ~temp;
 
-     if(Rx1buffer != 'a')
-        temp = temp | 0x01;
-     else
-        temp = temp & ~0x01;
+        if(Rx1buffer != 'a')
+            temp = temp | 0x01;
+        else
+            temp = temp & ~0x01;
 
-     delay(10);
-     USART_putc('j');
-     PORTB = temp;
- }
+        delay(10);
+        Write1USART('j');
+        PORTB = temp;
+    }
 }
 
 void delay(long delayTime)
@@ -92,10 +80,4 @@ void delay(long delayTime)
      volatile long k, j;
      for(k = 0; k < delayTime; k++)
          for(j = 0; j < delayTime; j++);
-}
-
-void USART_putc (unsigned char c)
-{
-    while (!TXSTAbits.TRMT);
-    TXREG = c;
 }
