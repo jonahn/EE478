@@ -21,7 +21,7 @@ char data;
    if (PIR1bits.RCIF == 1 )//&& DataRdy1USART() == 1)   // see if there is data in the read buffer for USART1
    {
       Rx1buffer = Read1USART();
-      //Write1USART(Rx1buffer);
+      Write1USART(Rx1buffer);
       PIR1bits.RCIF = 0;
    }
 

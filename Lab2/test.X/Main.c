@@ -20,8 +20,6 @@
 
 #include "uart_interrupts.h"
 
-// needs to go after above config
-
 volatile int i;
 unsigned char temp;
 
@@ -43,7 +41,6 @@ void main(void)
     ADCON1 = 0b00001110;
     ADCON0 = 0x00;
     ADCON2 = 0b00001000;
-
 
     /* Reset Push Buttons and LEDs */
     PORTA = 0x07;
@@ -68,20 +65,12 @@ void main(void)
     Open1USART(USART_TX_INT_OFF & USART_RX_INT_ON & USART_ASYNCH_MODE & 
         USART_EIGHT_BIT & USART_BRGH_HIGH, 129);
 
-
- 
     while(1)
     {
-        /* Output Button Presses to LEDs */
-        //delay(100);
-        //temp = ~temp;
         if(Rx1buffer != 'a')
             temp = temp | 0x01;
         else
             temp = temp & ~0x01;
-
-        //delay(150);
-        //Write1USART(Rx1buffer);
 
         PORTB = temp;
     }
