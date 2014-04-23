@@ -49,9 +49,11 @@ void main(void)
     PORTA = 0x07;
     PORTB = 0x07;
 
-    temp = PORTA;
+    temp = 0x01;
 
     setupInterrupts();
+    RCSTAbits.SPEN = 1;     //set up asynchronous communication
+    RCSTAbits.CREN = 1;     //Enable receive
 
     // #2: set RX/TX TRIS
     TRISCbits.TRISC6 = 0; // TX
@@ -60,22 +62,27 @@ void main(void)
     ANSELCbits.ANSC6 = 0;
     ANSELCbits.ANSC7 = 0;
 
+    SPBRG = 129;
+    SPBRGH = 129;
+
     Open1USART(USART_TX_INT_OFF & USART_RX_INT_ON & USART_ASYNCH_MODE & 
         USART_EIGHT_BIT & USART_BRGH_HIGH, 129);
+
+
  
     while(1)
     {
         /* Output Button Presses to LEDs */
         //delay(100);
         //temp = ~temp;
-
         if(Rx1buffer != 'a')
             temp = temp | 0x01;
         else
             temp = temp & ~0x01;
 
-        delay(10);
-        Write1USART('j');
+        //delay(150);
+        //Write1USART(Rx1buffer);
+
         PORTB = temp;
     }
 }
