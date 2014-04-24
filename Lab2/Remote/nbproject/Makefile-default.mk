@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=src/main.c
+SOURCEFILES_QUOTED_IF_SPACED=src/main.c src/i2c_slave.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/src/main.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/src/main.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/src/main.o ${OBJECTDIR}/src/i2c_slave.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/src/main.o.d ${OBJECTDIR}/src/i2c_slave.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/src/main.o
+OBJECTFILES=${OBJECTDIR}/src/main.o ${OBJECTDIR}/src/i2c_slave.o
 
 # Source Files
-SOURCEFILES=src/main.c
+SOURCEFILES=src/main.c src/i2c_slave.c
 
 
 CFLAGS=
@@ -93,6 +93,13 @@ ${OBJECTDIR}/src/main.o: src/main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${DEP_GEN} -d ${OBJECTDIR}/src/main.o 
 	@${FIXDEPS} "${OBJECTDIR}/src/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
+${OBJECTDIR}/src/i2c_slave.o: src/i2c_slave.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/src 
+	@${RM} ${OBJECTDIR}/src/i2c_slave.o.d 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/src/i2c_slave.o   src/i2c_slave.c 
+	@${DEP_GEN} -d ${OBJECTDIR}/src/i2c_slave.o 
+	@${FIXDEPS} "${OBJECTDIR}/src/i2c_slave.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
+	
 else
 ${OBJECTDIR}/src/main.o: src/main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/src 
@@ -100,6 +107,13 @@ ${OBJECTDIR}/src/main.o: src/main.c  nbproject/Makefile-${CND_CONF}.mk
 	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/src/main.o   src/main.c 
 	@${DEP_GEN} -d ${OBJECTDIR}/src/main.o 
 	@${FIXDEPS} "${OBJECTDIR}/src/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
+	
+${OBJECTDIR}/src/i2c_slave.o: src/i2c_slave.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/src 
+	@${RM} ${OBJECTDIR}/src/i2c_slave.o.d 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/src/i2c_slave.o   src/i2c_slave.c 
+	@${DEP_GEN} -d ${OBJECTDIR}/src/i2c_slave.o 
+	@${FIXDEPS} "${OBJECTDIR}/src/i2c_slave.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
 endif
 

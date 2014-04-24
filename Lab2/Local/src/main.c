@@ -113,21 +113,25 @@ void main(void)
                 IdleI2C1();
                 
                 //**** Setup Communication to Write****
-                dataBuf = SSP1BUF;
-                do
+                //dataBuf = SSP1BUF;
+                /*
+                while(I2Cstatus!=0)
                 {
+                 */
                     I2Cstatus = WriteI2C1( 0xA2 | 0x00);
-                    if(I2Cstatus == -1)
+                    /*if(I2Cstatus == -1)
                     {
                         dataBuf = SSP1BUF;
                         SSP1CON1bits.WCOL=0;	// clear the bus collision status bit
                     }
-                }while(I2Cstatus!=0);
-
-                //**** Write data to Slave ****
-
+                    */
+               // }
                 IdleI2C1();
-                
+                /*
+                //**** Write data to Slave ****
+                while(*/putcI2C1('U');/*!=0)
+                */IdleI2C1();
+                /*
                 //**** RESTART I2C COMMUNICATION ****
                 RestartI2C1();
                 IdleI2C1();
@@ -151,17 +155,18 @@ void main(void)
 
 		NotAckI2C1();					//send the end of transmission signal through nack
 		while( SSP1CON2bits.ACKEN!=0);		//wait till ack sequence is complete
-
+                */
 
                 // **** Close I2C ****
                 StopI2C1();
-                CloseI2C1();
+                
             }
         }
         PORTB = temp;
 
          
     }
+    CloseI2C1();
 }
 
 void delay(long delayTime)

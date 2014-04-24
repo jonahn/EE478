@@ -1,34 +1,38 @@
-#include "i2c.h"
+#include <i2c.h>
 #include "p18f25k22.h"
+#include "i2c_slave.h"
 
-unsigned char tempAddr, tempData=0;
+#pragma code
+#pragma interrupthigh high_vector
+
+unsigned char tempAddr, tempData;
 
 // This is the code for at the high priority vector
-#pragma code high_vector=0x08
-void interrupt_at_high_vector(void) { _asm GOTO highPriorityISR _endasm }
-#pragma code
+#pragma code high_vector = 0x08
+void high_vector(void)
+{ 
+    _asm goto highPriorityISR _endasm
+}
+
+unsigned char toggleLED;
 
 // The actual high priority ISR
 #pragma interrupt highPriorityISR
 void highPriorityISR() {
-    if (PIR1bits.SSPIF == 1) {        // Check for SSP interrupt
-        
+    if (PIR1bits.SSP1IF == 1) {        // Check for SSP interrupt
+        toggleLED = 1;
+
+        tempData = ReadI2C1();
+        /*
         // It is an SSP interrupt, call the SSP ISR
         
-        CloseI2C1();
-        
-        OpenI2C1(SLAVE_7, SLEW_OFF);
-        SSP1ADD = 0xA2; // Match and initialze slave addr
-        
-        //***** READ THE ADDRESS FROM MASTER ******
-        
-        while (DataRdyI2C1()==0);
-        tempAddr = READI2C1();
+       
+       
         
         //***** READ DATA FROM MASTER ******
         
         while (DataRdyI2C1()==0);
-        tempData = READI2C1();
+        tempData = ReadI2C1();
         
         //***** wait untill STOP CONDITION *****
         
@@ -37,7 +41,7 @@ void highPriorityISR() {
         //***** READ THE ADDRESS FROM MASTER *****
         
         while (DataRdyI2C1()==0);
-        tempAddr = READI2C1();
+        tempAddr = ReadI2C1();
         
         //***** SLAVE WRITE BACK *****
         
@@ -46,8 +50,24 @@ void highPriorityISR() {
         }
         
         CloseI2C1();
+        */
         
-        PIR1bits.SSPIF = 0;  // Clear the interrupt flag
+        PIR1bits.SSP1IF = 0;  // Clear the interrupt flag
     }
     return;
+}
+
+void setupInterrupts(void)
+{
+
+   RCONbits.IPEN = 1;       // Enable priority interrupts
+   INTCONbits.GIEL = 1;     // Enable global interrupts
+   INTCONbits.GIEH = 1;     // Enable global interrupts
+   INTCONbits.PEIE = 1;     // peripheral interrupts
+
+   //INTCON &= 0x3f;
+   PIE1bits.SSP1IE = 1;      // Enable SSP Interrupt
+   IPR1bits.SSP1IP = 1;      // Set SSP interrupt to high
+
+
 }
