@@ -22,6 +22,7 @@ unsigned char bufferIndex, mode, numOut;    //mode: 0 = null, 1 = S, 2 = i, 3 = 
 unsigned char uartBuffer[3];        //buff containing char inputs from usart
 unsigned char decBuffer[3];         //buff containing conversions to decimal
 
+int i;
 
 extern void setup();
 extern void setupUSARTAndI2C();
@@ -40,7 +41,7 @@ void main(void)
     mode = 0;
     numOut = 0;
     //write initial msg to user on USART
-    Write1USART("\nEnter number from 0 - 200 for Setpoint(s) or i/d\n");
+    Write1USART('i');   //FIGURE OUT HOW TO SEND STRING
 
     while(1)
     {
@@ -66,8 +67,7 @@ void main(void)
                     bufferIndex = 0;
 
                     //clear buffer
-                    int i;
-                    for(int i = 0; i <= bufferIndex; i++)
+                    for(i = 0; i <= 2; i++)
                     {
                         uartBuffer[i] = '0';
                     }
@@ -75,30 +75,28 @@ void main(void)
 
                 //if user pressed enter (in S mode), read buffer, reset index
                 else if (commandBuffer == '\r' && mode == 1)
-                {
+                {   
                     //read buffer and convert to decimal
-                    int i;
-                    for(int i = 0; i <= bufferIndex; i++)
+                    for(i = 0; i <= bufferIndex; i++)
                     {
                         decBuffer[i] = uartBuffer[i] - '0';
                     }
 
                     //Send msg and don't process number if > 100.
-                    if (decBuffer[2] > 1)
+                    if (decBuffer[0] > 1)
                     {
-                        Write1USART("\nNumber entered too high.\n");
+                        Write1USART('E');
                     }
                     else 
                     {
                         //convert dec buffer to single character
-                        numOut = (decBuffer[2] * 100 + decBuffer[1] * 10 + decBuffer[0]) * 2;
+                        numOut = (decBuffer[0] * 100 + decBuffer[1] * 10 + decBuffer[2]) * 2;
 
                         sendi2c(numOut);
 
-                        bufferIndex = 0;
-                        mode = 0;   //back to no mode
                     }
-
+                    bufferIndex = 0;
+                    mode = 0;   //back to no mode
                 }
                 //number entered while in s mode
                 else if (mode == 1)
