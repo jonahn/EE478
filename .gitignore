@@ -2,6 +2,8 @@ dist/
 build/
 **/Mac/
 *.err
+**/nbproject/Makefile*
+**/nbproject/configurations*
 !*.c
 !*.h
 !*.cpp
