@@ -17,10 +17,7 @@
 #include "uart_interrupts.h"
 
 extern unsigned char temp, dataToSend, commandBuffer;
-unsigned char w;
 unsigned int set;
-
-unsigned char I2C_Recv[21];
 
 extern void setup();
 extern void setupUSARTAndI2C();
@@ -32,9 +29,6 @@ void main(void)
     setupInterrupts();
 
     setupUSARTAndI2C();
-
-    for(w=0;w<20;w++)
-    I2C_Recv[w]=1;
 
     while(1)
     {
@@ -54,7 +48,7 @@ void main(void)
                 StartI2C1();    //send Start Condition
                 IdleI2C1();
 
-                //I2Cstatus = WriteI2C1( 0xA2 | 0x00);
+                WriteI2C1(0xA2);
 
                 IdleI2C1();
 
@@ -66,7 +60,7 @@ void main(void)
                 StartI2C1();    //send Start Condition
                 IdleI2C1();
 
-                putcI2C1('U');
+                WriteI2C1('U');
                 IdleI2C1();
 
                 // **** Close I2C ****

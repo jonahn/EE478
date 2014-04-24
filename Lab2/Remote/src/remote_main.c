@@ -9,8 +9,8 @@
 #include <stdlib.h>
 #include <p18f25k22.h>
 #include <i2c.h>
+#include "../../src/utils.h"
 
-#pragma config WDTEN = OFF
 
 #include "i2c_slave.h"
 
