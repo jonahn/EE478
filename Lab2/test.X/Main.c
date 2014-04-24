@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <p18f25k22.h>
 #include <usart.h>
+#include <i2c.h>
 
 #pragma config FOSC = ECHPIO6   // Select external oscillator (EC) - high power
 #pragma config PLLCFG = OFF     // Using oscillator directly.
@@ -22,6 +23,8 @@
 
 volatile int i;
 unsigned char temp;
+
+unsigned int set;
 
 void delay(long delayTime);
 
@@ -53,11 +56,14 @@ void main(void)
     RCSTAbits.CREN = 1;     //Enable receive
 
     // #2: set RX/TX TRIS
-    TRISCbits.TRISC6 = 0; // TX
-    TRISCbits.TRISC7 = 1; // RX
+    //TRISCbits.TRISC6 = 0; // TX
+    //TRISCbits.TRISC7 = 1; // RX
 
     ANSELCbits.ANSC6 = 0;
     ANSELCbits.ANSC7 = 0;
+
+    ANSELCbits.ANSC3 = 0;   //SDA
+    ANSELCbits.ANSC4 = 0;   //SCL
 
     SPBRG = 129;
     SPBRGH = 129;
@@ -65,13 +71,43 @@ void main(void)
     Open1USART(USART_TX_INT_OFF & USART_RX_INT_ON & USART_ASYNCH_MODE & 
         USART_EIGHT_BIT & USART_BRGH_HIGH, 129);
 
+
+    //I2C
+    //Need to set TRIS bits?
+
+    
+    //open, se4t device as MASTER, slew on for sharper transitions
+    OpenI2C1(MASTER, SLEW_OFF);
+    SSP1ADD = 0x31;
+
+    set = 0;
+    
     while(1)
     {
-        if(Rx1buffer != 'a')
-            temp = temp | 0x01;
-        else
-            temp = temp & ~0x01;
+        //commands:
+        //setpoint  - s
+        //increment - i
+        //decrement - d
 
+        if(Rx1buffer != 'a'){
+            temp = temp | 0x01;
+            //IdleI2C1();
+            //StopI2C1();
+            //IdleI2C1();
+            set = 0;
+        }
+        else
+        {
+            temp = temp & ~0x01;
+            if (set == 0)
+            {
+                set = 1;
+                IdleI2C1();      //wait until bus is idle
+                StartI2C1();    //send Start Condition
+                IdleI2C1();
+                StopI2C1();
+            }
+        }
         PORTB = temp;
     }
 }
