@@ -3,10 +3,8 @@
 #include "uart_interrupts.h"
 
 //Interrupt
-#pragma code
-#pragma interrupthigh low_vector
 
-char Rx1buffer;      // create a buffer for Rx1
+char commandBuffer;      // create a buffer for Rx1
 char data;
 
  #pragma code low_vector = 0x08  // jump to the address for the low priority ISR interrupt
@@ -20,8 +18,8 @@ char data;
  {
    if (PIR1bits.RCIF == 1 )//&& DataRdy1USART() == 1)   // see if there is data in the read buffer for USART1
    {
-      Rx1buffer = Read1USART();
-      Write1USART(Rx1buffer);
+      commandBuffer = Read1USART();
+      Write1USART(commandBuffer);
       PIR1bits.RCIF = 0;
    }
 

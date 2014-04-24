@@ -10,13 +10,6 @@
 #include <p18f25k22.h>
 #include <i2c.h>
 
-
-#pragma config FOSC = ECHPIO6   // Select external oscillator (EC) - high power
-#pragma config PLLCFG = OFF     // Using oscillator directly.
-#pragma config PRICLKEN = ON    // Primary Clock Enable
-#pragma config FCMEN = OFF      // Fail Safe Clock Monitor Enable
-#pragma config IESO = OFF       // External/Internal Oscillator Switchover
-
 #pragma config WDTEN = OFF
 
 #include "i2c_slave.h"
@@ -24,8 +17,6 @@
 extern unsigned char toggleLED;
 unsigned char temp;
 volatile int i;
-
-void delay(long delayTime);
 
 void main(void)
 {
@@ -41,7 +32,7 @@ void main(void)
 
     //TODO: SETUP I2C
     OpenI2C1(SLAVE_7, SLEW_OFF);
-    SSP1ADD = 0xA3;
+    SSP1ADD = 0xA2;
 
 
     while(1)
@@ -55,14 +46,8 @@ void main(void)
             //temp = ~temp;
             //PORTB = temp;
             toggleLED = 0;
+            toggleLED = toggleLED;
         }
         
     }
-}
-
-void delay(long delayTime)
-{
-     volatile long k, j;
-     for(k = 0; k < delayTime; k++)
-         for(j = 0; j < delayTime; j++);
 }

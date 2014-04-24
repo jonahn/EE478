@@ -23,6 +23,7 @@ void highPriorityISR() {
         toggleLED = 1;
 
         tempData = ReadI2C1();
+        
         /*
         // It is an SSP interrupt, call the SSP ISR
         
