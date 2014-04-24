@@ -3,12 +3,6 @@
 
 unsigned char tempAddr, tempData=0;
 
-// Function prototypes for the high priority ISRs
-void highPriorityISR(void);
-
-// Function prototype for the SSP ISR
-void SSPISR(void);
-
 // This is the code for at the high priority vector
 #pragma code high_vector=0x08
 void interrupt_at_high_vector(void) { _asm GOTO highPriorityISR _endasm }
