@@ -1,4 +1,6 @@
-*
+dist/
+build/
+*.err
 !*.c
 !*.h
 !*.cpp
