@@ -96,30 +96,7 @@ void main(void)
         //commands:
         //setpoint  - s
         //increment - i
-
-        /*
-         if(Rx1buffer == 'i')
-        {
-            //increment stored data
-            dataToSend++;
-            //send data to remote
-            IdleI2C1();      //wait until bus is idle
-            StartI2C1();    //send Start Condition
-
-            IdleI2C1();     //wait for acknowledge response?
-            I2Cstatus = WriteI2C1(0xA2);//| 0x00);  //slave address and RW set to 0
-
-            //while(I2Cstatus != 0);      //wait until finished writing
-
-            WriteI2C1(dataToSend);       //set buffer to the value to be sent
-            while(SSP1CON2bits.ACKSTAT);    //wait to get a ~ACK signal
-
-            StopI2C1();
-        }
-         * */
         //decrement - d
-
-
 
         if(Rx1buffer != 'a'){
             temp = temp | 0x01;
@@ -148,7 +125,7 @@ void main(void)
                 }while(I2Cstatus!=0);
 
                 //**** Write data to Slave ****
-                while(putsI2C1("UR") != 0);
+
                 IdleI2C1();
                 
                 //**** RESTART I2C COMMUNICATION ****
