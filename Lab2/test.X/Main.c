@@ -28,7 +28,11 @@ unsigned int set;
 
 void delay(long delayTime);
 
-extern char Rx1buffer; 
+extern char Rx1buffer;
+
+unsigned char I2Cstatus, dataBuf, w;
+unsigned char I2C_Recv[21];
+unsigned char dataToSend;   //temporary value, will be stored in SRAM
 
 void main(void)
 {
@@ -56,8 +60,8 @@ void main(void)
     RCSTAbits.CREN = 1;     //Enable receive
 
     // #2: set RX/TX TRIS
-    //TRISCbits.TRISC6 = 0; // TX
-    //TRISCbits.TRISC7 = 1; // RX
+    TRISCbits.TRISC6 = 0; // TX output
+    TRISCbits.TRISC7 = 1; // RX input
 
     ANSELCbits.ANSC6 = 0;
     ANSELCbits.ANSC7 = 0;
@@ -80,20 +84,45 @@ void main(void)
     OpenI2C1(MASTER, SLEW_OFF);
     SSP1ADD = 0x31;
 
-    set = 0;
+    //Temporary value, will be stored in SRAM later
+    dataToSend = 0;
+
     
+    for(w=0;w<20;w++)
+    I2C_Recv[w]=0;
+
     while(1)
     {
         //commands:
         //setpoint  - s
         //increment - i
+
+        /*
+         if(Rx1buffer == 'i')
+        {
+            //increment stored data
+            dataToSend++;
+            //send data to remote
+            IdleI2C1();      //wait until bus is idle
+            StartI2C1();    //send Start Condition
+
+            IdleI2C1();     //wait for acknowledge response?
+            I2Cstatus = WriteI2C1(0xA2);//| 0x00);  //slave address and RW set to 0
+
+            //while(I2Cstatus != 0);      //wait until finished writing
+
+            WriteI2C1(dataToSend);       //set buffer to the value to be sent
+            while(SSP1CON2bits.ACKSTAT);    //wait to get a ~ACK signal
+
+            StopI2C1();
+        }
+         * */
         //decrement - d
+
+
 
         if(Rx1buffer != 'a'){
             temp = temp | 0x01;
-            //IdleI2C1();
-            //StopI2C1();
-            //IdleI2C1();
             set = 0;
         }
         else
@@ -105,10 +134,56 @@ void main(void)
                 IdleI2C1();      //wait until bus is idle
                 StartI2C1();    //send Start Condition
                 IdleI2C1();
+                
+                //**** Setup Communication to Write****
+                dataBuf = SSP1BUF;
+                do
+                {
+                    I2Cstatus = WriteI2C1( 0xA2 | 0x00);
+                    if(I2Cstatus == -1)
+                    {
+                        dataBuf = SSP1BUF;
+                        SSP1CON1bits.WCOL=0;	// clear the bus collision status bit
+                    }
+                }while(I2Cstatus!=0);
+
+                //**** Write data to Slave ****
+                while(putsI2C1("UR") != 0);
+                IdleI2C1();
+                
+                //**** RESTART I2C COMMUNICATION ****
+                RestartI2C1();
+                IdleI2C1();
+
+                //**** Setup Communication to Read back ****
+                dataBuf = SSP1BUF;
+                do
+                {
+                    I2Cstatus = WriteI2C1( 0xA2 | 0x01);
+                    if(I2Cstatus == -1)
+                    {
+                        dataBuf = SSP1BUF;
+                        SSP1CON1bits.WCOL=0;	// clear the bus collision status bit
+                    }
+                }while(I2Cstatus!=0);
+
+                //**** Recieve data from slave ****
+
+                while( getsI2C1(I2C_Recv,20) );		//recieve data string of lenght 20 from slave
+                I2C_Recv[20] = '\0' ;
+
+		NotAckI2C1();					//send the end of transmission signal through nack
+		while( SSP1CON2bits.ACKEN!=0);		//wait till ack sequence is complete
+
+
+                // **** Close I2C ****
                 StopI2C1();
+                CloseI2C1();
             }
         }
         PORTB = temp;
+
+         
     }
 }
 
