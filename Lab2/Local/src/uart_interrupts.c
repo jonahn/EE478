@@ -4,7 +4,7 @@
 
 //Interrupt
 
-char commandBuffer;      // create a buffer for Rx1
+char commandBuffer, charReceived;      // create a buffer for Rx1
 char data;
 
  #pragma code low_vector = 0x08  // jump to the address for the low priority ISR interrupt
@@ -19,6 +19,7 @@ char data;
    if (PIR1bits.RCIF == 1 )//&& DataRdy1USART() == 1)   // see if there is data in the read buffer for USART1
    {
       commandBuffer = Read1USART();
+      charReceived = 1;
       Write1USART(commandBuffer);
       PIR1bits.RCIF = 0;
    }

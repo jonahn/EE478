@@ -2,9 +2,6 @@
 #include "p18f25k22.h"
 #include "i2c_slave.h"
 
-#pragma code
-#pragma interrupthigh high_vector
-
 unsigned char tempAddr, tempData;
 
 // This is the code for at the high priority vector
@@ -19,42 +16,26 @@ unsigned char toggleLED;
 // The actual high priority ISR
 #pragma interrupt highPriorityISR
 void highPriorityISR() {
-    if (PIR1bits.SSP1IF == 1) {        // Check for SSP interrupt
-        toggleLED = 1;
+    // Check for SSP interrupt, reading address
+    toggleLED = 1;
+    if (PIR1bits.SSP1IF == 1 && SSP1STATbits.BF == 1 && SSP1STATbits.D_A == 0) {
 
-        tempData = ReadI2C1();
-        
-        /*
-        // It is an SSP interrupt, call the SSP ISR
-        
-       
-       
-        
-        //***** READ DATA FROM MASTER ******
-        
-        while (DataRdyI2C1()==0);
-        tempData = ReadI2C1();
-        
-        //***** wait untill STOP CONDITION *****
-        
-        while(SSPSTATbits.S!=1);
-        
-        //***** READ THE ADDRESS FROM MASTER *****
-        
-        while (DataRdyI2C1()==0);
-        tempAddr = ReadI2C1();
-        
-        //***** SLAVE WRITE BACK *****
-        
-        if (SSP1STAT & 0x04) {
-            while (putsI2C1("Got the message!"));
-        }
-        
-        CloseI2C1();
-        */
-        
+        tempAddr = SSP1BUF;  //read addr from buffer
+        SSP1STATbits.BF = 0; //clear buffer (unnecessary?)
+
+        //SSP1STATbits.D_A == 1;
         PIR1bits.SSP1IF = 0;  // Clear the interrupt flag
     }
+    //Check for SSP interrupt, reading data
+    else if (PIR1bits.SSP1IF == 1 && SSP1STATbits.BF == 1 && SSP1STATbits.D_A == 1 )
+    {
+        tempData = SSP1BUF;
+        //SSP1STATbits.D_A = 0; //set bit to 0 so tat it can check for new data
+
+
+        PIR1bits.SSP1IF = 0;  // Clear the interrupt flag
+    }
+    PIR1bits.SSP1IF = 0;
     return;
 }
 

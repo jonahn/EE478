@@ -16,7 +16,7 @@
 
 #include "uart_interrupts.h"
 
-extern unsigned char temp, dataToSend, commandBuffer;
+extern unsigned char temp, dataToSend, commandBuffer, charReceived;
 unsigned int set;
 
 extern void setup();
@@ -37,13 +37,13 @@ void main(void)
         //increment - i
         //decrement - d
 
-        if(commandBuffer == 'a')
-        {
-            temp = temp & ~0x01;
+            
                     
-            if (set == 0)
+            if (charReceived == 1)
             {
-                set = 1;
+                temp = ~temp;
+                charReceived = 0;
+
                 IdleI2C1();      //wait until bus is idle
                 StartI2C1();    //send Start Condition
                 IdleI2C1();
@@ -51,29 +51,14 @@ void main(void)
                 WriteI2C1(0xA2);
 
                 IdleI2C1();
-
-                StopI2C1();
-
-                IdleI2C1();
-
                 //**** Write data to Slave ****
-                StartI2C1();    //send Start Condition
-                IdleI2C1();
 
-                WriteI2C1('U');
+                WriteI2C1(commandBuffer);
                 IdleI2C1();
 
                 // **** Close I2C ****
                 StopI2C1();
-
             }
-        }
-        else
-        {
-            temp = temp | 0x01;
-            set = 0;
-        }
-
         PORTB = temp;
         
     } //end of while(1)
