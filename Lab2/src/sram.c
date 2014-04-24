@@ -7,11 +7,22 @@
 
 #define NUMBER_OF_ADDRESSES 256
 
-unsigned char currentAddress = 0x0;
+#include <stdio.h>
 
-unsigned char storeData(unsigned char inData)
+unsigned char currentAddress = 0x0;
+unsigned char returnAddress;
+
+unsigned char* storeData(unsigned char inData)
 {
+    currentAddress++;
     
+    //TODO: write to sram here
+    
+    returnAddress = currentAddress;
+    
+    printf("Wrote to Address: %#x with data: %#x \n",currentAddress, inData);
+    
+    return &returnAddress;
 }
 
 // get the data at the address given.
