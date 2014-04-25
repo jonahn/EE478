@@ -13,12 +13,13 @@
 
 #include "../../src/utils.h"
 #include "local_setup.h"
+#include "../../src/sram.h"
 
 #include "uart_interrupts.h"
 
 extern unsigned char temp, commandBuffer, charReceived;
 
-unsigned char bufferIndex, mode;    //mode: 0 = null, 1 = S, 2 = i, 3 = d
+unsigned char bufferIndex, mode, readAddress, PORTCtemp, dataToSRAM;    //mode: 0 = null, 1 = S, 2 = i, 3 = d
 unsigned char numOut = 0x49;
 unsigned char uartBuffer[3];        //buff containing char inputs from usart
 unsigned char decBuffer[3];         //buff containing conversions to decimal
@@ -27,6 +28,7 @@ int i;
 
 extern void setup();
 extern void setupUSARTAndI2C();
+extern unsigned char storeData();
 
 void main(void)
 {
@@ -52,13 +54,14 @@ void main(void)
             if (charReceived == 1)      //check if a character sent from UART
             {
                 //toggle LED (testing)
-                temp = ~temp;
-                PORTB = temp;
+                temp = ~temp & 0x01;
 
                 //reset received flag
                 charReceived = 0;
 
-
+                dataToSRAM = commandBuffer;
+                storeData();
+                getData();
                 //Setpoint case
                 if(commandBuffer == 's')
                 {

@@ -14,18 +14,15 @@ unsigned char temp, dataToSend;
 
 void setup()
 {
-        /* Make RA0 - RA2 inputs (Push Buttons) */
-    TRISA = 0x07;
+    TRISA = 0x00;
 
-    /* Enable Digital Inputs */
-    ANSELA = 0xE0;
+    ADCON1 = 0x0F;     //Disable all analog inputs
 
-    /* Make RB0 - RB2 outputs (LEDs) */
-    TRISB = 0;
+    // make all port B outputs
+    TRISB = 0x00;
 
-    ADCON1 = 0b00001110;
-    ADCON0 = 0x00;
-    ADCON2 = 0b00001000;
+    ANSELA = 0xC0;
+    ANSELC = 0x00;
 
     /* Reset Push Buttons and LEDs */
     PORTA = 0x07;
@@ -40,7 +37,9 @@ void setupUSARTAndI2C()
     RCSTAbits.SPEN = 1;     //set up asynchronous communication
     RCSTAbits.CREN = 1;     //Enable receive
 
-    // #2: set RX/TX TRIS
+    TRISCbits.TRISC0 = 0; //
+    TRISCbits.TRISC1 = 0; //
+
     TRISCbits.TRISC6 = 0; // TX output
     TRISCbits.TRISC7 = 1; // RX input
 

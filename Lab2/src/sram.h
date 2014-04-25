@@ -16,13 +16,23 @@
 // Address is 8 bits -> 256 total addresses.
 // Data is 8 bits.
 // will overwrite the address written to 256 times ago.
-unsigned char storeData(unsigned char inData);
+// stores the data in variable: dataToSRAM to SRAM.
+unsigned char storeData();
 
 // get the data at the address given.
-void getData(unsigned char inAddress);
+void getData();
 
 // Clear all data. Set all addresses from 0-255 to 0x0.
 void clearSRAM();
+
+void enableWrite();
+void disableWrite();
+
+void enableOutput();
+void disableOutput();
+
+void setDataBusToOutput();
+void setDataBusToInput();
 
 #endif	/* __SRAM_H */
 
