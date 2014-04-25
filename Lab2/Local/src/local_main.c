@@ -18,7 +18,7 @@
 
 extern unsigned char temp, commandBuffer, charReceived;
 
-unsigned char bufferIndex, mode;    //mode: 0 = null, 1 = S, 2 = i, 3 = d
+unsigned char bufferIndex, mode;    //mode: 0 = null, 1 = Setpoint
 unsigned char numOut = 0x49;
 unsigned char uartBuffer[3];        //buff containing char inputs from usart
 unsigned char decBuffer[3];         //buff containing conversions to decimal
@@ -49,31 +49,33 @@ void main(void)
         //increment - i
         //decrement - d   
                     
-            if (charReceived == 1)      //check if a character sent from UART
+        if (charReceived == 1)      //check if a character sent from UART
+        {
+            //toggle LED (testing)
+            temp = ~temp;
+            PORTB = temp;
+
+            //reset received flag
+            charReceived = 0;
+
+            //Setpoint case
+            if(commandBuffer == 's')
             {
-                //toggle LED (testing)
-                temp = ~temp;
-                PORTB = temp;
+                mode = 1;       //indicating setpoint
+                bufferIndex = 0;
 
-                //reset received flag
-                charReceived = 0;
-
-
-                //Setpoint case
-                if(commandBuffer == 's')
+                //clear buffer
+                for(i = 0; i <= 2; i++)
                 {
-                    mode = 1;       //indicating setpoint
-                    bufferIndex = 0;
-
-                    //clear buffer
-                    for(i = 0; i <= 2; i++)
-                    {
-                        uartBuffer[i] = '0';
-                    }
+                    uartBuffer[i] = '0';
                 }
-
+            }
+                
+            //if in s mode
+            else if (1 == mode)
+            {
                 //if user pressed enter (in S mode), read buffer, reset index
-                else if (commandBuffer == '\r' && mode == 1)
+                if (commandBuffer == '\r')
                 {   
                     //read buffer and convert to decimal
                     for(i = 0; i <= bufferIndex; i++)
@@ -89,24 +91,20 @@ void main(void)
                     else 
                     {
                         //convert dec buffer to single character
-                       numOut = (decBuffer[0] * 100 + decBuffer[1] * 10 + decBuffer[2]) * 2;
+                        numOut = (decBuffer[0] * 100 + decBuffer[1] * 10 + decBuffer[2]) * 2;
 
-                       //***Send over I2C
-                        IdleI2C1();      //wait until bus is idle
-                        StartI2C1();    //send Start Condition
+                        //***Send over I2C           
+                        IdleI2C1();         //wait until bus is idle
+                        StartI2C1();        //send Start Condition
+                                
                         IdleI2C1();
-
-                        WriteI2C1(0xA2);
+                        WriteI2C1(0xA2);    //write address
 
                         IdleI2C1();
-                        //**** Write data to Slave ****
-
-                        WriteI2C1(numOut);
+                        WriteI2C1(numOut);  //write data
+                                
                         IdleI2C1();
-
-                        // **** Close I2C ****
                         StopI2C1();
-
                         //*** end of send ***
                     }
                     bufferIndex = 0;
@@ -114,20 +112,54 @@ void main(void)
                     Write1USART('\n');   //send  new line
                 }
                 //number entered while in s mode
-                else if (mode == 1)
+                else
                 {
                     uartBuffer[bufferIndex] = commandBuffer;
                     bufferIndex++;
                 }
-
-
-                //at this point, data to send is 1 byte from 0 - 200
-
-                //send data to remote node
-                //sendi2c(commandBuffer);
             }
 
-        
+            //Increment buffer
+            else if (commandBuffer == 'i')
+            {
+                numOut = numOut + 1;
+
+                //***Send over I2C
+                IdleI2C1();         //wait until bus is idle
+                StartI2C1();        //send Start Condition
+                        
+                IdleI2C1();
+                WriteI2C1(0xA2);    //write address
+
+                IdleI2C1();
+                WriteI2C1(numOut);  //write data
+                        
+                IdleI2C1();
+                StopI2C1();
+                //*** end of send ***
+            }
+            //Decrement buffer
+            else if (commandBuffer == 'd')
+            {
+                numOut = numOut - 1;
+
+                //***Send over I2C
+                IdleI2C1();         //wait until bus is idle
+                StartI2C1();        //send Start Condition
+                        
+                IdleI2C1();
+                WriteI2C1(0xA2);    //write address
+
+                IdleI2C1();
+                WriteI2C1(numOut);  //write data
+                        
+                IdleI2C1();
+                StopI2C1();
+                //*** end of send ***
+            }
+            //at this point, data to send is 1 byte from 0 - 200
+        }
+
     } //end of while(1)
     
     CloseI2C1();
