@@ -28,6 +28,8 @@ int i;
 extern void setup();
 extern void setupUSARTAndI2C();
 
+void UARTSend(char *str, unsigned long strLength);
+
 void main(void)
 {
     setup();
@@ -39,17 +41,18 @@ void main(void)
     bufferIndex = 0;
     mode = 0;
     
-    //write initial msg to user on USART
-    Write1USART('i');   //FIGURE OUT HOW TO SEND STRING
+    //write initial msg to user on USART        ****REPLACE W/ function*****
+    char* str = "Commands: Setpoint(s), Increment(i), Decrement(d)\n";
+    unsigned long strLength = 50;
+    while(strLength--)
+    {
+        // Write the next character to the UART, then increment
+        Write1USART(*str++);
+    }
 
     while(1)
-    {
-        //commands:
-        //setpoint  - s
-        //increment - i
-        //decrement - d   
-                    
-        if (charReceived == 1)      //check if a character sent from UART
+    {               
+        if ( 1 == charReceived )      //check if a character sent from UART
         {
             //toggle LED (testing)
             temp = ~temp;
@@ -59,14 +62,15 @@ void main(void)
             charReceived = 0;
 
             //Setpoint case
-            if(commandBuffer == 's')
+            if( 's' == commandBuffer )
             {
                 mode = 1;       //indicating setpoint
                 bufferIndex = 0;
 
                 //clear buffer
-                for(i = 0; i <= 2; i++)
+                for( i = 0; i <= 2; i++ )
                 {
+                    decBuffer[i] = '0';
                     uartBuffer[i] = '0';
                 }
             }
@@ -75,7 +79,7 @@ void main(void)
             else if (1 == mode)
             {
                 //if user pressed enter (in S mode), read buffer, reset index
-                if (commandBuffer == '\r')
+                if ( '\r' == commandBuffer )
                 {   
                     //read buffer and convert to decimal
                     for(i = 0; i <= bufferIndex; i++)
@@ -120,7 +124,7 @@ void main(void)
             }
 
             //Increment buffer
-            else if (commandBuffer == 'i')
+            else if ( 'i' == commandBuffer )
             {
                 numOut = numOut + 1;
 
@@ -164,3 +168,14 @@ void main(void)
     
     CloseI2C1();
 }
+
+void UARTSend(char *str, unsigned long strLength)
+{
+   // Loop while there are more characters to send
+   while(strLength--)
+   {
+       // Write the next character to the UART, then increment
+       Write1USART(*str++);
+   }
+}
+
