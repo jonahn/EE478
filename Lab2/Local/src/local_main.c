@@ -25,7 +25,8 @@ unsigned char numOut = 0x49;
 unsigned char uartBuffer[3];        //buff containing char inputs from usart
 unsigned char decBuffer[3];         //buff containing conversions to decimal
 
-char str[] = "Welcome to Remote Surgery System!\r\nEnter commands: Setpoint(s), Increment(i), Decrement(d)\n\0";
+char str[] = "Welcome to Remote Surgery System!\r\nEnter commands: Setpoint(s), Increment(i), Decrement(d)\r\n\0";
+char err[] = "Number entered exceeds 100.\r\n\0";
 unsigned char strLength;
 int i;
 
@@ -47,8 +48,8 @@ void main(void)
     bufferIndex = 0;
     mode = 0;
     
-    //write initial msg to user on USART        ****REPLACE W/ function*****
-    strLength = 93;
+    //write initial msg to user on USART        
+    strLength = 94;
     i = 0;
     while(strLength > 0)
     {
@@ -72,12 +73,14 @@ void main(void)
             //reset received flag
             charReceived = 0;
 
+            //SRAM
             dataToSRAM = commandBuffer;
             storeData();
             delay(255);
             //doneWriting();
             delay(255);
             //getData();
+
             //Setpoint case
             if( 's' == commandBuffer )
             {
@@ -107,7 +110,18 @@ void main(void)
                     //Send msg and don't process number if > 100.
                     if (decBuffer[0] > 1)
                     {
-                        Write1USART('E');
+                        strLength = 30;
+                        i = 0;
+                        while(strLength > 0)
+                        {
+                            strLength--;
+                            // Write the next character to the UART, then increment
+                            delay(100);
+                            Write1USART(err[i]);
+                            delay(100);
+                            i++;
+                        }
+                        delay(100);
                     }
                     else 
                     {
@@ -130,6 +144,7 @@ void main(void)
                     }
                     bufferIndex = 0;
                     mode = 0;   //back to no mode
+                    Write1USART('\r');   //send  new line
                     Write1USART('\n');   //send  new line
                 }
                 //number entered while in s mode
@@ -158,6 +173,7 @@ void main(void)
                 IdleI2C1();
                 StopI2C1();
                 //*** end of send ***
+                Write1USART('\r');   //send  new line
                 Write1USART('\n');   //send  new line
                 delay(100);
             }
@@ -179,7 +195,7 @@ void main(void)
                 IdleI2C1();
                 StopI2C1();
                 //*** end of send ***
-
+                Write1USART('\r');   //send  new line
                 Write1USART('\n');   //send  new line
                 delay(100);
             }
