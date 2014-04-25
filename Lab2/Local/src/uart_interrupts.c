@@ -7,7 +7,7 @@
 char commandBuffer, charReceived;      // create a buffer for Rx1
 char data;
 
- #pragma code low_vector = 0x18  // jump to the address for the low priority ISR interrupt
+ #pragma code low_vector = 0x08  // jump to the address for the low priority ISR interrupt
  void low_vector(void)
  {
    _asm goto low_isr _endasm
