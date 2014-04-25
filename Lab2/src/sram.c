@@ -12,7 +12,7 @@
 #include "sram.h"
 #include "../src/utils.h"
 
-unsigned char tempData;
+unsigned char tempSRAMData;
 
 extern unsigned char SRAMDataBus, address;
 
@@ -37,7 +37,7 @@ void setAddress();
 // to satisfy compiler
 extern void setAddress();
 
-unsigned char storeData()
+void storeData()
 {
     setDataBusToOutput();
 
@@ -46,11 +46,11 @@ unsigned char storeData()
     enableWrite();
     
     //always set A7 and A6 to high
-    tempData = SRAMDataBus | 0xC0;
+    tempSRAMData = SRAMDataBus | 0xC0;
     // set A0...A5 to lower 6 bits of data
-    LATA = tempData;
-    tempData = PORTC | SRAMDataBus >> 6;
-    LATC = tempData;
+    LATA = tempSRAMData;
+    tempSRAMData = PORTC | SRAMDataBus >> 6;
+    LATC = tempSRAMData;
 
     delay(50);
 
@@ -71,10 +71,10 @@ void getData()
     // delay after the address is pushed on the SRAM
     delay(50);
 
-    tempData = PORTA & ~0xC0;
-    tempData = tempData | PORTC << 6;
+    tempSRAMData = PORTA & ~0xC0;
+    tempSRAMData = tempSRAMData | PORTC << 6;
 
-    SRAMDataBus = tempData;
+    SRAMDataBus = tempSRAMData;
     
     disableOutput();
 }

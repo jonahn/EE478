@@ -10,18 +10,22 @@
 #include <p18f25k22.h>
 #include <i2c.h>
 #include "../../src/utils.h"
-
+#include "../../src/sram.h"
 
 #include "i2c_slave.h"
 
 
 extern unsigned char toggleLED;
 extern unsigned char tempData;
-unsigned char temp;
+unsigned char temp, SRAMDataBus, address;
 volatile int i;
 unsigned int duty;
 
+unsigned char recievedData;
 
+extern void setupInterrupts();
+extern void storeData();
+extern void getData();
 
 void main(void)
 {
@@ -35,7 +39,6 @@ void main(void)
 
     setupInterrupts();
 
-    //TODO: SETUP I2C
     OpenI2C1(SLAVE_7, SLEW_OFF);
     SSP1ADD = 0xA2;
 
@@ -48,19 +51,32 @@ void main(void)
     T2CON = 0b00000101; // Turn Timer 2 on
     TRISCbits.RC2 = 0; // Clear TRIS bit
 
+    recievedData = NOT_RECIEVED;
 
     while(1)
     {
-        temp = ~temp;
-        PORTB = temp;
-        delay(100);
-
         if (toggleLED == 1)
         {
             //temp = ~temp;
             //PORTB = temp;
             toggleLED = 0;
             toggleLED = toggleLED;
+        }
+
+        if(recievedData == RECIEVED)
+        {
+            address = 0x6;
+
+            recievedData = NOT_RECIEVED;
+
+            //store in SRAM
+            SRAMDataBus = tempData;
+            storeData();
+
+            delay(50);
+
+            // retrieve from SRAM
+            getData();
         }
 
         duty = tempData * 1.14 ; //0xE4, 0d228 = 100%

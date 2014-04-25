@@ -4,6 +4,8 @@
 
 unsigned char tempAddr, tempData;
 
+extern unsigned char recievedData;
+
 // This is the code for at the high priority vector
 #pragma code high_vector = 0x08
 void high_vector(void)
@@ -18,6 +20,7 @@ unsigned char toggleLED;
 void highPriorityISR() {
     // Check for SSP interrupt, reading address
     toggleLED = 1;
+    recievedData = RECIEVED;
     if (PIR1bits.SSP1IF == 1 && SSP1STATbits.BF == 1 && SSP1STATbits.D_A == 0) {
 
         tempAddr = SSP1BUF;  //read addr from buffer

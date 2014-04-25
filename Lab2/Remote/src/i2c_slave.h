@@ -8,7 +8,11 @@
 
 #ifndef _i2c_slave_h
 #define _i2c_slave_h
-    
+
+#define NOT_RECIEVED 0
+#define RECIEVED 1
+
+
 // Function prototypes for the high priority ISRs
 void highPriorityISR(void);
     

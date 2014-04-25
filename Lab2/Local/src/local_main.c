@@ -32,7 +32,7 @@ int i;
 
 extern void setup();
 extern void setupUSARTAndI2C();
-extern unsigned char storeData();
+extern void storeData();
 void getData();
 
 void UARTSend(char *str, unsigned long strLength);
@@ -66,31 +66,8 @@ void main(void)
     {               
         if ( 1 == charReceived )      //check if a character sent from UART
         {
-            //toggle LED (testing)
-            temp = ~temp;
-            PORTB = temp;
-
             //reset received flag
             charReceived = 0;
-
-            address = 0x6;
-
-            //SRAM
-            SRAMDataBus = commandBuffer;
-            storeData();
-
-            delay(50);
-
-            getData();
-
-            address = 0x7;
-
-            //SRAM
-            SRAMDataBus = commandBuffer + 1;
-            storeData();
-
-            address = 0x6;
-            getData();
 
             //Setpoint case
             if( 's' == commandBuffer )
@@ -139,16 +116,27 @@ void main(void)
                         //convert dec buffer to single character
                         numOut = (decBuffer[0] * 100 + decBuffer[1] * 10 + decBuffer[2]) * 2;
 
-                        //***Send over I2C           
+                        address = 0x6;
+
+                        //store in SRAM
+                        SRAMDataBus = numOut;
+                        storeData();
+
+                        delay(50);
+
+                        // retrieve from SRAM
+                        getData();
+
+                        //***Send over I2C
                         IdleI2C1();         //wait until bus is idle
                         StartI2C1();        //send Start Condition
-                                
+
                         IdleI2C1();
                         WriteI2C1(0xA2);    //write address
 
                         IdleI2C1();
-                        WriteI2C1(numOut);  //write data
-                                
+                        WriteI2C1(SRAMDataBus);  //write data
+
                         IdleI2C1();
                         StopI2C1();
                         //*** end of send ***
@@ -171,6 +159,15 @@ void main(void)
             {
                 numOut = numOut + 1;
 
+                //store in SRAM
+                SRAMDataBus = numOut;
+                storeData();
+
+                delay(50);
+
+                // retrieve from SRAM
+                getData();
+
                 //***Send over I2C
                 IdleI2C1();         //wait until bus is idle
                 StartI2C1();        //send Start Condition
@@ -179,7 +176,7 @@ void main(void)
                 WriteI2C1(0xA2);    //write address
 
                 IdleI2C1();
-                WriteI2C1(numOut);  //write data
+                WriteI2C1(SRAMDataBus);  //write data
                         
                 IdleI2C1();
                 StopI2C1();
@@ -193,6 +190,15 @@ void main(void)
             {
                 numOut = numOut - 1;
 
+                //store in SRAM
+                SRAMDataBus = numOut;
+                storeData();
+
+                delay(50);
+
+                // retrieve from SRAM
+                getData();
+
                 //***Send over I2C
                 IdleI2C1();         //wait until bus is idle
                 StartI2C1();        //send Start Condition
@@ -201,7 +207,7 @@ void main(void)
                 WriteI2C1(0xA2);    //write address
 
                 IdleI2C1();
-                WriteI2C1(numOut);  //write data
+                WriteI2C1(SRAMDataBus);  //write data
                         
                 IdleI2C1();
                 StopI2C1();

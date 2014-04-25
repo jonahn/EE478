@@ -14,7 +14,7 @@
  */
 
 // stores the data in variable: SRAMDataBus to variable address.
-unsigned char storeData();
+void storeData();
 
 // get the data at the variable:address.
 void getData();
