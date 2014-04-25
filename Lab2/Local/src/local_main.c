@@ -18,7 +18,8 @@
 
 extern unsigned char temp, commandBuffer, charReceived;
 
-unsigned char bufferIndex, mode, numOut;    //mode: 0 = null, 1 = S, 2 = i, 3 = d
+unsigned char bufferIndex, mode;    //mode: 0 = null, 1 = S, 2 = i, 3 = d
+unsigned char numOut = 0x49;
 unsigned char uartBuffer[3];        //buff containing char inputs from usart
 unsigned char decBuffer[3];         //buff containing conversions to decimal
 
@@ -26,8 +27,6 @@ int i;
 
 extern void setup();
 extern void setupUSARTAndI2C();
-
-void sendi2c(char commandBuff);
 
 void main(void)
 {
@@ -39,7 +38,7 @@ void main(void)
 
     bufferIndex = 0;
     mode = 0;
-    numOut = 0;
+    
     //write initial msg to user on USART
     Write1USART('i');   //FIGURE OUT HOW TO SEND STRING
 
@@ -90,13 +89,29 @@ void main(void)
                     else 
                     {
                         //convert dec buffer to single character
-                        numOut = (decBuffer[0] * 100 + decBuffer[1] * 10 + decBuffer[2]) * 2;
+                       numOut = (decBuffer[0] * 100 + decBuffer[1] * 10 + decBuffer[2]) * 2;
 
-                        sendi2c(numOut);
+                       //***Send over I2C
+                        IdleI2C1();      //wait until bus is idle
+                        StartI2C1();    //send Start Condition
+                        IdleI2C1();
 
+                        WriteI2C1(0xA2);
+
+                        IdleI2C1();
+                        //**** Write data to Slave ****
+
+                        WriteI2C1(numOut);
+                        IdleI2C1();
+
+                        // **** Close I2C ****
+                        StopI2C1();
+
+                        //*** end of send ***
                     }
                     bufferIndex = 0;
                     mode = 0;   //back to no mode
+                    Write1USART('\n');   //send  new line
                 }
                 //number entered while in s mode
                 else if (mode == 1)
@@ -116,22 +131,4 @@ void main(void)
     } //end of while(1)
     
     CloseI2C1();
-}
-
-void sendi2c(char commandBuff)
-{
-    IdleI2C1();      //wait until bus is idle
-    StartI2C1();    //send Start Condition
-    IdleI2C1();
-
-    WriteI2C1(0xA2);
-
-    IdleI2C1();
-    //**** Write data to Slave ****
-
-    WriteI2C1(commandBuff);
-    IdleI2C1();
-
-    // **** Close I2C ****
-    StopI2C1();    
 }
