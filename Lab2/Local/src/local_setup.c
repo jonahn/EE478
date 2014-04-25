@@ -22,11 +22,8 @@ void setup()
     TRISB = 0x00;
 
     ANSELA = 0xC0;
+    ANSELB = 0x00;
     ANSELC = 0x00;
-
-    /* Reset Push Buttons and LEDs */
-    PORTA = 0x07;
-    PORTB = 0x07;
 
     temp = 0x01;
 

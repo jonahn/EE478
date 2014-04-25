@@ -10,31 +10,17 @@
 
 /*
  * Using the CY7C128A SRAM. Organized as 2K x 8 bits: 2K addresses (2^11) accessing 8 bits of data
- * 
+ * REQUIRED GLOBAL VARIABLES: SRAMDataBus, commandBuffer, address.
  */
 
-// Address is 8 bits -> 256 total addresses.
-// Data is 8 bits.
-// will overwrite the address written to 256 times ago.
-// stores the data in variable: dataToSRAM to SRAM.
+// stores the data in variable: SRAMDataBus to variable address.
 unsigned char storeData();
 
-// get the data at the address given.
+// get the data at the variable:address.
 void getData();
-
-void doneWriting();
 
 // Clear all data. Set all addresses from 0-255 to 0x0.
 void clearSRAM();
-
-void enableWrite();
-void disableWrite();
-
-void enableOutput();
-void disableOutput();
-
-void setDataBusToOutput();
-void setDataBusToInput();
 
 #endif	/* __SRAM_H */
 

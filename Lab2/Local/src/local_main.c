@@ -19,7 +19,7 @@
 
 extern unsigned char temp, commandBuffer, charReceived;
 
-unsigned char bufferIndex, mode, readAddress, PORTCtemp, dataToSRAM;    //mode: 0 = null, 1 = Setpoint
+unsigned char bufferIndex, mode, PORTCtemp, SRAMDataBus, address;    //mode: 0 = null, 1 = Setpoint
 
 unsigned char numOut = 0x49;
 unsigned char uartBuffer[3];        //buff containing char inputs from usart
@@ -73,13 +73,24 @@ void main(void)
             //reset received flag
             charReceived = 0;
 
+            address = 0x6;
+
             //SRAM
-            dataToSRAM = commandBuffer;
+            SRAMDataBus = commandBuffer;
             storeData();
-            delay(255);
-            //doneWriting();
-            delay(255);
-            //getData();
+
+            delay(50);
+
+            getData();
+
+            address = 0x7;
+
+            //SRAM
+            SRAMDataBus = commandBuffer + 1;
+            storeData();
+
+            address = 0x6;
+            getData();
 
             //Setpoint case
             if( 's' == commandBuffer )

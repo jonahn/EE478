@@ -10,46 +10,52 @@
 #include <stdio.h>
 #include <p18f25k22.h>
 #include "sram.h"
+#include "../src/utils.h"
 
 unsigned char currentAddress = 0x0;
 unsigned char tempData;
 
-extern unsigned char dataToSRAM, commandBuffer, readAddress;
+extern unsigned char SRAMDataBus, commandBuffer, address;
 
+void enableWrite();
+void disableWrite();
+
+void enableOutput();
+void disableOutput();
+
+void setDataBusToOutput();
+void setDataBusToInput();
+
+// to satisfy compiler
 extern void setDataBusToOutput();
 extern void setDataBusToInput();
-
 extern void enableWrite();
 extern void disableWrite();
-
 extern void enableOutput();
 extern void disableOutput();
 
+void setAddress();
+// to satisfy compiler
+extern void setAddress();
+
 unsigned char storeData()
 {
-    //setDataBusToOutput();
+    setDataBusToOutput();
 
-    // always write to address 0x02
-    currentAddress = 0x7;
-    
-    if(currentAddress > 0x7)
-    {
-        currentAddress = 0x0;
-    }
+    setAddress();
 
-    readAddress = currentAddress;
-
-    //enableWrite();
+    enableWrite();
     
     //always set A7 and A6 to high
-    tempData = dataToSRAM | 0xC0;
+    tempData = SRAMDataBus | 0xC0;
     // set A0...A5 to lower 6 bits of data
     LATA = tempData;
-    tempData = PORTC | dataToSRAM >> 6;
+    tempData = PORTC | SRAMDataBus >> 6;
     LATC = tempData;
 
-    LATB = PORTB | currentAddress << 1;
+    delay(50);
 
+    disableWrite();
 }
 
 // get the data at the address given.
@@ -59,13 +65,19 @@ void getData()
 
     disableWrite();
 
-    LATB = PORTB | readAddress << 1;
+    delay(10);
+
+    setAddress();
+
+    // delay after the address is pushed on the SRAM
+    delay(50);
 
     tempData = PORTA & ~0xC0;
     tempData = tempData | PORTC << 6;
 
-    dataToSRAM = tempData;
-    tempData=tempData;
+    SRAMDataBus = tempData;
+    
+    disableOutput();
 }
 
 // Clear all data. Set all addresses from 0-255 to 0x0.
@@ -75,7 +87,7 @@ void clearSRAM()
     
     for(k = 0; k < NUMBER_OF_ADDRESSES; k++)
     {
-        dataToSRAM = 0x0;
+        SRAMDataBus = 0x0;
         storeData();
     }
 }
@@ -105,34 +117,39 @@ void setDataBusToInput()
     TRISCbits.TRISC1 = 1; 
 }
 
-void doneWriting()
-{
-    disableWrite();
-}
-
 void enableWrite()
 {
-    //B4 is ~WE so enable it (0)
-    LATB = PORTB & ~0x10;
-
     disableOutput();
+
+    TRISBbits.TRISB4 = 0;
+    //B4 is ~WE so enable it (0)
+    LATBbits.LATB4 = 0;
 }
 
 void disableWrite()
 {
-    //B4 is ~WE so disable it (1)
-    LATB = PORTB | 0x10;
-
     enableOutput();
+
+    TRISBbits.TRISB4 = 0;
+    //B4 is ~WE so disable it (1)
+    LATBbits.LATB4 = 1;
 }
 
 void enableOutput()
 {
     //B5 is ~OE so enable it (0)
-    LATB = PORTB & ~0x20;
+    TRISBbits.TRISB5 = 0;
+    LATBbits.LATB5 = 0;
 }
 void disableOutput()
 {
     //B5 is ~OE so disable it (1)
-    LATB = PORTB | 0x20;
+    TRISBbits.TRISB5 = 0;
+    LATBbits.LATB5 = 1;
+}
+
+void setAddress()
+{
+    LATB = PORTB & ~0x7;
+    LATB = PORTB | address << 1;
 }
