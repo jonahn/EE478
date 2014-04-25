@@ -12,10 +12,9 @@
 #include "sram.h"
 #include "../src/utils.h"
 
-unsigned char currentAddress = 0x0;
 unsigned char tempData;
 
-extern unsigned char SRAMDataBus, commandBuffer, address;
+extern unsigned char SRAMDataBus, address;
 
 void enableWrite();
 void disableWrite();

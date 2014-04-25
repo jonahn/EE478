@@ -10,7 +10,7 @@
 
 /*
  * Using the CY7C128A SRAM. Organized as 2K x 8 bits: 2K addresses (2^11) accessing 8 bits of data
- * REQUIRED GLOBAL VARIABLES: SRAMDataBus, commandBuffer, address.
+ * REQUIRED GLOBAL VARIABLES: SRAMDataBus, address.
  */
 
 // stores the data in variable: SRAMDataBus to variable address.
