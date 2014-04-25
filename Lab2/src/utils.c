@@ -9,6 +9,10 @@
 
 #pragma config WDTEN = OFF
 
+
+
+extern int i;
+
 void delay(unsigned char delayTime)
 {
     Delay1KTCYx(delayTime);

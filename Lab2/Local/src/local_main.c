@@ -74,7 +74,10 @@ void main(void)
 
             dataToSRAM = commandBuffer;
             storeData();
-            getData();
+            delay(255);
+            //doneWriting();
+            delay(255);
+            //getData();
             //Setpoint case
             if( 's' == commandBuffer )
             {
@@ -155,6 +158,8 @@ void main(void)
                 IdleI2C1();
                 StopI2C1();
                 //*** end of send ***
+                Write1USART('\n');   //send  new line
+                delay(100);
             }
             //Decrement buffer
             else if (commandBuffer == 'd')
@@ -174,6 +179,9 @@ void main(void)
                 IdleI2C1();
                 StopI2C1();
                 //*** end of send ***
+
+                Write1USART('\n');   //send  new line
+                delay(100);
             }
             //at this point, data to send is 1 byte from 0 - 200
         }

@@ -27,10 +27,10 @@ extern void disableOutput();
 
 unsigned char storeData()
 {
-    setDataBusToOutput();
+    //setDataBusToOutput();
 
     // always write to address 0x02
-    currentAddress = 0x02;
+    currentAddress = 0x7;
     
     if(currentAddress > 0x7)
     {
@@ -39,7 +39,7 @@ unsigned char storeData()
 
     readAddress = currentAddress;
 
-    enableWrite();
+    //enableWrite();
     
     //always set A7 and A6 to high
     tempData = dataToSRAM | 0xC0;
@@ -103,6 +103,11 @@ void setDataBusToInput()
     TRISAbits.TRISA5 = 1;
     TRISCbits.TRISC0 = 1; 
     TRISCbits.TRISC1 = 1; 
+}
+
+void doneWriting()
+{
+    disableWrite();
 }
 
 void enableWrite()

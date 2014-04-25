@@ -22,6 +22,8 @@ unsigned char storeData();
 // get the data at the address given.
 void getData();
 
+void doneWriting();
+
 // Clear all data. Set all addresses from 0-255 to 0x0.
 void clearSRAM();
 
