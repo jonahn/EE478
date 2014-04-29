@@ -79,6 +79,10 @@ void main(void)
     //enable interrupt
     ADC_INT_ENABLE();
 
+    PIR1bits.ADIF = 0;
+    ADCON0bits.GO_DONE = 1;
+    //ConvertADC();
+
     recievedData = NOT_RECIEVED;
 
     while(1)

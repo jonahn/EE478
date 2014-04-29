@@ -12,7 +12,7 @@ void low_vector(void)
 float voltage = 0;
 extern volatile int i;
 unsigned int ADCResult;
-// The actual high priority ISR
+// The actual low priority ISR
 #pragma interrupt ADCISR
 void ADCISR() {
     // Check for SSP interrupt, reading address
@@ -27,6 +27,7 @@ void ADCISR() {
 	}
 	ADCResult /= 16;
 	voltage = (ADCResult*5.0)/1024; // convert ADC count into voltage
+          ADCON0bits.GO_DONE = 1;
         PIR1bits.ADIF == 0;
         //ConvertADC();
     }
