@@ -22,6 +22,7 @@ extern unsigned char temp, commandBuffer, charReceived;
 unsigned char bufferIndex, mode, PORTCtemp, SRAMDataBus, address;    //mode: 0 = null, 1 = Setpoint
 
 unsigned char numOut = 0x49;
+unsigned char testerChar;
 unsigned char uartBuffer[3];        //buff containing char inputs from usart
 unsigned char decBuffer[3];         //buff containing conversions to decimal
 
@@ -68,6 +69,23 @@ void main(void)
         {
             //reset received flag
             charReceived = 0;
+
+            //TEST the read from slave:
+          if('t' == commandBuffer )
+            {
+                IdleI2C1();         // wait until bus is idle
+                StartI2C1();        // send Start Condition
+                IdleI2C1();
+                WriteI2C1(0xA2 | 0x01);    // write address
+                IdleI2C1();
+                testerChar = ReadI2C1();         // read data
+                IdleI2C1();
+                AckI2C();
+                StopI2C1();
+                Write1USART(testerChar);
+                testerChar = 0;
+            }
+        
 
             //Setpoint case
             if( 's' == commandBuffer )

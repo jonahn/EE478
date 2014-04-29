@@ -76,7 +76,7 @@ void main(void)
             delay(50);
 
             // retrieve from SRAM
-            getData();
+            //getData();
         }
 
         duty = tempData * 1.14 ; //0xE4, 0d228 = 100%
