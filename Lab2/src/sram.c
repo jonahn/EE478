@@ -46,11 +46,16 @@ void storeData()
     enableWrite();
     
     //always set A7 and A6 to high
-    tempSRAMData = SRAMDataBus | 0xC0;
-    // set A0...A5 to lower 6 bits of data
-    LATA = tempSRAMData;
-    tempSRAMData = PORTC | SRAMDataBus >> 6;
-    LATC = tempSRAMData;
+    LATAbits.LATA0 = SRAMDataBus & 0b00000001 ? 1 : 0;
+    LATAbits.LATA1 = SRAMDataBus & 0b00000010 ? 1 : 0;
+    LATAbits.LATA2 = SRAMDataBus & 0b00000100 ? 1 : 0;
+    LATAbits.LATA3 = SRAMDataBus & 0b00001000 ? 1 : 0;
+    LATAbits.LATA4 = SRAMDataBus & 0b00010000 ? 1 : 0;
+    LATAbits.LATA5 = SRAMDataBus & 0b00100000 ? 1 : 0;
+
+    //tempSRAMData = PORTC | SRAMDataBus >> 6;
+    LATCbits.LATC0 = SRAMDataBus & 0b01000000 ? 1 : 0;
+    LATCbits.LATC1 = SRAMDataBus & 0b10000000 ? 1 : 0;
 
     delay(50);
 
@@ -71,10 +76,7 @@ void getData()
     // delay after the address is pushed on the SRAM
     delay(50);
 
-    tempSRAMData = PORTA & ~0xC0;
-    tempSRAMData = tempSRAMData | PORTC << 6;
-
-    SRAMDataBus = tempSRAMData;
+    SRAMDataBus = ((PORTC << 6) & 0xC0) | (PORTA & 0x3F);
     
     disableOutput();
 }
