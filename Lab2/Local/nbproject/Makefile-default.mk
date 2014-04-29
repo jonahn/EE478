@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=src/main.c src/uart_interrupts.c
+SOURCEFILES_QUOTED_IF_SPACED=src/uart_interrupts.c src/local_main.c src/local_setup.c ../src/sram.c ../src/utils.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/src/main.o ${OBJECTDIR}/src/uart_interrupts.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/src/main.o.d ${OBJECTDIR}/src/uart_interrupts.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/src/uart_interrupts.o ${OBJECTDIR}/src/local_main.o ${OBJECTDIR}/src/local_setup.o ${OBJECTDIR}/_ext/1360937237/sram.o ${OBJECTDIR}/_ext/1360937237/utils.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/src/uart_interrupts.o.d ${OBJECTDIR}/src/local_main.o.d ${OBJECTDIR}/src/local_setup.o.d ${OBJECTDIR}/_ext/1360937237/sram.o.d ${OBJECTDIR}/_ext/1360937237/utils.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/src/main.o ${OBJECTDIR}/src/uart_interrupts.o
+OBJECTFILES=${OBJECTDIR}/src/uart_interrupts.o ${OBJECTDIR}/src/local_main.o ${OBJECTDIR}/src/local_setup.o ${OBJECTDIR}/_ext/1360937237/sram.o ${OBJECTDIR}/_ext/1360937237/utils.o
 
 # Source Files
-SOURCEFILES=src/main.c src/uart_interrupts.c
+SOURCEFILES=src/uart_interrupts.c src/local_main.c src/local_setup.c ../src/sram.c ../src/utils.c
 
 
 CFLAGS=
@@ -86,13 +86,6 @@ endif
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: compile
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-${OBJECTDIR}/src/main.o: src/main.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/src 
-	@${RM} ${OBJECTDIR}/src/main.o.d 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/src/main.o   src/main.c 
-	@${DEP_GEN} -d ${OBJECTDIR}/src/main.o 
-	@${FIXDEPS} "${OBJECTDIR}/src/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
-	
 ${OBJECTDIR}/src/uart_interrupts.o: src/uart_interrupts.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/src 
 	@${RM} ${OBJECTDIR}/src/uart_interrupts.o.d 
@@ -100,20 +93,69 @@ ${OBJECTDIR}/src/uart_interrupts.o: src/uart_interrupts.c  nbproject/Makefile-${
 	@${DEP_GEN} -d ${OBJECTDIR}/src/uart_interrupts.o 
 	@${FIXDEPS} "${OBJECTDIR}/src/uart_interrupts.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
-else
-${OBJECTDIR}/src/main.o: src/main.c  nbproject/Makefile-${CND_CONF}.mk
+${OBJECTDIR}/src/local_main.o: src/local_main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/src 
-	@${RM} ${OBJECTDIR}/src/main.o.d 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/src/main.o   src/main.c 
-	@${DEP_GEN} -d ${OBJECTDIR}/src/main.o 
-	@${FIXDEPS} "${OBJECTDIR}/src/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
+	@${RM} ${OBJECTDIR}/src/local_main.o.d 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/src/local_main.o   src/local_main.c 
+	@${DEP_GEN} -d ${OBJECTDIR}/src/local_main.o 
+	@${FIXDEPS} "${OBJECTDIR}/src/local_main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
+${OBJECTDIR}/src/local_setup.o: src/local_setup.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/src 
+	@${RM} ${OBJECTDIR}/src/local_setup.o.d 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/src/local_setup.o   src/local_setup.c 
+	@${DEP_GEN} -d ${OBJECTDIR}/src/local_setup.o 
+	@${FIXDEPS} "${OBJECTDIR}/src/local_setup.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
+	
+${OBJECTDIR}/_ext/1360937237/sram.o: ../src/sram.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/_ext/1360937237 
+	@${RM} ${OBJECTDIR}/_ext/1360937237/sram.o.d 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1360937237/sram.o   ../src/sram.c 
+	@${DEP_GEN} -d ${OBJECTDIR}/_ext/1360937237/sram.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1360937237/sram.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
+	
+${OBJECTDIR}/_ext/1360937237/utils.o: ../src/utils.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/_ext/1360937237 
+	@${RM} ${OBJECTDIR}/_ext/1360937237/utils.o.d 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1360937237/utils.o   ../src/utils.c 
+	@${DEP_GEN} -d ${OBJECTDIR}/_ext/1360937237/utils.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1360937237/utils.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
+	
+else
 ${OBJECTDIR}/src/uart_interrupts.o: src/uart_interrupts.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/src 
 	@${RM} ${OBJECTDIR}/src/uart_interrupts.o.d 
 	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/src/uart_interrupts.o   src/uart_interrupts.c 
 	@${DEP_GEN} -d ${OBJECTDIR}/src/uart_interrupts.o 
 	@${FIXDEPS} "${OBJECTDIR}/src/uart_interrupts.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
+	
+${OBJECTDIR}/src/local_main.o: src/local_main.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/src 
+	@${RM} ${OBJECTDIR}/src/local_main.o.d 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/src/local_main.o   src/local_main.c 
+	@${DEP_GEN} -d ${OBJECTDIR}/src/local_main.o 
+	@${FIXDEPS} "${OBJECTDIR}/src/local_main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
+	
+${OBJECTDIR}/src/local_setup.o: src/local_setup.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/src 
+	@${RM} ${OBJECTDIR}/src/local_setup.o.d 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/src/local_setup.o   src/local_setup.c 
+	@${DEP_GEN} -d ${OBJECTDIR}/src/local_setup.o 
+	@${FIXDEPS} "${OBJECTDIR}/src/local_setup.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
+	
+${OBJECTDIR}/_ext/1360937237/sram.o: ../src/sram.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/_ext/1360937237 
+	@${RM} ${OBJECTDIR}/_ext/1360937237/sram.o.d 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1360937237/sram.o   ../src/sram.c 
+	@${DEP_GEN} -d ${OBJECTDIR}/_ext/1360937237/sram.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1360937237/sram.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
+	
+${OBJECTDIR}/_ext/1360937237/utils.o: ../src/utils.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/_ext/1360937237 
+	@${RM} ${OBJECTDIR}/_ext/1360937237/utils.o.d 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1360937237/utils.o   ../src/utils.c 
+	@${DEP_GEN} -d ${OBJECTDIR}/_ext/1360937237/utils.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1360937237/utils.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
 endif
 

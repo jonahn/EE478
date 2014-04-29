@@ -13,8 +13,14 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>src/main.c</itemPath>
       <itemPath>src/uart_interrupts.c</itemPath>
+      <itemPath>src/local_main.c</itemPath>
+      <itemPath>src/local_setup.c</itemPath>
+      <itemPath>src/local_setup.h</itemPath>
+      <itemPath>../src/sram.c</itemPath>
+      <itemPath>../src/sram.h</itemPath>
+      <itemPath>../src/utils.c</itemPath>
+      <itemPath>../src/utils.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -24,6 +30,7 @@
   </logicalFolder>
   <sourceRootList>
     <Elem>src</Elem>
+    <Elem>../src</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
