@@ -7,11 +7,12 @@ unsigned char tempAddr, tempData;
 extern unsigned char recievedData;
 
 // This is the code for at the high priority vector
-#pragma code high_vector = 0x08
+#pragma code high_vector = 0x18
 void high_vector(void)
 { 
     _asm goto highPriorityISR _endasm
 }
+#pragma code
 
 unsigned char toggleLED;
 

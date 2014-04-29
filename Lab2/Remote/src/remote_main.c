@@ -9,11 +9,15 @@
 #include <stdlib.h>
 #include <p18f25k22.h>
 #include <i2c.h>
+#include <adc.h>
 #include "../../src/utils.h"
 #include "../../src/sram.h"
 
 #include "i2c_slave.h"
+#include "ADC_Remote.h"
 
+#define USE_OR_MASKS
+#define ADC_V13
 
 extern unsigned char toggleLED;
 extern unsigned char tempData;
@@ -26,6 +30,8 @@ unsigned char recievedData;
 extern void setupInterrupts();
 extern void storeData();
 extern void getData();
+extern float voltage;
+float checkVolt;
 
 void main(void)
 {
@@ -33,6 +39,7 @@ void main(void)
 
     ANSELCbits.ANSC3 = 0;   //SDA
     ANSELCbits.ANSC4 = 0;   //SCL
+
 
     TRISB = 0;      //test LED initialize port
     PORTB = 0x01;   //test LED
@@ -50,6 +57,27 @@ void main(void)
     CCPR1L = 0x00;  // set Duty Cycle eight bits
     T2CON = 0b00000101; // Turn Timer 2 on
     TRISCbits.RC2 = 0; // Clear TRIS bit
+
+    //setup ADC
+    //Conversion clock = fosc/2
+    //right justified result
+    //aquisition time of 2 AD
+    //channel 1 for sampling
+    //ADC interrupt on
+    //reference voltage from VDD & VSS
+
+    setupADCInterrupts();
+
+
+    OpenADC(ADC_FOSC_2 & ADC_RIGHT_JUST & ADC_2_TAD,
+            ADC_CH17 & ADC_INT_ON & ADC_REF_VDD_VSS, 0);
+
+    //RC5 SETUP
+    ANSELCbits.ANSC5 = 1; 
+    TRISCbits.RC5 = 1;
+
+    //enable interrupt
+    ADC_INT_ENABLE();
 
     recievedData = NOT_RECIEVED;
 
@@ -84,5 +112,7 @@ void main(void)
         CCP1CONbits.DC1B0 = duty & 1;
         CCP1CONbits.DC1B1 = (duty>>1) & 1;
         CCPR1L = (duty >> 2);
+
+        checkVolt = voltage;
     }
 }

@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=src/i2c_slave.c ../src/utils.c src/remote_main.c ../src/sram.c
+SOURCEFILES_QUOTED_IF_SPACED=src/i2c_slave.c ../src/utils.c src/remote_main.c ../src/sram.c src/ADC_Remote.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/src/i2c_slave.o ${OBJECTDIR}/_ext/1360937237/utils.o ${OBJECTDIR}/src/remote_main.o ${OBJECTDIR}/_ext/1360937237/sram.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/src/i2c_slave.o.d ${OBJECTDIR}/_ext/1360937237/utils.o.d ${OBJECTDIR}/src/remote_main.o.d ${OBJECTDIR}/_ext/1360937237/sram.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/src/i2c_slave.o ${OBJECTDIR}/_ext/1360937237/utils.o ${OBJECTDIR}/src/remote_main.o ${OBJECTDIR}/_ext/1360937237/sram.o ${OBJECTDIR}/src/ADC_Remote.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/src/i2c_slave.o.d ${OBJECTDIR}/_ext/1360937237/utils.o.d ${OBJECTDIR}/src/remote_main.o.d ${OBJECTDIR}/_ext/1360937237/sram.o.d ${OBJECTDIR}/src/ADC_Remote.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/src/i2c_slave.o ${OBJECTDIR}/_ext/1360937237/utils.o ${OBJECTDIR}/src/remote_main.o ${OBJECTDIR}/_ext/1360937237/sram.o
+OBJECTFILES=${OBJECTDIR}/src/i2c_slave.o ${OBJECTDIR}/_ext/1360937237/utils.o ${OBJECTDIR}/src/remote_main.o ${OBJECTDIR}/_ext/1360937237/sram.o ${OBJECTDIR}/src/ADC_Remote.o
 
 # Source Files
-SOURCEFILES=src/i2c_slave.c ../src/utils.c src/remote_main.c ../src/sram.c
+SOURCEFILES=src/i2c_slave.c ../src/utils.c src/remote_main.c ../src/sram.c src/ADC_Remote.c
 
 
 CFLAGS=
@@ -114,6 +114,13 @@ ${OBJECTDIR}/_ext/1360937237/sram.o: ../src/sram.c  nbproject/Makefile-${CND_CON
 	@${DEP_GEN} -d ${OBJECTDIR}/_ext/1360937237/sram.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1360937237/sram.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
+${OBJECTDIR}/src/ADC_Remote.o: src/ADC_Remote.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/src 
+	@${RM} ${OBJECTDIR}/src/ADC_Remote.o.d 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/src/ADC_Remote.o   src/ADC_Remote.c 
+	@${DEP_GEN} -d ${OBJECTDIR}/src/ADC_Remote.o 
+	@${FIXDEPS} "${OBJECTDIR}/src/ADC_Remote.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
+	
 else
 ${OBJECTDIR}/src/i2c_slave.o: src/i2c_slave.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/src 
@@ -142,6 +149,13 @@ ${OBJECTDIR}/_ext/1360937237/sram.o: ../src/sram.c  nbproject/Makefile-${CND_CON
 	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1360937237/sram.o   ../src/sram.c 
 	@${DEP_GEN} -d ${OBJECTDIR}/_ext/1360937237/sram.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1360937237/sram.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
+	
+${OBJECTDIR}/src/ADC_Remote.o: src/ADC_Remote.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/src 
+	@${RM} ${OBJECTDIR}/src/ADC_Remote.o.d 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/src/ADC_Remote.o   src/ADC_Remote.c 
+	@${DEP_GEN} -d ${OBJECTDIR}/src/ADC_Remote.o 
+	@${FIXDEPS} "${OBJECTDIR}/src/ADC_Remote.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
 endif
 

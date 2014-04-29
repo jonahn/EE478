@@ -18,6 +18,8 @@
       <itemPath>../src/utils.c</itemPath>
       <itemPath>src/remote_main.c</itemPath>
       <itemPath>../src/sram.c</itemPath>
+      <itemPath>src/ADC_Remote.c</itemPath>
+      <itemPath>src/ADC_Remote.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -28,6 +30,7 @@
   <sourceRootList>
     <Elem>src</Elem>
     <Elem>../src</Elem>
+    <Elem>../../../../tempLab2-ADC/Remote/src</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
