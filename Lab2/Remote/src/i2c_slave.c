@@ -27,15 +27,12 @@ void highPriorityISR() {
         tempAddr = SSP1BUF;  //read addr from buffer
         SSP1STATbits.BF = 0; //clear buffer (unnecessary?)
 
-        //SSP1STATbits.D_A == 1;
         PIR1bits.SSP1IF = 0;  // Clear the interrupt flag
     }
     //Check for SSP interrupt, reading data
     else if (PIR1bits.SSP1IF == 1 && SSP1STATbits.BF == 1 && SSP1STATbits.R == 0 && SSP1STATbits.D_A == 1 )
     {
         tempData = SSP1BUF;
-        //SSP1STATbits.D_A = 0; //set bit to 0 so tat it can check for new data
-
 
         PIR1bits.SSP1IF = 0;  // Clear the interrupt flag
     }
@@ -43,10 +40,11 @@ void highPriorityISR() {
    else if ( PIR1bits.SSP1IF == 1 && SSP1STATbits.BF == 1 && SSP1STATbits.R == 1 && SSP1STATbits.D_A == 1 )
     {
         //SSP1STATbits.BF = 0; //clear buffer
-        //WriteI2C1(0xA6);  //test with temp data
-        SSP1BUF = 0xA6;
+        tempData = WriteI2C1(0xA6);  //test with temp data, check return val
+                                      //-2 = acknowledged
+        //SSP1BUF = 0xA6;     //write to buffer
+
         PIR1bits.SSP1IF = 0;  // Clear the interrupt flag
-        //SSP1STATbits.A = 0;
     }
     
     PIR1bits.SSP1IF = 0;

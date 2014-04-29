@@ -79,9 +79,12 @@ void main(void)
                 WriteI2C1(0xA2 | 0x01);    // write address
                 IdleI2C1();
                 testerChar = ReadI2C1();         // read data
-                IdleI2C1();
-                AckI2C();
+                
+                //IdleI2C1();
+                NotAckI2C1();   //send ~Ack
+
                 StopI2C1();
+                Write1USART('r');
                 Write1USART(testerChar);
                 testerChar = 0;
             }
@@ -150,7 +153,7 @@ void main(void)
                         StartI2C1();        //send Start Condition
 
                         IdleI2C1();
-                        WriteI2C1(0xA2);    //write address
+                        WriteI2C1(0xA2);    //write address w/ 0 last bit
 
                         IdleI2C1();
                         WriteI2C1(SRAMDataBus);  //write data
