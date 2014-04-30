@@ -30,7 +30,7 @@ unsigned char recievedData;
 extern void setupInterrupts();
 extern void storeData();
 extern void getData();
-extern float voltage;
+extern char voltage;
 float checkVolt;
 
 void main(void)
@@ -68,8 +68,8 @@ void main(void)
 
     setupADCInterrupts();
 
-
-    OpenADC(ADC_FOSC_2 & ADC_RIGHT_JUST & ADC_2_TAD,
+   
+    OpenADC(ADC_FOSC_64 & ADC_RIGHT_JUST & ADC_2_TAD,
             ADC_CH17 & ADC_INT_ON & ADC_REF_VDD_VSS, 0);
 
     //RC5 SETUP
@@ -82,6 +82,7 @@ void main(void)
     PIR1bits.ADIF = 0;
     ADCON0bits.GO_DONE = 1;
     //ConvertADC();
+
 
     recievedData = NOT_RECIEVED;
 
@@ -118,5 +119,7 @@ void main(void)
         CCPR1L = (duty >> 2);
 
         checkVolt = voltage;
+
+        LATB = voltage;
     }
 }

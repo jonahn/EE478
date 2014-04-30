@@ -15,7 +15,7 @@
 
 // Function prototypes for the high priority ISRs
 void highPriorityISR(void);
-    
+void setupInterrupts(void);
 
 
 #endif
