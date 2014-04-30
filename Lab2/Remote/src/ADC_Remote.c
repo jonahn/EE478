@@ -9,7 +9,7 @@ void low_vector(void)
 }
 #pragma code
 
-char voltage = 0;
+unsigned char voltage = 0;
 extern volatile int i;
 unsigned int ADCResult;
 // The actual low priority ISR
@@ -36,7 +36,9 @@ void ADCISR() {
         //ConvertADC();
 
      */
-        voltage = ~voltage;
+        voltage = ADRESH << 2;
+        voltage |= ADRESL >> 6;
+        ADCON0bits.GO_DONE = 1;
         PIR1bits.ADIF = 0;
     }
     return;
