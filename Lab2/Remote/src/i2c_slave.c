@@ -28,13 +28,13 @@ void highPriorityISR() {
         SSP1STATbits.BF = 0; //clear buffer (unnecessary?)
 
     }
-    //Check for SSP interrupt, reading data
+    //Check for SSP interrupt, reading data // this works
     else if (PIR1bits.SSP1IF == 1 && SSP1STATbits.BF == 1 && SSP1STATbits.R_NOT_W == 0 && SSP1STATbits.D_A == 1 )
     {
         tempData = SSP1BUF;
 
     }
-    //interrupt for sending data back, getting address
+    //interrupt for sending data back, getting address // NEVER GETS TO THIS!!
    else if ( PIR1bits.SSP1IF == 1 && SSP1STATbits.BF == 1 && SSP1STATbits.R_NOT_W == 1 && SSP1STATbits.D_A == 1 )
     {
         //SSP1STATbits.BF = 0; //clear buffer
