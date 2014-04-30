@@ -58,17 +58,17 @@ void main(void)
     T2CON = 0b00000101; // Turn Timer 2 on
     TRISCbits.RC2 = 0; // Clear TRIS bit
 
-    //setup ADC
-    //Conversion clock = fosc/2
-    //right justified result
-    //aquisition time of 2 AD
-    //channel 1 for sampling
-    //ADC interrupt on
-    //reference voltage from VDD & VSS
 
+    //setup ADC
     setupADCInterrupts();
 
-   
+    //Opening ADC:
+    //Conversion clock = fosc/64
+    //right justified result
+    //aquisition time of 2 AD
+    //channel 17 for sampling
+    //ADC interrupt on
+    //reference voltage from VDD & VSS
     OpenADC(ADC_FOSC_64 & ADC_RIGHT_JUST & ADC_2_TAD,
             ADC_CH17 & ADC_INT_ON & ADC_REF_VDD_VSS, 0);
 
