@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=src/uart_interrupts.c src/local_main.c src/local_setup.c ../src/sram.c ../src/utils.c
+SOURCEFILES_QUOTED_IF_SPACED=src/uart_interrupts.c src/local_main.c src/local_setup.c ../src/sram.c ../src/utils.c src/local_funct.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/src/uart_interrupts.o ${OBJECTDIR}/src/local_main.o ${OBJECTDIR}/src/local_setup.o ${OBJECTDIR}/_ext/1360937237/sram.o ${OBJECTDIR}/_ext/1360937237/utils.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/src/uart_interrupts.o.d ${OBJECTDIR}/src/local_main.o.d ${OBJECTDIR}/src/local_setup.o.d ${OBJECTDIR}/_ext/1360937237/sram.o.d ${OBJECTDIR}/_ext/1360937237/utils.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/src/uart_interrupts.o ${OBJECTDIR}/src/local_main.o ${OBJECTDIR}/src/local_setup.o ${OBJECTDIR}/_ext/1360937237/sram.o ${OBJECTDIR}/_ext/1360937237/utils.o ${OBJECTDIR}/src/local_funct.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/src/uart_interrupts.o.d ${OBJECTDIR}/src/local_main.o.d ${OBJECTDIR}/src/local_setup.o.d ${OBJECTDIR}/_ext/1360937237/sram.o.d ${OBJECTDIR}/_ext/1360937237/utils.o.d ${OBJECTDIR}/src/local_funct.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/src/uart_interrupts.o ${OBJECTDIR}/src/local_main.o ${OBJECTDIR}/src/local_setup.o ${OBJECTDIR}/_ext/1360937237/sram.o ${OBJECTDIR}/_ext/1360937237/utils.o
+OBJECTFILES=${OBJECTDIR}/src/uart_interrupts.o ${OBJECTDIR}/src/local_main.o ${OBJECTDIR}/src/local_setup.o ${OBJECTDIR}/_ext/1360937237/sram.o ${OBJECTDIR}/_ext/1360937237/utils.o ${OBJECTDIR}/src/local_funct.o
 
 # Source Files
-SOURCEFILES=src/uart_interrupts.c src/local_main.c src/local_setup.c ../src/sram.c ../src/utils.c
+SOURCEFILES=src/uart_interrupts.c src/local_main.c src/local_setup.c ../src/sram.c ../src/utils.c src/local_funct.c
 
 
 CFLAGS=
@@ -121,6 +121,13 @@ ${OBJECTDIR}/_ext/1360937237/utils.o: ../src/utils.c  nbproject/Makefile-${CND_C
 	@${DEP_GEN} -d ${OBJECTDIR}/_ext/1360937237/utils.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1360937237/utils.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
+${OBJECTDIR}/src/local_funct.o: src/local_funct.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/src 
+	@${RM} ${OBJECTDIR}/src/local_funct.o.d 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/src/local_funct.o   src/local_funct.c 
+	@${DEP_GEN} -d ${OBJECTDIR}/src/local_funct.o 
+	@${FIXDEPS} "${OBJECTDIR}/src/local_funct.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
+	
 else
 ${OBJECTDIR}/src/uart_interrupts.o: src/uart_interrupts.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/src 
@@ -156,6 +163,13 @@ ${OBJECTDIR}/_ext/1360937237/utils.o: ../src/utils.c  nbproject/Makefile-${CND_C
 	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1360937237/utils.o   ../src/utils.c 
 	@${DEP_GEN} -d ${OBJECTDIR}/_ext/1360937237/utils.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1360937237/utils.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
+	
+${OBJECTDIR}/src/local_funct.o: src/local_funct.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/src 
+	@${RM} ${OBJECTDIR}/src/local_funct.o.d 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION)   -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/src/local_funct.o   src/local_funct.c 
+	@${DEP_GEN} -d ${OBJECTDIR}/src/local_funct.o 
+	@${FIXDEPS} "${OBJECTDIR}/src/local_funct.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
 endif
 
