@@ -27,7 +27,8 @@ unsigned char uartBuffer[3];        //buff containing char inputs from usart
 unsigned char decBuffer[3];         //buff containing conversions to decimal
 
 char str[] = "Welcome to Remote Surgery System!\r\nEnter commands: Setpoint(s), Increment(i), Decrement(d)\r\n\0";
-char err[] = "Number entered exceeds 100.\r\n\0";
+char errMax[] = "Number entered exceeds 100.\r\n\0";
+char errMin[] = "Number entered below     0.\r\n\0";
 unsigned char strLength;
 int i;
 
@@ -35,6 +36,12 @@ extern void setup();
 extern void setupUSARTAndI2C();
 extern void storeData();
 void getData();
+
+void sendErrorMessageMin();
+extern void sendErrorMessageMin();
+
+void sendErrorMessageMax();
+extern void sendErrorMessageMax();
 
 void UARTSend(char *str, unsigned long strLength);
 
@@ -64,31 +71,30 @@ void main(void)
     delay(100);
 
     while(1)
-    {               
-        if ( 1 == charReceived )      //check if a character sent from UART
+    {
+        if( 1 != charReceived )
+        {
+            IdleI2C1();         // wait until bus is idle
+            StartI2C1();        // send Start Condition
+            IdleI2C1();
+            WriteI2C1(0xA2 | 0x01);    // write address
+            IdleI2C1();
+            testerChar = ReadI2C1();         // read data
+
+            //IdleI2C1();
+            //NotAckI2C1();   //send ~Ack
+
+            StopI2C1();
+//            Write1USART('r');
+//            delay(100);
+//            Write1USART(testerChar);
+//            delay(100);
+            testerChar = 0;
+        }
+        else
         {
             //reset received flag
-            charReceived = 0;
-
-            //TEST the read from slave:
-            if('t' == commandBuffer )
-            {
-                IdleI2C1();         // wait until bus is idle
-                StartI2C1();        // send Start Condition
-                IdleI2C1();
-                WriteI2C1(0xA2 | 0x01);    // write address
-                IdleI2C1();
-                testerChar = ReadI2C1();         // read data
-                
-                //IdleI2C1();
-                NotAckI2C1();   //send ~Ack
-
-                StopI2C1();
-                Write1USART('r');
-                Write1USART(testerChar);
-                testerChar = 0;
-            }
-        
+            charReceived = 0;        
 
             //Setpoint case
             if( 's' == commandBuffer )
@@ -119,17 +125,7 @@ void main(void)
                     //Send msg and don't process number if > 100.
                     if (decBuffer[0] > 1)
                     {
-                        strLength = 30;
-                        i = 0;
-                        while(strLength > 0)
-                        {
-                            strLength--;
-                            // Write the next character to the UART, then increment
-                            delay(100);
-                            Write1USART(err[i]);
-                            delay(100);
-                            i++;
-                        }
+                        sendErrorMessageMax();
                         delay(100);
                     }
                     else 
@@ -178,9 +174,17 @@ void main(void)
             //Increment buffer
             else if ( 'i' == commandBuffer )
             {
-                numOut = numOut + 1;
+                if(numOut > 200)
+                {
+                    sendErrorMessageMax();
+                }
+                else
+                {
+                    numOut = numOut + 1;
+                }
 
-                //store in SRAM
+
+               //store in SRAM
                 SRAMDataBus = numOut;
                 storeData();
 
@@ -209,7 +213,15 @@ void main(void)
             //Decrement buffer
             else if (commandBuffer == 'd')
             {
-                numOut = numOut - 1;
+                if(numOut == 0)
+                {
+                    sendErrorMessageMin();
+                }
+                else
+                {
+                    numOut = numOut - 1;
+                }
+
 
                 //store in SRAM
                 SRAMDataBus = numOut;
@@ -243,6 +255,38 @@ void main(void)
     } //end of while(1)
     
     CloseI2C1();
+}
+
+void sendErrorMessageMax()
+{
+        strLength = 30;
+        i = 0;
+        while(strLength > 0)
+        {
+            strLength--;
+            // Write the next character to the UART, then increment
+            delay(100);
+            Write1USART(errMax[i]);
+            delay(100);
+            i++;
+        }
+        delay(100);
+}
+
+void sendErrorMessageMin()
+{
+        strLength = 30;
+        i = 0;
+        while(strLength > 0)
+        {
+            strLength--;
+            // Write the next character to the UART, then increment
+            delay(100);
+            Write1USART(errMin[i]);
+            delay(100);
+            i++;
+        }
+        delay(100);
 }
 
 void UARTSend(char *str, unsigned long strLength)

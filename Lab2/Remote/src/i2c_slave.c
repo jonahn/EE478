@@ -14,6 +14,7 @@ void high_vector(void)
 }
 #pragma code
 
+
 unsigned char toggleLED;
 
 // The actual high priority ISR
@@ -26,6 +27,12 @@ void highPriorityISR() {
 
         tempAddr = SSP1BUF;  //read addr from buffer
         SSP1STATbits.BF = 0; //clear buffer (unnecessary?)
+        if (SSP1STATbits.R_NOT_W == 1)      //master is waiting for a read
+        {
+            SSP1STATbits.R_NOT_W = 0;
+            WriteI2C1(0x40);
+            //SSP1BUF = 0xA6;     //write to buffer
+        }
 
     }
     //Check for SSP interrupt, reading data // this works
@@ -35,14 +42,15 @@ void highPriorityISR() {
 
     }
     //interrupt for sending data back, getting address // NEVER GETS TO THIS!!
-   else if ( PIR1bits.SSP1IF == 1 && SSP1STATbits.BF == 1 && SSP1STATbits.R_NOT_W == 1 && SSP1STATbits.D_A == 1 )
+ /* else if ( PIR1bits.SSP1IF == 1 && SSP1STATbits.BF == 1 && SSP1STATbits.R_NOT_W == 1 && SSP1STATbits.D_A == 1 )
     {
         //SSP1STATbits.BF = 0; //clear buffer
         tempData = WriteI2C1(0xA6);  //test with temp data, check return val//-2 = acknowledged
         //SSP1BUF = 0xA6;     //write to buffer
 
     }
-    
+ */
+
     PIR1bits.SSP1IF = 0; // Clear the interrupt flag
     return;
 }
