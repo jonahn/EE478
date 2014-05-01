@@ -102,11 +102,12 @@ void main(void)
             //Done getting datas
 
             //Compute error value
-            if(actualVal > correctedVal)
+            if( (actualVal+1) > (correctedVal) )
             {
                 correctedIncrement();
             }
-            else
+
+            if((actualVal+1) < (correctedVal) )
             {
                 correctedDecrement();
             }    
@@ -164,7 +165,7 @@ void main(void)
                     Write1USART('\r');   //send  new line
                     delay(100);
                     Write1USART('\n');   //send  new line
-                    delay(100);
+                    delay(1000);
                 }
                 //number entered while in s mode
                 else

@@ -69,8 +69,10 @@ void main(void)
     //channel 17 for sampling
     //ADC interrupt on
     //reference voltage from VDD & VSS
-    OpenADC(ADC_FOSC_64 & ADC_RIGHT_JUST & ADC_2_TAD,
+    OpenADC(ADC_FOSC_64 & ADC_RIGHT_JUST & ADC_12_TAD,
             ADC_CH17 & ADC_INT_ON & ADC_REF_VDD_VSS, 0);
+
+    //ADCON2bits.ACQT = 0b100;
 
     //RC5 SETUP
     ANSELCbits.ANSC5 = 1; 
@@ -79,8 +81,6 @@ void main(void)
     //enable interrupt
     ADC_INT_ENABLE();
 
-    PIR1bits.ADIF = 0;
-    ADCON0bits.GO_DONE = 1;
     //ConvertADC();
 
 
@@ -110,6 +110,8 @@ void main(void)
 
             // retrieve from SRAM
             //getData();
+            PIR1bits.ADIF = 0;
+            ADCON0bits.GO_DONE = 1;
         }
 
         duty = tempData * 1.14 ; //0xE4, 0d228 = 100%

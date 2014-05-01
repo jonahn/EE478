@@ -36,9 +36,12 @@ void ADCISR() {
         //ConvertADC();
 
      */
-        voltage = ADRESH << 2;
-        voltage |= ADRESL >> 6;
-        ADCON0bits.GO_DONE = 1;
+        //voltage = ADRESH << 2;
+        //voltage |= ADRESL >> 6;
+        voltage = ADRESL >> 2;
+        voltage |= ADRESH << 6;
+        voltage = (char)(((int)voltage * 200) / ((int)253));
+        //ADCON0bits.GO_DONE = 1;
         PIR1bits.ADIF = 0;
 
     }

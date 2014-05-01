@@ -16,6 +16,7 @@ void high_vector(void)
 
 
 unsigned char toggleLED;
+extern unsigned char voltage;
 
 // The actual high priority ISR
 #pragma interrupt highPriorityISR
@@ -30,7 +31,7 @@ void highPriorityISR() {
         if (SSP1STATbits.R_NOT_W == 1)      //master is waiting for a read
         {
             SSP1STATbits.R_NOT_W = 0;
-            WriteI2C1(0x40);
+            WriteI2C1(voltage);
             //SSP1BUF = 0xA6;     //write to buffer
         }
 
