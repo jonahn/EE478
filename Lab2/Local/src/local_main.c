@@ -22,6 +22,7 @@ extern unsigned char temp, commandBuffer, charReceived;
 unsigned char bufferIndex, mode, PORTCtemp, SRAMDataBus, address;    //mode: 0 = null, 1 = Setpoint
 
 unsigned char numOut = 0x49;
+unsigned char sendVal = 100;
 unsigned char correctedVal = 100; // 50% duty
 unsigned char actualVal;
 unsigned char uartBuffer[3];        //buff containing char inputs from usart
@@ -101,13 +102,13 @@ void main(void)
             //Done getting datas
 
             //Compute error value
-            if(actualVal < numOut)
+            if(actualVal > correctedVal)
             {
-                //correctedIncrement();
+                correctedIncrement();
             }
             else
             {
-                //correctedDecrement();
+                correctedDecrement();
             }    
         }
         else
@@ -154,7 +155,8 @@ void main(void)
                         correctedVal = numOut;
 
                         address = 0x6;
-                        
+
+                        sendVal = numOut;
                         sendDataI2C();
                     }
                     bufferIndex = 0;
@@ -224,23 +226,23 @@ void sendErrorMessageMin()
 
 void correctedIncrement()
 {
-    if(correctedVal <= 255)
+    if(correctedVal < 255)
     {
         correctedVal = correctedVal + 1;
-        numOut = correctedVal;
     }
 
+    sendVal = correctedVal;
     sendDataI2C();
 }
 
 void correctedDecrement()
 {
-    if(correctedVal >= 0)
+    if(correctedVal > 0)
     {
         correctedVal = correctedVal - 1;
-        numOut = correctedVal;
     }
 
+    sendVal = correctedVal;
     sendDataI2C();
 }
 
@@ -256,6 +258,7 @@ void increment()
         correctedVal = numOut;
     }
 
+    sendVal = correctedVal;
     sendDataI2C();
 
         //*** end of send ***
@@ -276,6 +279,7 @@ void decrement()
         numOut = numOut - 1;
     }
 
+    sendVal = correctedVal;
     sendDataI2C();
 
         //*** end of send ***
@@ -287,7 +291,7 @@ void decrement()
 void sendDataI2C()
 {
     //store in SRAM
-    SRAMDataBus = numOut;
+    SRAMDataBus = sendVal;
     storeData();
 
     delay(50);
