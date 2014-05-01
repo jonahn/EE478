@@ -36,7 +36,6 @@ void ADCISR() {
         //ConvertADC();
 
      */
-        //voltage = ~voltage;
         voltage = ADRESH << 2;
         voltage |= ADRESL >> 6;
         ADCON0bits.GO_DONE = 1;

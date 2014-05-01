@@ -71,7 +71,7 @@ void main(void)
             charReceived = 0;
 
             //TEST the read from slave:
-          if('t' == commandBuffer )
+            if('t' == commandBuffer )
             {
                 IdleI2C1();         // wait until bus is idle
                 StartI2C1();        // send Start Condition
