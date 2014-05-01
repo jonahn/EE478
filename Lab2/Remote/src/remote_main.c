@@ -30,8 +30,8 @@ unsigned char recievedData;
 extern void setupInterrupts();
 extern void storeData();
 extern void getData();
-extern char voltage;
-float checkVolt;
+extern unsigned char voltage;
+unsigned char checkVolt;
 
 void main(void)
 {
