@@ -83,7 +83,7 @@ void sendErrorMessageMin()
 
 void correctedIncrement()
 {
-    if(correctedVal < 200) //255?
+    if(correctedVal < 255) //255?
     {
         correctedVal = correctedVal + 1;
     }
@@ -105,7 +105,7 @@ void correctedDecrement()
 
 void increment()
 {
-    if(numOut > 200)
+    if(numOut >= 200)
     {
         sendErrorMessageMax();
     }

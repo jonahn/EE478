@@ -16,8 +16,14 @@
 
 #include "uart_interrupts.h"
 #include "local_setup.h"
+#include "warnings.h"
 
-extern unsigned char temp, commandBuffer, charReceived;
+#define INCREMENT_COMMAND   0x01
+#define DECREMENT_COMMAND   0x02
+#define SP_COMMAND          0x03
+
+
+extern unsigned char temp, commandBuffer, charReceived, screenUpdated;
 
 unsigned char bufferIndex, mode, PORTCtemp, SRAMDataBus, address;    //mode: 0 = null, 1 = Setpoint
 
@@ -27,6 +33,7 @@ unsigned char correctedVal = 100;   //calculated value based on remote channel f
 unsigned char actualVal;            //actual value sent back from remote channel
 
 unsigned char minCycle = 0;             //counter for cycles through while loop. used for error msg timing
+unsigned char majorCycle = 0;
 
 unsigned char uartBuffer[3];        //buff containing char inputs from usart
 unsigned char decBuffer[3];         //buff containing conversions to decimal
@@ -35,9 +42,7 @@ unsigned char decBuffer[3];         //buff containing conversions to decimal
 char str[] = "Welcome to Remote Surgery System!\r\nEnter commands: Setpoint(s), Increment(i), Decrement(d)\r\n\0";
 char errMax[] = "Number entered exceeds 100.\r\n\0";
 char errMin[] = "Number entered below     0.\r\n\0";
-//char errVolt1[] = "Voltage +/- 1.0% out of range. \r\n\0";
-//char errVolt2[] = "Voltage +/- 2.0% out of range. \r\n\0";
-//char errVolt5[] = "Voltage +/- 5.0% out of range. \r\n\0";
+
 unsigned char strLength;
 int i;
 
@@ -62,7 +67,9 @@ extern void sendErrorMessageMin();
 
 void sendErrorMessageMax();
 extern void sendErrorMessageMax();
-
+extern void displayWarnings();
+char clearScreen = 0x1; //always clear the screen except for when waiting for user input
+char lastCommand = 0x0;
 
 void UARTSend(char *str, unsigned long strLength);
 
@@ -76,24 +83,23 @@ void main(void)
 
     bufferIndex = 0;
     mode = 0;
-    
-    //write initial msg to user on USART        
-    strLength = 94;
-    i = 0;
-    while(strLength > 0)
-    {
-        strLength--;
-        // Write the next character to the UART, then increment
-        delay(100);
-        Write1USART(str[i]);
-        delay(100);
-        i++;
-    }
-    delay(100);
 
+    Write1USART(0x0c);   // clear hyperterminal
+    delay(10);
+    puts1USART(str);
+    
     while(1)
     {
         minCycle++;             //increment cycle
+        if(minCycle % 10 == 0)
+        {
+            majorCycle++;
+            if(majorCycle % 50 == 0)
+            {
+                screenUpdated = NOT_UPDATED;
+            }
+        }
+
         // Poll the slave if not receiving input from user
         if( 1 != charReceived )
         {
@@ -110,19 +116,16 @@ void main(void)
             //Done getting datas
 
             //Compute error value
-            if( (actualVal + 1) > (numOut) )
+            if( (actualVal) > (numOut) )
             {
                 correctedDecrement();
-            } else if((actualVal + 1) < (numOut) )
+            } else if((actualVal) < (numOut) )
             {
                // correctedDecrement();
                 correctedIncrement();
             }
 
-            if( minCycle%100 == 0)                  //Send any error Msgs
-            {
-
-            }
+            displayWarnings();
         }
         else
         {
@@ -134,6 +137,7 @@ void main(void)
             {
                 mode = 1;       //indicating setpoint
                 bufferIndex = 0;
+                clearScreen = DONT_CLEAR_SCREEN;
 
                 //clear buffer
                 for( i = 0; i <= 2; i++ )
@@ -148,7 +152,10 @@ void main(void)
             {
                 //if user pressed enter (in S mode), read buffer, reset index
                 if ( '\r' == commandBuffer )
-                {   
+                {
+                    clearScreen = CLEAR_SCREEN;
+                    lastCommand = SP_COMMAND;
+                    screenUpdated = NOT_UPDATED;
                     //read buffer and convert to decimal
                     for(i = 0; i <= bufferIndex; i++)
                     {
@@ -177,11 +184,12 @@ void main(void)
                     Write1USART('\r');   //send  new line
                     delay(100);
                     Write1USART('\n');   //send  new line
-                    delay(1000);
+                    delay(100);
                 }
                 //number entered while in s mode
                 else
                 {
+                    clearScreen = DONT_CLEAR_SCREEN;
                     uartBuffer[bufferIndex] = commandBuffer;
                     bufferIndex++;
                 }
@@ -190,11 +198,17 @@ void main(void)
             //Increment buffer
             else if ( 'i' == commandBuffer )
             {
+                clearScreen = CLEAR_SCREEN;
+                lastCommand = INCREMENT_COMMAND;
+                screenUpdated = NOT_UPDATED;
                 increment();
             }
             //Decrement buffer
             else if (commandBuffer == 'd')
             {
+                clearScreen = CLEAR_SCREEN;
+                lastCommand = DECREMENT_COMMAND;
+                screenUpdated = NOT_UPDATED;
                 decrement();
             }
             //at this point, data to send is 1 byte from 0 - 200
