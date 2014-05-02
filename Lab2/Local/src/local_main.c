@@ -40,7 +40,7 @@ unsigned char decBuffer[3];         //buff containing conversions to decimal
 
 #pragma udata userdata
 char str[] = "Welcome to Remote Surgery System!\r\nEnter commands: Setpoint(s), Increment(i), Decrement(d)\r\n\0";
-char errMax[] = "Number entered exceeds 100.\r\n\0";
+char errMax[] = "Number entered exceeds 100 or invalid input.\r\n\0";
 char errMin[] = "Number entered below     0.\r\n\0";
 
 unsigned char strLength;
