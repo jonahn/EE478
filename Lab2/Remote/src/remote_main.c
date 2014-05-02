@@ -69,7 +69,7 @@ void main(void)
     //channel 17 for sampling
     //ADC interrupt on
     //reference voltage from VDD & VSS
-    OpenADC(ADC_FOSC_64 & ADC_RIGHT_JUST & ADC_12_TAD,
+    OpenADC(ADC_FOSC_64 & ADC_LEFT_JUST & ADC_12_TAD,
             ADC_CH17 & ADC_INT_ON & ADC_REF_VDD_VSS, 0);
 
     //ADCON2bits.ACQT = 0b100;

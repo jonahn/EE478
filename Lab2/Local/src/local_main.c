@@ -110,14 +110,13 @@ void main(void)
             //Done getting datas
 
             //Compute error value
-            if( (actualVal+1) > (correctedVal) )
-            {
-                correctedIncrement();
-            }
-
-            if((actualVal+1) < (correctedVal) )
+            if( (actualVal + 1) > (numOut) )
             {
                 correctedDecrement();
+            } else if((actualVal + 1) < (numOut) )
+            {
+               // correctedDecrement();
+                correctedIncrement();
             }
 
             if( minCycle%100 == 0)                  //Send any error Msgs
