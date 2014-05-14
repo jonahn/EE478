@@ -1,0 +1,36 @@
+#!/bin/sh /etc/rc.common
+
+START=95
+
+LIST_SEP="
+"
+BRIDG_COMMAND=/usr/bin/bridgd
+
+
+section_enabled() {
+	config_get_bool enabled "$1" 'enabled' 0
+	[ $enabled -gt 0 ]
+}
+
+start_instance() {
+	local s="$1"
+
+	section_enabled "$s" || return 1
+
+	eval service_start "'$BRIDG_COMMAND'"
+}
+
+stop_instance() {
+	local s="$1"
+	service_stop "$BRIDG_COMMAND"
+}
+
+start() {
+	config_load 'bridgd'
+	config_foreach start_instance 'bridgd'
+}
+
+stop() {
+	config_load 'bridgd'
+	config_foreach stop_instance 'bridgd'
+}
