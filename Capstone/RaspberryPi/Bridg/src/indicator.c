@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <wiringPi.h>
 
 #include "settings.h"
 
@@ -12,41 +13,35 @@ char onLight[] = "255";
 char offLight[] = "0";
 extern pthread_t iThread;
 
-unsigned int timeInMS = 10;
+unsigned int timeInMS = 500;
 
 void turnOnLight()
 {
-	fseek(wifiGPIOLED, 0, SEEK_SET);
-	fputs(onLight, wifiGPIOLED);
+	digitalWrite (0,  HIGH) ;
 }
 
 void turnOffLight()
 {
-	fseek(wifiGPIOLED, 0, SEEK_SET);
-	fputs(offLight, wifiGPIOLED);
+	digitalWrite (0,  LOW) ;
 }
 
 void* indicatorThread(void* microSeconds)
 {
-	wifiGPIOLED = fopen(INDICATOR_FILE,"w");
-
 	while(1)
 	{
 		if( keepRunning == 1 )
 		{
-			printf("Turning on light\n");
 			turnOnLight();
-			usleep(*(unsigned int*)(microSeconds));
+			delay(500);
 			turnOffLight();
-			usleep(*(unsigned int*)(microSeconds));
+			delay(500);
 		}
 	}
-
-	fclose(wifiGPIOLED);
 }
 
 void runIndicatorThread()
 {
-	printf("Running thread\n");
+	wiringPiSetup();
+  	pinMode(0, OUTPUT);
 	int iThreadHandle = pthread_create(&iThread, NULL, indicatorThread, (void*)&timeInMS);
 }
