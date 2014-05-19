@@ -1,5 +1,5 @@
 # default target
-bridgd: src/main.c build/indicator.o
+bridgd: src/main.c indicator.o
 	gcc -Wall -g -o bridgd src/main.c build/indicator.o
 
 # individual source files
