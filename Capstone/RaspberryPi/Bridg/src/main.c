@@ -48,7 +48,7 @@ int main(int argc, char **argv)
 		//Create a session and set the process group id.
 		setsid();
 
-		runIndicatorThread();
+		//runIndicatorThread();
 
 		sockfd = socket(AF_INET, SOCK_STREAM, 0);
 		if (sockfd < 0) 
