@@ -1,5 +1,5 @@
 # default target
-bridgd: main.cpp Point.o
+bridgd: src/main.c build/indicator.o
 	gcc -Wall -g -o bridgd src/main.c build/indicator.o
 
 # individual source files
