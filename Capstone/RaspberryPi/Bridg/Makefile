@@ -1,10 +1,11 @@
 # default target
 bridgd: src/main.c indicator.o
-	gcc -Wall -g -o bridgd src/main.c build/indicator.o
+	gcc -Wall -pthread -g -o bridgd src/main.c build/indicator.o
 
 # individual source files
-indicator.o: indicator.h indicator.c
-	gcc -Wall -g -c -o build/indicator.o indicator.c
+indicator.o: src/indicator.h src/indicator.c
+	mkdir -p build
+	gcc -Wall -pthread -g -c -o build/indicator.o src/indicator.c
 
 
 clean:
