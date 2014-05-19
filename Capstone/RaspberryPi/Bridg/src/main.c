@@ -80,8 +80,6 @@ int main(int argc, char **argv)
 
 		close(newsockfd);
 		close(sockfd);
-
-        pthread_join(iThread, NULL);
         
 		return 0; 
 
