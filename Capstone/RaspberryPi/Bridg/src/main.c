@@ -1,3 +1,4 @@
+/*
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -89,4 +90,82 @@ int main(int argc, char **argv)
 		//parent
 		return 0;
 	}
+}*/
+
+Just in case you, or anyone else is interested, here’s my completed program :
+
+/*
+ * SPItest3.c:
+ * LED manipulation using wiringPi SPI functions
+ * to control 6 x RGB LEDs via WS2803 chip
+ * Ramps R, G and B for each LED until all are on full.
+ * The program does 18 x 256 = 4609 writes to the chip buffer,
+ * latching the output each time, and still manages it in a couple of seconds!
+ 
+ */
+
+#include <wiringPi.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <errno.h>
+#include <string.h>
+
+int main (void)
+{
+    int channel=0 ;
+    uint8_t i=0 ;
+    uint16_t j=0 ;
+    uint8_t k=0 ;
+    uint8_t bufsize=18 ;
+    uint16_t delaytime = 550 ;
+    uint8_t outbuffer [18] ;
+    uint8_t firstbuffer [] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} ;
+    int cnt ;
+    
+    printf (“Raspberry Pi wiringPi SPI LED test program\n”) ;
+    
+    // set output SPI channel to 0 and speed to 8MHz
+    
+    if (wiringPiSPISetup (0,8000000) < 0)
+    {
+        fprintf (stderr, "Unable to open SPI device 0: %s\n", strerror (errno)) ;
+        exit (1) ;
+    }
+    printf ("Starting\n") ;
+    
+    wiringPiSetupSys() ;
+    
+    // for each location in the buffer
+    
+    for (i==0;i!=bufsize;i++)
+    {
+        // go through each value in turn and load buffer location with LED level
+        
+        for (j==0;j!=256;j++)
+        {
+            firstbuffer[i] = j ;
+            
+            // load output buffer and send it out
+            
+            for (k==0;k!=bufsize;k++)
+            {
+                outbuffer [k] = firstbuffer [k] ;
+            }
+            
+            k=0 ;
+            
+            wiringPiSPIDataRW (channel, outbuffer, bufsize) ;
+            
+            delayMicroseconds (delaytime) ;
+            
+        }
+        
+        j=0 ;
+        
+    }
+    
+    printf ("Done\n") ;
+    
+    return 0 ;
 }
