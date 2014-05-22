@@ -1,4 +1,4 @@
-/*
+
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,7 +13,7 @@
 #include "settings.h"
 
 pthread_t iThread;
-
+/*
 void error(const char *msg)
 {
     perror(msg);
@@ -108,6 +108,8 @@ int main(int argc, char **argv)
 #include <stdint.h>
 #include <errno.h>
 #include <string.h>
+
+//pthread_t iThread;
 
 int main (void)
 {
