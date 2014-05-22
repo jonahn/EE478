@@ -117,11 +117,11 @@ int main (void)
     uint8_t i=0 ;
     uint16_t j=0 ;
     uint8_t k=0 ;
-    uint8_t bufsize=18 ;
+    uint8_t bufsize=5;
     uint16_t delaytime = 550 ;
-    uint8_t outbuffer [18] ;
-    uint8_t firstbuffer [] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} ;
-    int cnt ;
+    uint8_t outbuffer [5] ;
+    uint8_t firstbuffer [] = {170,2,3,4,5} ;
+    int cnt;
     
     printf("Raspberry Pi wiringPi SPI LED test program\n");
     
@@ -138,34 +138,25 @@ int main (void)
     
     // for each location in the buffer
     
-    for (i==0;i!=bufsize;i++)
-    {
         // go through each value in turn and load buffer location with LED level
         
-        for (j==0;j!=256;j++)
-        {
-            firstbuffer[i] = j ;
             
             // load output buffer and send it out
             
-            for (k==0;k!=bufsize;k++)
+            for (k=0;k!=bufsize;k++)
             {
                 outbuffer [k] = firstbuffer [k] ;
             }
             
             k=0 ;
             
-            wiringPiSPIDataRW (channel, outbuffer, bufsize) ;
+            wiringPiSPIDataRW (channel, outbuffer, 1) ;
             
             delayMicroseconds (delaytime) ;
             
-        }
-        
-        j=0 ;
-        
-    }
     
     printf ("Done\n") ;
+	printf ("%i", *outbuffer);
     
     return 0 ;
 }
