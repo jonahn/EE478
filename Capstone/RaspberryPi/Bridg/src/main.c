@@ -92,8 +92,6 @@ int main(int argc, char **argv)
 	}
 }*/
 
-Just in case you, or anyone else is interested, here’s my completed program :
-
 /*
  * SPItest3.c:
  * LED manipulation using wiringPi SPI functions
