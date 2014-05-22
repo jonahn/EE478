@@ -121,7 +121,7 @@ int main (void)
     uint8_t firstbuffer [] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} ;
     int cnt ;
     
-    printf (“Raspberry Pi wiringPi SPI LED test program\n”) ;
+    printf("Raspberry Pi wiringPi SPI LED test program\n");
     
     // set output SPI channel to 0 and speed to 8MHz
     
