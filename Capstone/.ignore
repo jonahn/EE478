@@ -1,0 +1,7 @@
+*/Mac/
+*.err
+!*.c
+!*.h
+!*.cpp
+!*.txt
+.DS_Store
