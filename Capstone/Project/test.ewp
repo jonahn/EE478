@@ -2011,6 +2011,9 @@
     <file>
       <name>$PROJ_DIR$\setupSDIO.c</name>
     </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\Perforce\478_Capstone\Project\ST_SPI.c</name>
+    </file>
   </group>
   <file>
     <name>$PROJ_DIR$\..\Libraries\STM32F4xx_StdPeriph_Driver\src\misc.c</name>
