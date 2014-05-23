@@ -10,7 +10,7 @@
 #include <pthread.h>
 
 #include "indicator.h"
-#include "../../Shared/settings.h"
+#include "../../../Shared/settings.h"
 
 #define TRANSFER_BUFFER_SIZE 256
 

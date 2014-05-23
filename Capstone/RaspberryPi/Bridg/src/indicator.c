@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <wiringPi.h>
 
-#include "../../Shared/settings.h"
+#include "../../../Shared/settings.h"
 
 char keepRunning = 1;
 FILE * wifiGPIOLED;

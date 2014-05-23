@@ -21,9 +21,9 @@
 #endif
 
 
-static float TIME_SCALE __unused = SCALE;
-static int SAMPLE_LENGTH __unused = 2048*SCALE;
-static float SAMPLE_RATE __unused = 44100*SCALE;
-static float TIME_INTERVAL __unused = 8192.0f / SAMPLE_RATE;
+static float TIME_SCALE  = SCALE;
+static int SAMPLE_LENGTH  = 2048*SCALE;
+static float SAMPLE_RATE  = 44100*SCALE;
+static float TIME_INTERVAL  = 8192.0f / SAMPLE_RATE;
 
 #endif
