@@ -94,7 +94,7 @@ int main(int argc, char **argv)
 			n = read(newsockfd, buffer, bufferSize );
 			if (n < 0) error("ERROR reading from socket");
 
-            printf("Sending data over SPI with length: %d", bufferSize);
+            printf("Sending data over SPI with length: %d \n", bufferSize);
             
 			wiringPiSPIDataRW (channel, buffer, bufferSize) ;
 		}
