@@ -21,9 +21,9 @@
 #endif
 
 
-static float TIME_SCALE  = SCALE;
-static int SAMPLE_LENGTH  = 2048*SCALE;
-static float SAMPLE_RATE  = 44100*SCALE;
-static float TIME_INTERVAL  = 8192.0f / SAMPLE_RATE;
+#define TIME_SCALE  SCALE
+#define SAMPLE_LENGTH 2048*SCALE
+#define SAMPLE_RATE 44100*SCALE
+#define TIME_INTERVAL 8192.0f / SAMPLE_RATE
 
 #endif
