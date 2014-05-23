@@ -1,3 +1,4 @@
+
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,6 +15,7 @@
 #define BUFFER_SIZE 256
 
 pthread_t iThread;
+/*
 int channel = 0;
 
 void error(const char *msg)
@@ -97,7 +99,7 @@ int main(int argc, char **argv)
 		return 0;
 	}
 }
-
+*/
 /*
  * SPItest3.c:
  * LED manipulation using wiringPi SPI functions
@@ -114,7 +116,6 @@ int main(int argc, char **argv)
 #include <stdint.h>
 #include <errno.h>
 #include <string.h>
-
 int main (void)
 {
     int channel=0 ;
@@ -156,11 +157,15 @@ int main (void)
             
             wiringPiSPIDataRW (channel, outbuffer, 1) ;
             
+	    wiringPiSPIDataRW (1, outbuffer, 3);
+
             delayMicroseconds (delaytime) ;
             
     
     printf ("Done\n") ;
-	printf ("%i", *outbuffer);
+
+	for(k =  0; k < bufsize; k++)
+		printf ("%i \n", outbuffer[k]);
     
     return 0 ;
 }
