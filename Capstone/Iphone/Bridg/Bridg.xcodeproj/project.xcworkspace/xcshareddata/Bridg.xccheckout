@@ -12,6 +12,8 @@
 	<dict>
 		<key>02AF5E09-FF68-445F-A18A-010985E78002</key>
 		<string>https://github.com/ahmedjafri/EE478.git</string>
+		<key>CB649E7F-740D-48CB-A823-F0BE12550A8D</key>
+		<string>https://github.com/wuqiong/mp3lame-for-iOS.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Capstone/Iphone/Bridg/Bridg.xcodeproj/project.xcworkspace</string>
@@ -19,6 +21,8 @@
 	<dict>
 		<key>02AF5E09-FF68-445F-A18A-010985E78002</key>
 		<string>../../../../..</string>
+		<key>CB649E7F-740D-48CB-A823-F0BE12550A8D</key>
+		<string>../../mp3lame-for-iOS</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/ahmedjafri/EE478.git</string>
@@ -35,6 +39,14 @@
 			<string>02AF5E09-FF68-445F-A18A-010985E78002</string>
 			<key>IDESourceControlWCCName</key>
 			<string>EE478</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>CB649E7F-740D-48CB-A823-F0BE12550A8D</string>
+			<key>IDESourceControlWCCName</key>
+			<string>mp3lame-for-iOS</string>
 		</dict>
 	</array>
 </dict>

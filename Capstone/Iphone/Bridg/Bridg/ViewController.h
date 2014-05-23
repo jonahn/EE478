@@ -11,15 +11,12 @@
 
 @interface ViewController : UIViewController <MPMediaPickerControllerDelegate>
 {
-    IBOutlet UITextField    *textField;
-    IBOutlet UIButton       *sendDataButton;
     IBOutlet UIButton       *pickSongButton;
+    IBOutlet UISwitch       *mp3EncodeSwitch;
 }
 
 @property (nonatomic, retain) IBOutlet UIProgressView *conversionProgress;
 
--(IBAction)sendData:(id)sender;
--(void)sendDataToServer;
 -(IBAction)pickSong:(id)sender;
 
 @end

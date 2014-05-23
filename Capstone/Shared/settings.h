@@ -10,6 +10,7 @@
 #define Bridg_settings_h
 
 #define SCALE 1
+#define BUFFER_SIZE 32768
 
 static float TIME_SCALE __unused = SCALE;
 static int SAMPLE_LENGTH __unused = 2048*SCALE;
