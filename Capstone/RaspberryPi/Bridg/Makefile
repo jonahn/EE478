@@ -5,7 +5,7 @@ bridgd: src/main.c indicator.o
 # individual source files
 indicator.o: src/indicator.h src/indicator.c
 	mkdir -p build
-	gcc -Wall -pthread -g -c -o build/indicator.o src/indicator.c -lwiringPi
+	gcc -Wall -pthread -g -c -o build/indicator.o src/indicator.c ../../Shared/settings.h -lwiringPi
 
 
 clean:
