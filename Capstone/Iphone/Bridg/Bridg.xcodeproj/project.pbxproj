@@ -29,7 +29,8 @@
 		C8CB658D192C2D88004A465C /* MediaToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8CB658C192C2D88004A465C /* MediaToolbox.framework */; };
 		C8CB658F192C2DAC004A465C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8CB658E192C2DAC004A465C /* AVFoundation.framework */; };
 		C8CB6593192C373D004A465C /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = C8CB6592192C373D004A465C /* Utils.m */; };
-		C8CB65A5192D58B5004A465C /* libmp3lame.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C8CB65A4192D58B5004A465C /* libmp3lame.a */; };
+		C8CB65AC192F2B61004A465C /* lame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8CB65AB192F2B61004A465C /* lame.framework */; };
+		C8CB65B0192FC8AD004A465C /* SimplePing.m in Sources */ = {isa = PBXBuildFile; fileRef = C8CB65AF192FC8AD004A465C /* SimplePing.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,12 +71,13 @@
 		C8CB658A192C2D7C004A465C /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		C8CB658C192C2D88004A465C /* MediaToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaToolbox.framework; path = System/Library/Frameworks/MediaToolbox.framework; sourceTree = SDKROOT; };
 		C8CB658E192C2DAC004A465C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		C8CB6590192C33C7004A465C /* settings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = settings.h; sourceTree = "<group>"; };
 		C8CB6591192C373D004A465C /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		C8CB6592192C373D004A465C /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
-		C8CB65A2192D57A8004A465C /* libmp3lame.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmp3lame.a; path = "../../../../../../../../Downloads/lame-3.99.5/build/libmp3lame.a"; sourceTree = "<group>"; };
-		C8CB65A4192D58B5004A465C /* libmp3lame.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmp3lame.a; path = "lame-3.99.5/build/libmp3lame.a"; sourceTree = "<group>"; };
 		C8CB65A6192D592E004A465C /* lame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lame.h; path = "../lame-3.99.5/include/lame.h"; sourceTree = "<group>"; };
+		C8CB65AB192F2B61004A465C /* lame.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = lame.framework; path = "mp3lame-for-iOS/lame.framework"; sourceTree = "<group>"; };
+		C8CB65AD192F329B004A465C /* settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = settings.h; path = ../../../Shared/settings.h; sourceTree = "<group>"; };
+		C8CB65AE192FC8AD004A465C /* SimplePing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimplePing.h; sourceTree = "<group>"; };
+		C8CB65AF192FC8AD004A465C /* SimplePing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimplePing.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,7 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C8CB65A5192D58B5004A465C /* libmp3lame.a in Frameworks */,
+				C8CB65AC192F2B61004A465C /* lame.framework in Frameworks */,
 				C8CB658F192C2DAC004A465C /* AVFoundation.framework in Frameworks */,
 				C8CB658D192C2D88004A465C /* MediaToolbox.framework in Frameworks */,
 				C8CB658B192C2D7C004A465C /* MediaPlayer.framework in Frameworks */,
@@ -132,8 +134,7 @@
 		C89F7AE51919AF7C00ADBF87 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C8CB65A4192D58B5004A465C /* libmp3lame.a */,
-				C8CB65A2192D57A8004A465C /* libmp3lame.a */,
+				C8CB65AB192F2B61004A465C /* lame.framework */,
 				C8CB658E192C2DAC004A465C /* AVFoundation.framework */,
 				C8CB658C192C2D88004A465C /* MediaToolbox.framework */,
 				C8CB658A192C2D7C004A465C /* MediaPlayer.framework */,
@@ -153,6 +154,8 @@
 		C89F7AEC1919AF7C00ADBF87 /* Bridg */ = {
 			isa = PBXGroup;
 			children = (
+				C8CB65B1192FC8D4004A465C /* utils */,
+				C8CB65AD192F329B004A465C /* settings.h */,
 				C8CB65A6192D592E004A465C /* lame.h */,
 				C89F7AF51919AF7C00ADBF87 /* AppDelegate.h */,
 				C89F7AF61919AF7C00ADBF87 /* AppDelegate.m */,
@@ -161,7 +164,6 @@
 				C89F7AFC1919AF7C00ADBF87 /* ViewController.mm */,
 				C89F7AFE1919AF7C00ADBF87 /* Images.xcassets */,
 				C89F7AED1919AF7C00ADBF87 /* Supporting Files */,
-				C8CB6590192C33C7004A465C /* settings.h */,
 				C8CB6591192C373D004A465C /* Utils.h */,
 				C8CB6592192C373D004A465C /* Utils.m */,
 			);
@@ -195,6 +197,15 @@
 				C89F7B0E1919AF7C00ADBF87 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C8CB65B1192FC8D4004A465C /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				C8CB65AE192FC8AD004A465C /* SimplePing.h */,
+				C8CB65AF192FC8AD004A465C /* SimplePing.m */,
+			);
+			name = utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -297,6 +308,7 @@
 				C89F7AFD1919AF7C00ADBF87 /* ViewController.mm in Sources */,
 				C89F7AF71919AF7C00ADBF87 /* AppDelegate.m in Sources */,
 				C89F7AF31919AF7C00ADBF87 /* main.m in Sources */,
+				C8CB65B0192FC8AD004A465C /* SimplePing.m in Sources */,
 				C8CB6593192C373D004A465C /* Utils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -423,6 +435,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ahmed Jafri (DY4SCYVY56)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/mp3lame-for-iOS",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Bridg/Bridg-Prefix.pch";
 				INFOPLIST_FILE = "Bridg/Bridg-Info.plist";
@@ -444,6 +460,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ahmed Jafri (DY4SCYVY56)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/mp3lame-for-iOS",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Bridg/Bridg-Prefix.pch";
 				INFOPLIST_FILE = "Bridg/Bridg-Info.plist";

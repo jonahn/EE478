@@ -16,6 +16,7 @@
 #include "settings.h"
 #include "Utils.h"
 
+#include "lame.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -34,7 +35,9 @@
 {
     float trackLengthinSeconds;
     FILE *fp;
-    float *songWave;
+    short *songWaveL, *songWaveR;
+    __block long totalSize;
+    unsigned char * mp3Buffer;
 }
 
 @end
@@ -51,7 +54,10 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    songWave = (float *)malloc(SAMPLE_LENGTH * 3 * sizeof(float));
+    songWaveL = (short *)malloc(BUFFER_SIZE * sizeof(short) );
+    songWaveR = (short *)malloc(BUFFER_SIZE * sizeof(short) );
+    
+    mp3Buffer = (unsigned char*)malloc(BUFFER_SIZE);
     
     pickerController =	[[MPMediaPickerController alloc] initWithMediaTypes: MPMediaTypeMusic];
     pickerController.prompt = @"Choose song to export";
@@ -76,11 +82,6 @@ void error(const char *msg)
 -(IBAction)pickSong:(id)sender
 {
     [self presentViewController:pickerController animated:YES completion:nil];
-}
-
--(IBAction)sendData:(id)sender
-{
-    [self sendDataToServer];
 }
 
 - (void)mediaPicker: (MPMediaPickerController *)mediaPicker
@@ -121,7 +122,7 @@ void error(const char *msg)
 }
 
 -(IBAction)convertTapped:(MPMediaItem*)songItem {
-    [self deleteFile];
+    [self deleteFile:@"song.mp3"];
     
     if(![songItem valueForProperty:MPMediaItemPropertyAssetURL])
         return;
@@ -154,8 +155,9 @@ void error(const char *msg)
     [reader addOutput:audioMixOutput];
     
     
-    __block long totalSize = 0;
+    totalSize = 0;
     
+    // -- BACKGROUND THREAD --//
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH,
                                              (unsigned long)NULL), ^(void) {
         
@@ -165,6 +167,13 @@ void error(const char *msg)
             NSLog( @"Cannot start reading");
         CMSampleBufferRef sample = NULL;
         CMBlockBufferRef buffer = NULL;
+        
+        lame_t lame = lame_init();
+        lame_set_in_samplerate(lame, SAMPLE_RATE);
+        lame_set_out_samplerate(lame, SAMPLE_RATE);
+        lame_set_num_channels(lame, 2);
+        lame_set_brate(lame, 96);
+        lame_init_params(lame);
         
         while (true)
         {
@@ -184,17 +193,34 @@ void error(const char *msg)
             CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(sample, NULL, &audioBufferList, sizeof(audioBufferList), NULL, NULL,
                                                                     kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked | kAudioFormatFlagIsFloat | kAudioFormatFlagIsNonInterleaved, &buffer);
             
-            for (int bufferCount=0; bufferCount < audioBufferList.mNumberBuffers; bufferCount++) {
-                songWave = (float*)audioBufferList.mBuffers[bufferCount].mData;
-                int size = audioBufferList.mBuffers[bufferCount].mDataByteSize/sizeof(float);
-                for(int i = 0; i < size; i+=2)
-                    songWave[i/2] = (songWave[i] + songWave[i+1])/2; //combine left and right channels with simple average
-                [self WriteSong:size/2];
-                totalSize += size/2;
+            for (int bufferCount=0; bufferCount < audioBufferList.mNumberBuffers; bufferCount++ ) {
+                float * tempData = (float*)audioBufferList.mBuffers[bufferCount].mData; //left and right channels are interleaved
                 
+                // MP3 ENCODING - THIS IS SLOW!!
+                if(mp3EncodeSwitch.on)
+                {
+                    int size = audioBufferList.mBuffers[bufferCount].mDataByteSize/sizeof(float);
+                    for(int i = 0; i < size; i+= 2)
+                    {
+                        songWaveL[i/2] = (short)(tempData[i] * 32767); // SCALE THESE TO MAX of short
+                        songWaveR[i/2] = (short)(tempData[i + 1] * 32767);
+                    }
+                    
+                    totalSize = size;
+                    
+                    int encodedBytes = lame_encode_buffer(lame, songWaveL, songWaveR, size/2, mp3Buffer, BUFFER_SIZE);
+                    
+                    [self sendDataToServer:mp3Buffer withLength:encodedBytes];
+                }
+                else
+                {
+                    [self sendDataToServer:tempData withLength:audioBufferList.mBuffers[bufferCount].mDataByteSize]; // stereo interleaved data
+                }
+
+                // SHOULD WE BE STORING ENCODED DATA BEFORE TRANSMITTING??
+                //[self WriteData:@"song.mp3" data:mp3Buffer length:encodedBytes];
             }
             
-            [self sendDataToServer];
             
             CFRelease( buffer );
             CFRelease( sample );
@@ -210,25 +236,24 @@ void error(const char *msg)
                                                        delegate:nil cancelButtonTitle:@"Done" otherButtonTitles:nil];
         
         [alert show];
-        //[self analyze:nil];
     });
     
 }
 
--(void)WriteSong:(int)length
+-(void)WriteData:(NSString*)inFilename data:(void*)inData length:(int)inLength
 {
-    fp = fopen([[Utils getFilePathWithFileName:@"song.bin"] fileSystemRepresentation],"a");
+    fp = fopen([[Utils getFilePathWithFileName:inFilename] fileSystemRepresentation],"a");
     if(fp == NULL)
         printf("error creating file");
     else
-        fwrite(songWave, sizeof(float), length, fp);
+        fwrite(inData, sizeof(unsigned char), inLength, fp);
     fclose(fp);
 }
 
--(BOOL)deleteFile
+-(BOOL)deleteFile:(NSString*)inFilename
 {
     NSError *error;
-    return [[NSFileManager defaultManager] removeItemAtPath:[Utils getFilePathWithFileName:@"song.bin"] error:&error];
+    return [[NSFileManager defaultManager] removeItemAtPath:[Utils getFilePathWithFileName:inFilename] error:&error];
 }
 
 -(void)updateProgress:(NSNumber*)seconds
@@ -241,7 +266,7 @@ void error(const char *msg)
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
--(void)sendDataToServer
+-(void)sendDataToServer:(void*)inData withLength:(unsigned int)inLength
 {
     int sockfd, portno, n;
     struct sockaddr_in serv_addr;
@@ -278,18 +303,16 @@ void error(const char *msg)
         return;
     }
     
-    n = write(sockfd,songWave, SAMPLE_LENGTH * 3);
+    n = write(sockfd,inData, inLength);
     if (n < 0)
     {
         error("ERROR writing to socket");
         return;
     }
     
-    bzero(songWave, SAMPLE_LENGTH * 3);
-    
     char returnBuffer[256];
     
-    n = read(sockfd,returnBuffer,255);
+    n = read(sockfd,returnBuffer, 1);
     
     if (n < 0)
     {

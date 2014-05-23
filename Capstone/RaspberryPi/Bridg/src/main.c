@@ -1,4 +1,3 @@
-
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,8 +11,11 @@
 #include "indicator.h"
 #include "settings.h"
 
+#define BUFFER_SIZE 256
+
 pthread_t iThread;
-/*
+int channel = 0;
+
 void error(const char *msg)
 {
     perror(msg);
@@ -23,9 +25,11 @@ int main(int argc, char **argv)
 {
 	int sockfd, newsockfd, portno;
 	socklen_t clilen;
-	char buffer[256];
+	float buffer[256];
 	struct sockaddr_in serv_addr, cli_addr;
 	int n;
+
+    wiringPiSetupSys();
 
 	if (argc < 2) {
 	 fprintf(stderr,"ERROR, no port provided\n");
@@ -71,12 +75,14 @@ int main(int argc, char **argv)
 			if (newsockfd < 0) 
 			  error("ERROR on accept");
 
-			bzero(buffer,256);
-			n = read(newsockfd,buffer, 255);
+			bzero(buffer,BUFFER_SIZE);
+			n = read(newsockfd, buffer, BUFFER_SIZE * sizeof(float) );
 			if (n < 0) error("ERROR reading from socket");
 			printf("Here is the message: %s\n",buffer);
-			n = write(newsockfd,"I got your message",18);
+			n = write(newsockfd,"y",1);
 			if (n < 0) error("ERROR writing to socket");
+
+			wiringPiSPIDataRW (channel, buffer, bufsize) ;
 		}
 
 		close(newsockfd);
@@ -90,7 +96,7 @@ int main(int argc, char **argv)
 		//parent
 		return 0;
 	}
-}*/
+}
 
 /*
  * SPItest3.c:
@@ -108,8 +114,6 @@ int main(int argc, char **argv)
 #include <stdint.h>
 #include <errno.h>
 #include <string.h>
-
-//pthread_t iThread;
 
 int main (void)
 {
