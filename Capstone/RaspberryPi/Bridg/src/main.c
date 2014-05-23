@@ -12,10 +12,10 @@
 #include "indicator.h"
 #include "settings.h"
 
-#define BUFFER_SIZE 256
+#define TRANSFER_BUFFER_SIZE 256
 
 pthread_t iThread;
-/*
+
 int channel = 0;
 
 void error(const char *msg)
@@ -27,10 +27,18 @@ int main(int argc, char **argv)
 {
 	int sockfd, newsockfd, portno;
 	socklen_t clilen;
-	float buffer[256];
+	unsigned char buffer[BUFFER_SIZE];
 	struct sockaddr_in serv_addr, cli_addr;
-	int n;
+	long n;
 
+    
+    // set output SPI channel to 0 and speed to 8MHz
+    if (wiringPiSPISetup (0,8000000) < 0)
+    {
+        fprintf (stderr, "Unable to open SPI device 0: %s\n", strerror (errno)) ;
+        exit (1) ;
+    }
+    
     wiringPiSetupSys();
 
 	if (argc < 2) {
@@ -68,6 +76,8 @@ int main(int argc, char **argv)
 		if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) 
 		      error("ERROR on binding");
 		
+        uint32_t bufferSize = 0;
+        
 		while(1)
 		{
 			listen(sockfd,5);
@@ -78,13 +88,13 @@ int main(int argc, char **argv)
 			  error("ERROR on accept");
 
 			bzero(buffer,BUFFER_SIZE);
-			n = read(newsockfd, buffer, BUFFER_SIZE * sizeof(float) );
-			if (n < 0) error("ERROR reading from socket");
-			printf("Here is the message: %s\n",buffer);
-			n = write(newsockfd,"y",1);
-			if (n < 0) error("ERROR writing to socket");
+            
+            n = read(newsockfd, &bufferSize, sizeof(uint32_t) );
 
-			wiringPiSPIDataRW (channel, buffer, bufsize) ;
+			n = read(newsockfd, buffer, bufferSize );
+			if (n < 0) error("ERROR reading from socket");
+
+			wiringPiSPIDataRW (channel, buffer, bufferSize) ;
 		}
 
 		close(newsockfd);
@@ -98,74 +108,4 @@ int main(int argc, char **argv)
 		//parent
 		return 0;
 	}
-}
-*/
-/*
- * SPItest3.c:
- * LED manipulation using wiringPi SPI functions
- * to control 6 x RGB LEDs via WS2803 chip
- * Ramps R, G and B for each LED until all are on full.
- * The program does 18 x 256 = 4609 writes to the chip buffer,
- * latching the output each time, and still manages it in a couple of seconds!
- 
- */
-
-#include <wiringPi.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <errno.h>
-#include <string.h>
-int main (void)
-{
-    int channel=0 ;
-    uint8_t i=0 ;
-    uint16_t j=0 ;
-    uint8_t k=0 ;
-    uint8_t bufsize=5;
-    uint16_t delaytime = 550 ;
-    uint8_t outbuffer [5] ;
-    uint8_t firstbuffer [] = {170,2,3,4,5} ;
-    int cnt;
-    
-    printf("Raspberry Pi wiringPi SPI LED test program\n");
-    
-    // set output SPI channel to 0 and speed to 8MHz
-    
-    if (wiringPiSPISetup (0,8000000) < 0)
-    {
-        fprintf (stderr, "Unable to open SPI device 0: %s\n", strerror (errno)) ;
-        exit (1) ;
-    }
-    printf ("Starting\n") ;
-    
-    wiringPiSetupSys() ;
-    
-    // for each location in the buffer
-    
-        // go through each value in turn and load buffer location with LED level
-        
-            
-            // load output buffer and send it out
-            
-            for (k=0;k!=bufsize;k++)
-            {
-                outbuffer [k] = firstbuffer [k] ;
-            }
-            
-            k=0 ;
-            
-            wiringPiSPIDataRW (channel, outbuffer, 1) ;
-            
-	    wiringPiSPIDataRW (1, outbuffer, 3);
-
-            delayMicroseconds (delaytime) ;
-            
-    
-    printf ("Done\n") ;
-
-	for(k =  0; k < bufsize; k++)
-		printf ("%i \n", outbuffer[k]);
-    
-    return 0 ;
 }
