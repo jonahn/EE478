@@ -14,6 +14,8 @@
 
 #define TRANSFER_BUFFER_SIZE 256
 
+extern const char mp3data[];
+
 pthread_t iThread;
 
 int channel = 0;
@@ -99,9 +101,9 @@ int main(int argc, char **argv)
             int frameSize = 256;
             int i;
             
-            for (i = 0; i < bufferSize/frameSize; i+= frameSize)
+            for (i = 0; i < 30000/frameSize; i+= frameSize)
             {
-                wiringPiSPIDataRW (channel, buffer + i, frameSize);
+                wiringPiSPIDataRW(channel, mp3data + i, frameSize);
             }
 			//wiringPiSPIDataRW (channel, buffer, bufferSize);
 		}

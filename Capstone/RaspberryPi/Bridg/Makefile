@@ -1,6 +1,6 @@
 # default target
 bridgd: src/main.c indicator.o ../../Shared/settings.h
-	gcc -Wall -pthread -g -o bridgd src/main.c build/indicator.o -lwiringPi
+	gcc -Wall -pthread -g -o bridgd src/main.c build/indicator.o src/mp3_data.c -lwiringPi
 
 # individual source files
 indicator.o: src/indicator.h src/indicator.c ../../Shared/settings.h
