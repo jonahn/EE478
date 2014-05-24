@@ -99,7 +99,7 @@ int main(int argc, char **argv)
             printf("Sending data over SPI with length: %d \n", bufferSize);
             
             int frameSize = 256;
-            int i, k;
+            int i;
             
             char mp3Data[30000];
             
