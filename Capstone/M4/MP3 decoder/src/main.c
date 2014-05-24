@@ -7,6 +7,14 @@
 #include "Audio.h"
 #include "mp3dec.h"
 
+#include "settings.h"
+#include <stm32f4xx_spi.h>
+
+
+// Some macros
+#define MP3_SIZE	30000//687348
+#define BUTTON		(GPIOA->IDR & GPIO_Pin_0)
+
 // Private variables
 volatile uint32_t time_var1, time_var2;
 MP3FrameInfo mp3FrameInfo;
@@ -18,23 +26,42 @@ void Delay(volatile uint32_t nCount);
 void init();
 
 // External variables
-extern const char mp3_data[];
+/*extern */ char mp3_data[MP3_SIZE];
+int i;
 
-// Some macros
-#define MP3_SIZE	687348
-#define BUTTON		(GPIOA->IDR & GPIO_Pin_0)
+//SPI comm with Pi Variables
+extern uint8_t mySPI_GetData(uint8_t);
+extern void mySPI_Init(void);
+unsigned char data;
 
 int main(void) {
 	init();
 	int volume = 0;
 
 	// Play mp3
+        
+        mySPI_Init();                           //Init SPI for comm with Pi
+        
+        for (i = 0; i < MP3_SIZE; i++)
+          {
+              //Receive and Write back to Rpi, ignore 0x29
+              mp3_data[i] = mySPI_GetData(0x29); 
+          } 
+        
 	hMP3Decoder = MP3InitDecoder();
 	InitializeAudio(Audio44100HzSettings);
 	SetAudioVolume(0xCF);
-	PlayAudioWithCallback(AudioCallback, 0);
-
+        
+        PlayAudioWithCallback(AudioCallback, 0);
 	for(;;) {
+//          for (i = 0; i < MP3_SIZE; i++)
+//          {
+//              //Receive and Write back to Rpi, ignore 0x29
+//              mp3_data[i] = mySPI_GetData(0x29); 
+//          } 
+          
+          //PlayAudioWithCallback(AudioCallback, 0);
+            
 		/*
 		 * Check if user button is pressed
 		 */
@@ -61,6 +88,19 @@ int main(void) {
 	return 0;
 }
 
+uint8_t mySPI_GetData(uint8_t adress){
+ 
+    while(!SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE));
+    data = SPI_I2S_ReceiveData(SPI1); //Receive and store to Data
+     
+   // while(!SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE)); 
+   // SPI_I2S_SendData(SPI1, 0x08);  // Write an indicator back
+ 
+return  data;
+}
+
+
+
 /*
  * Called by the audio driver when it is time to provide data to
  * one of the audio buffers (while the other buffer is sent to the
@@ -73,7 +113,7 @@ static void AudioCallback(void *context, int buffer) {
 
 	int offset, err;
 	int outOfData = 0;
-	static const char *read_ptr = mp3_data;
+	static char *read_ptr = mp3_data;
 	static int bytes_left = MP3_SIZE;
 
 	int16_t *samples;
@@ -98,8 +138,8 @@ static void AudioCallback(void *context, int buffer) {
 	}
 
 	read_ptr += offset;
-	err = MP3Decode(hMP3Decoder, (unsigned char**)&read_ptr, &bytes_left, samples, 0);      //had breakpoint
-
+	//err = MP3Decode(hMP3Decoder, (unsigned char**)&read_ptr, &bytes_left, samples, 0);      //had breakpoint
+        err = MP3Decode(hMP3Decoder, (unsigned char**)&read_ptr, &bytes_left, samples, 0); 
 	if (err) {
 		/* error occurred */
 		switch (err) {
