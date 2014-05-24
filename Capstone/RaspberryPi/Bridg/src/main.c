@@ -78,6 +78,8 @@ int main(int argc, char **argv)
 		
         uint32_t bufferSize = 0;
         
+        int k = 0;
+        
 		while(1)
 		{
 			listen(sockfd,5);
@@ -97,18 +99,34 @@ int main(int argc, char **argv)
             printf("Sending data over SPI with length: %d \n", bufferSize);
             
             int frameSize = 256;
-            int i;
+            int i, k;
+            
+            char mp3Data[30000];
             
             char tempData[256];
             
-            for(i = 0; i < bufferSize; i++)
-            {
-                if(i % frameSize == 0 && i != 0)
-                {
-                    wiringPiSPIDataRW(channel, tempData, frameSize);
-                }
+            for (i = 0; i < bufferSize; i++) {
+                mp3Data[k] = buffer[i];
+                k++;
                 
-                tempData[i % frameSize] = buffer[i];
+                if(k >= 30000)
+                {
+                    break;
+                }
+            }
+            
+            if(k >= 30000)
+            {
+                k = 0;
+                for(i = 0; i < 30000; i++)
+                {
+                    if(i % frameSize == 0 && i != 0)
+                    {
+                        wiringPiSPIDataRW(channel, tempData, frameSize);
+                    }
+                    
+                    tempData[i % frameSize] = buffer[i];
+                }
             }
 			//wiringPiSPIDataRW (channel, buffer, bufferSize);
 		}
