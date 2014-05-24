@@ -101,7 +101,7 @@ int main(int argc, char **argv)
             int frameSize = 256;
             int i;
             
-            uint32_t dataLength = 60000;
+            uint32_t dataLength = 30000;
             
             char mp3Data[dataLength];
             
