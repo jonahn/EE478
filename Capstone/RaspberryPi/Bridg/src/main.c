@@ -101,7 +101,9 @@ int main(int argc, char **argv)
             int frameSize = 256;
             int i;
             
-            char mp3Data[30000];
+            uint32_t dataLength = 88000;
+            
+            char mp3Data[dataLength];
             
             char tempData[256];
             
@@ -109,16 +111,16 @@ int main(int argc, char **argv)
                 mp3Data[k] = buffer[i];
                 k++;
                 
-                if(k >= 30000)
+                if(k >= dataLength)
                 {
                     break;
                 }
             }
             
-            if(k >= 30000)
+            if(k >= dataLength)
             {
                 k = 0;
-                for(i = 0; i < 30000; i++)
+                for(i = 0; i < dataLength; i++)
                 {
                     if(i % frameSize == 0 && i != 0)
                     {
