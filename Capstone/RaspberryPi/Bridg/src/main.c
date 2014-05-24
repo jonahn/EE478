@@ -125,7 +125,7 @@ int main(int argc, char **argv)
                         wiringPiSPIDataRW(channel, tempData, frameSize);
                     }
                     
-                    tempData[i % frameSize] = buffer[i];
+                    tempData[i % frameSize] = mp3Data[i];
                 }
             }
 			//wiringPiSPIDataRW (channel, buffer, bufferSize);
