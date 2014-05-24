@@ -16,12 +16,23 @@
           <Column3>27</Column3>
         </ColumnWidths>
       </Workspace>
+      <Build>
+        <ColumnWidth0>20</ColumnWidth0>
+        <ColumnWidth1>921</ColumnWidth1>
+        <ColumnWidth2>245</ColumnWidth2>
+        <ColumnWidth3>61</ColumnWidth3>
+      </Build>
+      <TerminalIO/>
+      <Debug-Log>
+        <ColumnWidth0>20</ColumnWidth0>
+        <ColumnWidth1>1228</ColumnWidth1>
+      </Debug-Log>
     </Static>
     <Windows>
-      <Wnd1>
+      <Wnd2>
         <Tabs>
           <Tab>
-            <Identity>TabID-10573-28182</Identity>
+            <Identity>TabID-22287-23850</Identity>
             <TabName>Workspace</TabName>
             <Factory>Workspace</Factory>
             <Session>
@@ -33,7 +44,24 @@
           </Tab>
         </Tabs>
         <SelectedTab>0</SelectedTab>
-      </Wnd1>
+      </Wnd2>
+      <Wnd3>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-25717-23991</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+          <Tab>
+            <Identity>TabID-19966-24099</Identity>
+            <TabName>Debug Log</TabName>
+            <Factory>Debug-Log</Factory>
+            <Session/>
+          </Tab>
+        </Tabs>
+        <SelectedTab>0</SelectedTab>
+      </Wnd3>
     </Windows>
     <Editor>
       <Pane>
@@ -43,29 +71,29 @@
         </Tab>
         <Tab>
           <Factory>TextEditor</Factory>
-          <Filename>$WS_DIR$\..\..\..\..\..\Perforce\478_Capstone\Project\ST_SPI.c</Filename>
-          <XPos>0</XPos>
-          <YPos>0</YPos>
-          <SelStart>0</SelStart>
-          <SelEnd>0</SelEnd>
-          <XPos2>0</XPos2>
-          <YPos2>26</YPos2>
-          <SelStart2>0</SelStart2>
-          <SelEnd2>0</SelEnd2>
-        </Tab>
-        <Tab>
-          <Factory>TextEditor</Factory>
           <Filename>$WS_DIR$\main.c</Filename>
           <XPos>0</XPos>
           <YPos>0</YPos>
           <SelStart>0</SelStart>
           <SelEnd>0</SelEnd>
           <XPos2>0</XPos2>
-          <YPos2>37</YPos2>
-          <SelStart2>1194</SelStart2>
-          <SelEnd2>1194</SelEnd2>
+          <YPos2>38</YPos2>
+          <SelStart2>829</SelStart2>
+          <SelEnd2>829</SelEnd2>
         </Tab>
-        <ActiveTab>2</ActiveTab>
+        <ActiveTab>1</ActiveTab>
+        <Tab>
+          <Factory>TextEditor</Factory>
+          <Filename>$WS_DIR$\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_spi.c</Filename>
+          <XPos>0</XPos>
+          <YPos>0</YPos>
+          <SelStart>0</SelStart>
+          <SelEnd>0</SelEnd>
+          <XPos2>0</XPos2>
+          <YPos2>1146</YPos2>
+          <SelStart2>45458</SelStart2>
+          <SelEnd2>45458</SelEnd2>
+        </Tab>
       </Pane>
       <ActivePane>0</ActivePane>
       <Sizes>
@@ -80,20 +108,23 @@
       <Top>
         <Row0>
           <Sizes>
-            <Toolbar-0102BF20>
+            <Toolbar-002CBF20>
               <key>iaridepm.enu1</key>
-            </Toolbar-0102BF20>
+            </Toolbar-002CBF20>
           </Sizes>
         </Row0>
+        <Row1>
+          <Sizes/>
+        </Row1>
       </Top>
       <Left>
         <Row0>
           <Sizes>
-            <Wnd1>
+            <Wnd2>
               <Rect>
                 <Top>-2</Top>
                 <Left>-2</Left>
-                <Bottom>681</Bottom>
+                <Bottom>483</Bottom>
                 <Right>198</Right>
                 <x>-2</x>
                 <y>-2</y>
@@ -102,9 +133,9 @@
                 <sizeHorzCX>155400</sizeHorzCX>
                 <sizeHorzCY>275482</sizeHorzCY>
                 <sizeVertCX>155400</sizeVertCX>
-                <sizeVertCY>940771</sizeVertCY>
+                <sizeVertCY>668044</sizeVertCY>
               </Rect>
-            </Wnd1>
+            </Wnd2>
           </Sizes>
         </Row0>
       </Left>
@@ -115,7 +146,24 @@
       </Right>
       <Bottom>
         <Row0>
-          <Sizes/>
+          <Sizes>
+            <Wnd3>
+              <Rect>
+                <Top>-2</Top>
+                <Left>-2</Left>
+                <Bottom>198</Bottom>
+                <Right>1289</Right>
+                <x>-2</x>
+                <y>-2</y>
+                <xscreen>1291</xscreen>
+                <yscreen>200</yscreen>
+                <sizeHorzCX>1003108</sizeHorzCX>
+                <sizeHorzCY>275482</sizeHorzCY>
+                <sizeVertCX>155400</sizeVertCX>
+                <sizeVertCY>275482</sizeVertCY>
+              </Rect>
+            </Wnd3>
+          </Sizes>
         </Row0>
       </Bottom>
       <Float>
