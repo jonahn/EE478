@@ -1,4 +1,4 @@
-"Z:\Documents\EE 478 (GitHub)\EE478\Capstone\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_adc.c"
+"Z:\Perforce\478_Capstone\Project\ST_SPI.c"
 -std=c99
 -ferror-limit=100
 -I
@@ -233,7 +233,7 @@ Z:\Documents\EE 478 (GitHub)\EE478\Capstone\Libraries\CMSIS\ST\STM32F4xx\Include
 -D__HAS_LOCATED_WITH_INIT__=1
 -D__IAR_COMPILERBASE__=593669
 -D__DATE__="May 23 2014"
--D__TIME__="12:06:36"
+-D__TIME__="13:12:11"
 -D__STDC__=1
 -D__STDC_VERSION__=199901L
 -D__STDC_HOSTED__=1

@@ -28,6 +28,8 @@
 
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
+#define HEADER_LENGTH 32
+
 #define PORT_NUMBER 2000
 #define SERVER_ADDRESS "10.0.0.1"
 
@@ -266,11 +268,22 @@ void error(const char *msg)
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+void sendData(void* inData, unsigned long inLength)
+{
+    
+}
+
 -(void)sendDataToServer:(void*)inData withLength:(unsigned int)inLength
 {
     int sockfd, portno, n;
     struct sockaddr_in serv_addr;
     struct hostent *server;
+    
+    unsigned char dataBuffer[inLength + sizeof(uint32_t)];
+    uint32_t headerLength = *dataBuffer;
+    headerLength = inLength;
+    
+    memcpy(dataBuffer + sizeof(uint32_t), inData, inLength);
     
     portno = PORT_NUMBER;
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -303,23 +316,25 @@ void error(const char *msg)
         return;
     }
     
-    n = write(sockfd,inData, inLength);
+    n = write(sockfd, &headerLength, sizeof(uint32_t) );
+
+    n = write(sockfd, dataBuffer + sizeof(uint32_t), inLength );
     if (n < 0)
     {
         error("ERROR writing to socket");
         return;
     }
     
-    char returnBuffer[256];
+    //char returnBuffer[256];
     
-    n = read(sockfd,returnBuffer, 1);
+    /*n = read(sockfd,returnBuffer, 1);
     
     if (n < 0)
     {
         error("ERROR reading from socket");
         return;
     }
-    printf("%s\n",returnBuffer);
+    printf("%s\n",returnBuffer);*/
     close(sockfd);
 }
 
