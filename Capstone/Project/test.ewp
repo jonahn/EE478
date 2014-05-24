@@ -2012,7 +2012,7 @@
       <name>$PROJ_DIR$\setupSDIO.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\..\..\..\..\Perforce\478_Capstone\Project\ST_SPI.c</name>
+      <name>$PROJ_DIR$\ST_SPI.c</name>
     </file>
   </group>
   <file>

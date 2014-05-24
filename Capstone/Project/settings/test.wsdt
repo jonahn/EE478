@@ -77,11 +77,10 @@
           <SelStart>0</SelStart>
           <SelEnd>0</SelEnd>
           <XPos2>0</XPos2>
-          <YPos2>38</YPos2>
+          <YPos2>40</YPos2>
           <SelStart2>829</SelStart2>
           <SelEnd2>829</SelEnd2>
         </Tab>
-        <ActiveTab>1</ActiveTab>
         <Tab>
           <Factory>TextEditor</Factory>
           <Filename>$WS_DIR$\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_spi.c</Filename>
@@ -90,10 +89,11 @@
           <SelStart>0</SelStart>
           <SelEnd>0</SelEnd>
           <XPos2>0</XPos2>
-          <YPos2>1146</YPos2>
-          <SelStart2>45458</SelStart2>
-          <SelEnd2>45458</SelEnd2>
+          <YPos2>1115</YPos2>
+          <SelStart2>45569</SelStart2>
+          <SelEnd2>45569</SelEnd2>
         </Tab>
+        <ActiveTab>2</ActiveTab>
       </Pane>
       <ActivePane>0</ActivePane>
       <Sizes>
@@ -124,16 +124,16 @@
               <Rect>
                 <Top>-2</Top>
                 <Left>-2</Left>
-                <Bottom>483</Bottom>
+                <Bottom>465</Bottom>
                 <Right>198</Right>
                 <x>-2</x>
                 <y>-2</y>
                 <xscreen>200</xscreen>
                 <yscreen>200</yscreen>
-                <sizeHorzCX>155400</sizeHorzCX>
-                <sizeHorzCY>275482</sizeHorzCY>
-                <sizeVertCX>155400</sizeVertCX>
-                <sizeVertCY>668044</sizeVertCY>
+                <sizeHorzCX>157604</sizeHorzCX>
+                <sizeHorzCY>282486</sizeHorzCY>
+                <sizeVertCX>157604</sizeVertCX>
+                <sizeVertCY>659605</sizeVertCY>
               </Rect>
             </Wnd2>
           </Sizes>
@@ -152,15 +152,15 @@
                 <Top>-2</Top>
                 <Left>-2</Left>
                 <Bottom>198</Bottom>
-                <Right>1289</Right>
+                <Right>1271</Right>
                 <x>-2</x>
                 <y>-2</y>
-                <xscreen>1291</xscreen>
+                <xscreen>1273</xscreen>
                 <yscreen>200</yscreen>
-                <sizeHorzCX>1003108</sizeHorzCX>
-                <sizeHorzCY>275482</sizeHorzCY>
-                <sizeVertCX>155400</sizeVertCX>
-                <sizeVertCY>275482</sizeVertCY>
+                <sizeHorzCX>1003152</sizeHorzCX>
+                <sizeHorzCY>282486</sizeHorzCY>
+                <sizeVertCX>157604</sizeVertCX>
+                <sizeVertCY>282486</sizeVertCY>
               </Rect>
             </Wnd3>
           </Sizes>
