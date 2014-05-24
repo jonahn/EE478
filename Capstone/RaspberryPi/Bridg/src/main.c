@@ -14,7 +14,7 @@
 
 #define TRANSFER_BUFFER_SIZE 256
 
-extern const char mp3data[];
+extern const char mp3_data[];
 
 pthread_t iThread;
 
@@ -112,7 +112,7 @@ int main(int argc, char **argv)
                     wiringPiSPIDataRW(channel, tempData, frameSize);
                 }
                 
-                tempData[i % frameSize] = mp3data[i];
+                tempData[i % frameSize] = mp3_data[i];
             }
 			//wiringPiSPIDataRW (channel, buffer, bufferSize);
 		}
