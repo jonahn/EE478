@@ -96,7 +96,13 @@ int main(int argc, char **argv)
 
             printf("Sending data over SPI with length: %d \n", bufferSize);
             
-			wiringPiSPIDataRW (channel, buffer, bufferSize) ;
+            int frameSize = 256;
+            
+            for (int i = 0; i < bufferSize/frameSize; i+= frameSize)
+            {
+                wiringPiSPIDataRW (channel, buffer + i, frameSize);
+            }
+			//wiringPiSPIDataRW (channel, buffer, bufferSize);
 		}
 
 		close(newsockfd);
