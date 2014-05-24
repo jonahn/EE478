@@ -105,7 +105,7 @@ int main(int argc, char **argv)
             
             bufferSize = 30000;
             
-            for(int i = 0; i < bufferSize; i++)
+            for(i = 0; i < bufferSize; i++)
             {
                 if(i % frameSize == 0 && i != 0)
                 {
