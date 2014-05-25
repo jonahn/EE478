@@ -51,6 +51,9 @@
 
 @synthesize conversionProgress;
 
+void resetForNewSong();
+void sendDataToServer(void* inData, unsigned int inLength);
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -159,6 +162,8 @@ void error(const char *msg)
     
     totalSize = 0;
     
+    resetForNewSong();
+    
     // -- BACKGROUND THREAD --//
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH,
                                              (unsigned long)NULL), ^(void) {
@@ -212,11 +217,11 @@ void error(const char *msg)
                     
                     int encodedBytes = lame_encode_buffer(lame, songWaveL, songWaveR, size/2, mp3Buffer, BUFFER_SIZE);
                     
-                    [self sendDataToServer:mp3Buffer withLength:encodedBytes];
+                    sendDataToServer(mp3Buffer,encodedBytes);
                 }
                 else
                 {
-                    [self sendDataToServer:tempData withLength:audioBufferList.mBuffers[bufferCount].mDataByteSize]; // stereo interleaved data
+                    sendDataToServer(tempData, audioBufferList.mBuffers[bufferCount].mDataByteSize); // stereo interleaved data
                 }
 
                 // SHOULD WE BE STORING ENCODED DATA BEFORE TRANSMITTING??
@@ -273,7 +278,12 @@ void sendData(void* inData, unsigned long inLength)
     
 }
 
--(void)sendDataToServer:(void*)inData withLength:(unsigned int)inLength
+void resetForNewSong()
+{
+    sendDataToServer(NULL, 0);
+}
+
+void sendDataToServer(void* inData, unsigned int inLength)
 {
     int sockfd, portno, n;
     struct sockaddr_in serv_addr;
@@ -318,8 +328,12 @@ void sendData(void* inData, unsigned long inLength)
     
     n = write(sockfd, &headerLength, sizeof(uint32_t) );
 
-    n = write(sockfd, dataBuffer + sizeof(uint32_t), inLength );
-    if (n < 0)
+    if(inLength > 0)
+    {
+        n = write(sockfd, dataBuffer + sizeof(uint32_t), inLength );
+    }
+    
+        if (n < 0)
     {
         error("ERROR writing to socket");
         return;

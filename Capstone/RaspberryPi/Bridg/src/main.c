@@ -93,7 +93,11 @@ int main(int argc, char **argv)
             
             n = read(newsockfd, &bufferSize, sizeof(uint32_t) );
 
-			n = read(newsockfd, buffer, bufferSize );
+            if(bufferSize != 0)
+                n = read(newsockfd, buffer, bufferSize );
+            else
+                k = 0;
+            
 			if (n < 0) error("ERROR reading from socket");
 
             printf("Sending data over SPI with length: %d \n", bufferSize);
@@ -105,7 +109,7 @@ int main(int argc, char **argv)
             
             char mp3Data[dataLength];
             
-            char tempData[256];
+            char tempData[frameSize];
             
             for (i = 0; i < bufferSize; i++)
             {
