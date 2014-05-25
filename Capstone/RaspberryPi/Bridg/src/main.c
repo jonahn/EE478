@@ -109,12 +109,12 @@ int main(int argc, char **argv)
             
             for (i = 0; i < bufferSize; i++)
             {
-                k++;
-                
                 if(k < dataLength)
                 {
                     mp3Data[k] = buffer[i];
                 }
+                
+                k++;
             }
             
             if(k >= dataLength)
