@@ -107,19 +107,18 @@ int main(int argc, char **argv)
             
             char tempData[256];
             
-            for (i = 0; i < bufferSize; i++) {
-                mp3Data[k] = buffer[i];
+            for (i = 0; i < bufferSize; i++)
+            {
                 k++;
                 
-                if(k >= dataLength)
+                if(k < dataLength)
                 {
-                    break;
+                    mp3Data[k] = buffer[i];
                 }
             }
             
             if(k >= dataLength)
             {
-                k = 0;
                 for(i = 0; i < dataLength; i++)
                 {
                     if(i % frameSize == 0 && i != 0)
@@ -129,6 +128,8 @@ int main(int argc, char **argv)
                     
                     tempData[i % frameSize] = mp3Data[i];
                 }
+                
+                k = 0;
             }
 			//wiringPiSPIDataRW (channel, buffer, bufferSize);
             
