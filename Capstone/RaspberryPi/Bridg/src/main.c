@@ -131,9 +131,10 @@ int main(int argc, char **argv)
                 }
             }
 			//wiringPiSPIDataRW (channel, buffer, bufferSize);
+            
+            close(newsockfd);
 		}
 
-		close(newsockfd);
 		close(sockfd);
         
 		return 0; 
