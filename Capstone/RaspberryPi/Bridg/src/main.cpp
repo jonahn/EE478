@@ -16,6 +16,7 @@
 
 extern "C" {
 #include <wiringPi.h>
+#include <wiringPiSPI.h>
 }
 
 #define TRANSFER_BUFFER_SIZE 256
