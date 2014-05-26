@@ -14,6 +14,8 @@
 #include "../../../Shared/emptymp3data.h"
 #include "networkReciever.h"
 
+#include <wiringPi.h>
+
 #define TRANSFER_BUFFER_SIZE 256
 
 pthread_t iThread;
