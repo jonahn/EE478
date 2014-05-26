@@ -14,7 +14,9 @@
 #include "../../../Shared/emptymp3data.h"
 #include "networkReciever.h"
 
+extern "C" {
 #include <wiringPi.h>
+}
 
 #define TRANSFER_BUFFER_SIZE 256
 
