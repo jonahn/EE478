@@ -301,7 +301,10 @@ void sendDataToServer(void* inData, int inLength)
     int32_t headerLength = *dataBuffer;
     headerLength = inLength;
     
-    memcpy(dataBuffer + sizeof(int32_t), inData, inLength);
+    if(inData != NULL)
+    {
+        memcpy(dataBuffer + sizeof(int32_t), inData, inLength);
+    }
     
     portno = PORT_NUMBER;
     sockfd = socket(AF_INET, SOCK_STREAM, 0);

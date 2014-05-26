@@ -92,7 +92,7 @@ void* recieverThread(void* maxNumberOfFiles)
                     
                     printf("Creating file: mp3file%d.mp3 \n", fileCounter);
                     std::ostringstream s;
-                    s << "mp3file" << fileCounter << ".mp3";
+                    s << "files/mp3file" << fileCounter << ".mp3";
                     currentPath = std::string(s.str());
                     
                     remove(currentPath.c_str());
