@@ -1964,7 +1964,7 @@
       <name>$PROJ_DIR$\src\mp3_data.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\inc\ST_SPI.c</name>
+      <name>$PROJ_DIR$\src\ST_SPI.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\src\stm32f4xx_it.c</name>
