@@ -131,12 +131,10 @@ int main(int argc, char **argv)
                     tempData[(2*i+1) % frameSize] = mp3Data[i];
                     
                     //write
-                    wiringPiSPIDataRW(channel, tempData[2*i % frameSize], 3);
+                    wiringPiSPIDataRW(channel, &tempData[2*i % frameSize], 2);
                     
                     //read
                     wiringPiSPIDataRW(channel, readbuffer, 1);
-                    
-                    //printf("Response was: %x", *readbuffer);
                 }
                 
                 k = 0;
