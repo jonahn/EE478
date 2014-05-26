@@ -137,7 +137,7 @@ int main(int argc, char **argv)
                     //read
                     wiringPiSPIDataRW(channel, readbuffer, 1);
                     
-                    printf("Response was: %x", *readbuffer);
+                    //printf("Response was: %x", *readbuffer);
                 }
                 
                 k = 0;
