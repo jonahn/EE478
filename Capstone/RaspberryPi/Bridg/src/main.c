@@ -125,12 +125,13 @@ int main(int argc, char **argv)
             {
                 for(i = 0; i < dataLength; i++)
                 {
-                    if(i % frameSize == 0 && i != 0)
+                    if( (2*i) % frameSize == 0 && i != 0)
                     {
                         wiringPiSPIDataRW(channel, tempData, frameSize);
                     }
                     
-                    tempData[i % frameSize] = mp3Data[i];
+                    tempData[(2*i) % frameSize] = 0x01;
+                    tempData[(2*i+1) % frameSize] = mp3Data[i];
                 }
                 
                 k = 0;
