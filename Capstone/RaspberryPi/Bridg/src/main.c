@@ -121,17 +121,23 @@ int main(int argc, char **argv)
                 k++;
             }
             
+            char readbuffer[1];
+            
             if(k >= dataLength)
             {
                 for(i = 0; i < dataLength; i++)
                 {
-                    if( (2*i) % frameSize == 0 && i != 0)
-                    {
-                        wiringPiSPIDataRW(channel, tempData, frameSize);
-                    }
-                    
                     tempData[(2*i) % frameSize] = 0x01;
                     tempData[(2*i+1) % frameSize] = mp3Data[i];
+                    
+                    //write
+                    wiringPiSPIDataRW(channel, tempData[2*i % frameSize], 1);
+                    wiringPiSPIDataRW(channel, tempData[(2*i+1) % frameSize], 1);
+                    
+                    //read
+                    wiringPiSPIDataRW(channel, readbuffer, 1);
+                    
+                    printf("Response was: %x", *readbuffer);
                 }
                 
                 k = 0;
