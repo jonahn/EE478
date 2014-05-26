@@ -9,19 +9,23 @@
 #include <netinet/in.h>
 #include <pthread.h>
 
-#include "indicator.h"
 #include "../../../Shared/settings.h"
 #include "../../../Shared/emptymp3data.h"
 #include "networkReciever.h"
 
 extern "C" {
-#include <wiringPi.h>
-#include <wiringPiSPI.h>
+#if DEBUG
+    #include "wiringPi.h"
+#else
+    #include <wiringPi.h>
+    #include <wiringPiSPI.h>
+#endif
 }
 
 #define TRANSFER_BUFFER_SIZE 256
 
 pthread_t iThread;
+pthread_t networkThread;
 
 int channel = 0;
 
@@ -84,7 +88,7 @@ int main(int argc, char **argv)
     
 	printf("Forking to background now and exit in one minute.\n");
 
-#if RUNNING_IN_XCODE
+#if DEBUG
     pid_t result = 0;
 #else
     pid_t result = fork();
@@ -101,7 +105,7 @@ int main(int argc, char **argv)
 		setsid();
 
         NetworkReciever reciever = NetworkReciever(atoi(argv[1]));
-        reciever.runReciever(NULL);
+        reciever.runReciever(&networkThread);
 
 		while(1)
 		{
