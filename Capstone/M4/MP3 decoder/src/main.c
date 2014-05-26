@@ -30,9 +30,12 @@ void init();
 int i;
 
 //SPI comm with Pi Variables
-extern uint8_t mySPI_GetData(uint8_t);
+uint8_t mySPI_GetData(uint8_t response);
+void writeBackToRPI(uint8_t data);
 extern void mySPI_Init(void);
 unsigned char data;
+
+unsigned char needMoreData = 0x08;
 
 int main(void) {
 	init();
@@ -43,24 +46,17 @@ int main(void) {
         mySPI_Init();                           //Init SPI for comm with Pi
         
         for (i = 0; i < MP3_SIZE; i++)
-          {
-              //Receive and Write back to Rpi, ignore 0x29
-              mp3_data[i] = mySPI_GetData(0x29); 
-          } 
+        {
+            mp3_data[i] = mySPI_GetData(0x08);
+        } 
         
 	hMP3Decoder = MP3InitDecoder();
 	InitializeAudio(Audio44100HzSettings);
 	SetAudioVolume(0xCF);
-        
         PlayAudioWithCallback(AudioCallback, 0);
+        
 	for(;;) {
-//          for (i = 0; i < MP3_SIZE; i++)
-//          {
-//              //Receive and Write back to Rpi, ignore 0x29
-//              mp3_data[i] = mySPI_GetData(0x29); 
-//          } 
-          
-          //PlayAudioWithCallback(AudioCallback, 0);
+                
             
 		/*
 		 * Check if user button is pressed
@@ -88,18 +84,28 @@ int main(void) {
 	return 0;
 }
 
-uint8_t mySPI_GetData(uint8_t adress){
- 
+uint8_t mySPI_GetData(uint8_t response)
+{
+
     while(!SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE));
-    data = SPI_I2S_ReceiveData(SPI1); //Receive and store to Data
-     
-   // while(!SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE)); 
-   // SPI_I2S_SendData(SPI1, 0x08);  // Write an indicator back
- 
-return  data;
+    SPI_I2S_ReceiveData(SPI1);
+    
+    while(!SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE));
+    uint8_t data = SPI_I2S_ReceiveData(SPI1);
+    
+    writeBackToRPI(response);
+    
+    return data;
+ }
+
+void writeBackToRPI(uint8_t data)
+{
+      while(!SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE));
+      SPI_I2S_ReceiveData(SPI1);
+      
+      while(!SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE)); 
+      SPI_I2S_SendData(SPI1, data);  // Write an indicator back
 }
-
-
 
 /*
  * Called by the audio driver when it is time to provide data to
@@ -131,9 +137,9 @@ static void AudioCallback(void *context, int buffer) {
 	offset = MP3FindSyncWord((unsigned char*)read_ptr, bytes_left);
 	bytes_left -= offset;
 
-	if (bytes_left <= 10000) {
-		read_ptr = mp3_data;
-		bytes_left = MP3_SIZE;
+	if (bytes_left <= 15000) {
+		//read_ptr = mp3_data;
+		//bytes_left = MP3_SIZE;
 		offset = MP3FindSyncWord((unsigned char*)read_ptr, bytes_left);
 	}
 
@@ -159,7 +165,9 @@ static void AudioCallback(void *context, int buffer) {
 		MP3GetLastFrameInfo(hMP3Decoder, &mp3FrameInfo);
 	}
 
-	if (!outOfData) {
+        
+        
+	if ( !outOfData ) {
 		ProvideAudioBuffer(samples, mp3FrameInfo.outputSamps);
 	}
 }

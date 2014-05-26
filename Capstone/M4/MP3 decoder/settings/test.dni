@@ -20,7 +20,7 @@ Stop=1
 Freq=10000000
 MultiCoreRunAll=1
 [DebugChecksum]
-Checksum=-864157589
+Checksum=1106564822
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -85,9 +85,8 @@ Exclusions=
 [Disassemble mode]
 mode=0
 [Breakpoints2]
-Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\..\..\..\WINDOWS\system32}.18.7" 0 0 1 "" 0 "" 0
-Bp1=_ 1 "EMUL_CODE" "{$PROJ_DIR$\src\main.c}.145.3" 0 0 1 "" 0 "" 0
-Count=2
+Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\..\..\WINDOWS\system32}.18.7" 0 0 1 "" 0 "" 0
+Count=1
 [Aliases]
 A0=_ "C:\Users\Anna Horstmann\Documents\GitHub\EE478\Capstone\Libraries\CMSIS\ST\STM32F4xx\Source\Templates\iar\startup_stm32f4xx.s" ""
 Count=1

@@ -1,7 +1,6 @@
 #include <stm32f4xx.h>
 #include <stm32f4xx_spi.h>
 
-uint8_t mySPI_GetData(uint8_t);
 void mySPI_Init(void);
 
 void mySPI_Init(void){
