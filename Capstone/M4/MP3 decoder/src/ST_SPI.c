@@ -1,7 +1,4 @@
-#include <stm32f4xx.h>
-#include <stm32f4xx_spi.h>
-
-void mySPI_Init(void);
+#include "ST_SPI.h"
 
 void mySPI_Init(void){
   

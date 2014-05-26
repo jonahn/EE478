@@ -1964,6 +1964,9 @@
       <name>$PROJ_DIR$\src\mp3_data.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\src\spi_rw.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\src\ST_SPI.c</name>
     </file>
     <file>

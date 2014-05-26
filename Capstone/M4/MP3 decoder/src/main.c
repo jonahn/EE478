@@ -6,6 +6,7 @@
 #include "utils.h"
 #include "Audio.h"
 #include "mp3dec.h"
+#include "ST_SPI.h"
 
 #include "settings.h"
 #include <stm32f4xx_spi.h>
@@ -29,10 +30,6 @@ void init();
 /*extern */ char mp3_data[MP3_SIZE];
 int i;
 
-//SPI comm with Pi Variables
-uint8_t mySPI_GetData(uint8_t response);
-void writeBackToRPI(uint8_t data);
-extern void mySPI_Init(void);
 unsigned char data;
 
 unsigned char needMoreData = 0x08;
@@ -82,29 +79,6 @@ int main(void) {
 	}
 
 	return 0;
-}
-
-uint8_t mySPI_GetData(uint8_t response)
-{
-
-    while(!SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE));
-    SPI_I2S_ReceiveData(SPI1);
-    
-    while(!SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE));
-    uint8_t data = SPI_I2S_ReceiveData(SPI1);
-    
-    writeBackToRPI(response);
-    
-    return data;
- }
-
-void writeBackToRPI(uint8_t data)
-{
-      while(!SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE));
-      SPI_I2S_ReceiveData(SPI1);
-      
-      while(!SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE)); 
-      SPI_I2S_SendData(SPI1, data);  // Write an indicator back
 }
 
 /*
