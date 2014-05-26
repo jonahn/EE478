@@ -1,12 +1,15 @@
 # default target
 bridgd: src/main.c indicator.o ../../Shared/settings.h ../../Shared/emptymp3data.h
-	g++ -Wall -pthread -g -o bridgd src/main.c build/indicator.o -lwiringPi
+	g++ -Wall -pthread -g -o bridgd src/main.cpp build/indicator.o -lwiringPi
 
 # individual source files
 indicator.o: src/indicator.h src/indicator.c ../../Shared/settings.h
 	mkdir -p build
 	g++ -Wall -pthread -g -c -o build/indicator.o src/indicator.c -lwiringPi
 
+networkReciever.o: src/networkReciever.h src/networkReciever.cpp ../../Shared/settings.h
+	mkdir -p build
+	g++ -Wall -pthread -g -c -o build/networkReciever.o src/networkReciever.cpp -lwiringPi
 clean:
-	rm -f Point.o
-	rm -f closestPair
+	rm -f build/networkReciever.o
+	rm -f bridgd

@@ -87,6 +87,13 @@ void* recieverThread(void* maxNumberOfFiles)
                 case 0:
                 {
                     fileCounter++;
+                    
+                    if(fileCounter > 7)
+                    {
+                        fileCounter = 7;
+                        mp3Files.pop_back();
+                    }
+                    
                     printf("Creating file: mp3file%d.mp3 \n", fileCounter);
                     std::ostringstream s;
                     s << "mp3file" << fileCounter << ".mp3";
