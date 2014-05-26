@@ -52,7 +52,8 @@
 @synthesize conversionProgress;
 
 void resetForNewSong();
-void sendDataToServer(void* inData, unsigned int inLength);
+void finishedWithSong();
+void sendDataToServer(void* inData, int inLength);
 
 - (void)viewDidLoad
 {
@@ -239,6 +240,8 @@ void error(const char *msg)
         
         [self updateProgress:[NSNumber numberWithFloat:trackLengthinSeconds]];
 
+        finishedWithSong();
+        
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Done." message:@"Done Decoding.."
                                                        delegate:nil cancelButtonTitle:@"Done" otherButtonTitles:nil];
         
@@ -283,17 +286,22 @@ void resetForNewSong()
     sendDataToServer(NULL, 0);
 }
 
-void sendDataToServer(void* inData, unsigned int inLength)
+void finishedWithSong()
+{
+    sendDataToServer(NULL, -1);
+}
+
+void sendDataToServer(void* inData, int inLength)
 {
     int sockfd, portno, n;
     struct sockaddr_in serv_addr;
     struct hostent *server;
     
-    unsigned char dataBuffer[inLength + sizeof(uint32_t)];
-    uint32_t headerLength = *dataBuffer;
+    unsigned char dataBuffer[inLength + sizeof(int32_t)];
+    int32_t headerLength = *dataBuffer;
     headerLength = inLength;
     
-    memcpy(dataBuffer + sizeof(uint32_t), inData, inLength);
+    memcpy(dataBuffer + sizeof(int32_t), inData, inLength);
     
     portno = PORT_NUMBER;
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
