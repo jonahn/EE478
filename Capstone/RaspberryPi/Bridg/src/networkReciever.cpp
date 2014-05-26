@@ -24,18 +24,14 @@ std::deque<CompeletedFile> mp3Files;
 unsigned int fileCounter;
 int port;
 
+extern void error(const char *msg);
+
 NetworkReciever::NetworkReciever(int portNumber)
 {
     mp3Files = std::deque<CompeletedFile>();
     files = &mp3Files;
     fileCounter = 0;
     port = portNumber;
-}
-
-void error(const char *msg)
-{
-    perror(msg);
-    exit(1);
 }
 
 void* recieverThread(void* maxNumberOfFiles)
