@@ -114,6 +114,7 @@ void* recieverThread(void* maxNumberOfFiles)
                 }
                     
                 default:
+                    fwrite(buffer, 1, bufferSize, currentFile);
                     break;
             }
         }

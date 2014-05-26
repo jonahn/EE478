@@ -288,7 +288,7 @@ void resetForNewSong()
 
 void finishedWithSong()
 {
-    sendDataToServer(NULL, -1);
+    sendDataToServer(NULL, 1);
 }
 
 void sendDataToServer(void* inData, int inLength)
