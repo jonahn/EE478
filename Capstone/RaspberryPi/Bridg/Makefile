@@ -1,6 +1,6 @@
 # default target
 bridgd: src/main.cpp indicator.o ../../Shared/settings.h ../../Shared/emptymp3data.h
-	g++ -Wall -pthread -g -o bridgd src/main.cpp build/indicator.o -lwiringPi -I/home/pi/wiringPi/wiringPi
+	g++ -Wall -pthread -g -o bridgd src/main.cpp build/indicator.o build/networkReciever.o -lwiringPi -I/home/pi/wiringPi/wiringPi
 
 # individual source files
 indicator.o: src/indicator.h src/indicator.c ../../Shared/settings.h
