@@ -115,6 +115,7 @@ void* recieverThread(void* maxNumberOfFiles)
                     
                 default:
                     fwrite(buffer, 1, bufferSize, currentFile);
+                    printf("Appending buffer to: mp3file%d.mp3 withSize: %d\n", fileCounter, bufferSize);
                     break;
             }
         }

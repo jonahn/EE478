@@ -297,13 +297,12 @@ void sendDataToServer(void* inData, int inLength)
     struct sockaddr_in serv_addr;
     struct hostent *server;
     
-    unsigned char dataBuffer[inLength + sizeof(int32_t)];
-    int32_t headerLength = *dataBuffer;
-    headerLength = inLength;
+    unsigned char dataBuffer[inLength];
+    int32_t headerLength = inLength;
     
     if(inData != NULL)
     {
-        memcpy(dataBuffer + sizeof(int32_t), inData, inLength);
+        memcpy(dataBuffer, inData, inLength);
     }
     
     portno = PORT_NUMBER;
@@ -341,7 +340,7 @@ void sendDataToServer(void* inData, int inLength)
 
     if(inLength > 0)
     {
-        n = write(sockfd, dataBuffer + sizeof(uint32_t), inLength );
+        n = write(sockfd, dataBuffer, inLength );
     }
     
         if (n < 0)
