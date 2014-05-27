@@ -111,6 +111,8 @@ int main(int argc, char **argv)
 		{
             if(isM4Ready() == 0x08)
             {
+                printf("%lu", reciever.files->size());
+                
                 if(reciever.files->size() > 0)
                 {
                     CompeletedFile currentFile = reciever.files->front();
