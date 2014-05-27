@@ -20,7 +20,7 @@
 #include "networkReciever.h"
 #include "../../../Shared/settings.h"
 
-std::deque<CompeletedFile> mp3Files;
+std::deque<CompeletedFile> *mp3Files;
 unsigned int fileCounter;
 int port;
 
@@ -28,8 +28,8 @@ extern void error(const char *msg);
 
 NetworkReciever::NetworkReciever(int portNumber)
 {
-    mp3Files = std::deque<CompeletedFile>();
-    files = &mp3Files;
+    mp3Files = new std::deque<CompeletedFile>();
+    files = mp3Files;
     fileCounter = 0;
     port = portNumber;
 }
@@ -89,7 +89,7 @@ void* recieverThread(void* maxNumberOfFiles)
                     if(fileCounter > 7)
                     {
                         fileCounter = 7;
-                        mp3Files.pop_back();
+                        mp3Files->pop_back();
                     }
                     
                     printf("Creating file: mp3file%d.mp3 \n", fileCounter);
@@ -111,7 +111,7 @@ void* recieverThread(void* maxNumberOfFiles)
                     
                     CompeletedFile doneFile;
                     doneFile.filePath = currentPath;
-                    mp3Files.push_back(doneFile);
+                    mp3Files->push_back(doneFile);
                     break;
                 }
                     
