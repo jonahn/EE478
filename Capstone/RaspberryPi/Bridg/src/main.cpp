@@ -35,7 +35,7 @@ void error(const char *msg)
     exit(1);
 }
 
-void sendOverSPI(const void * data, const unsigned int inLength)
+void sendOverSPI(const unsigned char * data, const unsigned int inLength)
 {
     int frameSize = 256;
     int i;
@@ -45,7 +45,7 @@ void sendOverSPI(const void * data, const unsigned int inLength)
     for(i = 0; i < EMPTY_MP3_DATA_LENGTH; i++)
     {
         tempData[(2*i) % frameSize] = 0x01;
-        tempData[(2*i+1) % frameSize] = emptymp3data[i];
+        tempData[(2*i+1) % frameSize] = data[i];
         
         //write
         wiringPiSPIDataRW(channel, &tempData[2*i % frameSize], 2);
