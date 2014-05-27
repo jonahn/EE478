@@ -75,6 +75,8 @@ void* recieverThread(void* maxNumberOfFiles)
         {
             n = read(newsockfd, buffer, bufferSize );
             if (n < 0) error("ERROR reading from socket");
+            
+            fwrite(buffer, 1, bufferSize, currentFile);
         }
         else
         {
@@ -114,8 +116,6 @@ void* recieverThread(void* maxNumberOfFiles)
                 }
                     
                 default:
-                    fwrite(buffer, 1, bufferSize, currentFile);
-                    printf("Appending buffer to: mp3file%d.mp3 withSize: %d\n", fileCounter, bufferSize);
                     break;
             }
         }
