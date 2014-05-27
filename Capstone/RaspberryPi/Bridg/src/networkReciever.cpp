@@ -124,6 +124,8 @@ void* recieverThread(void* maxNumberOfFiles)
     }
     
     close(sockfd);
+    
+    return 0;
 }
 
 void NetworkReciever::runReciever(pthread_t *threadHandle)
