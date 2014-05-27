@@ -114,7 +114,7 @@ int main(int argc, char **argv)
                 if(reciever.files->size() > 0)
                 {
                     CompeletedFile currentFile = reciever.files->front();
-                    reciever.files->pop_front();
+                    //reciever.files->pop_front();
                     
                     FILE * f = fopen(currentFile.filePath.c_str(), "r");
                     
