@@ -288,7 +288,7 @@ void resetForNewSong()
 
 void finishedWithSong()
 {
-    sendDataToServer(NULL, 1);
+    sendDataToServer(NULL, -1);
 }
 
 void sendDataToServer(void* inData, int inLength)
@@ -336,7 +336,7 @@ void sendDataToServer(void* inData, int inLength)
         return;
     }
     
-    n = write(sockfd, &headerLength, sizeof(uint32_t) );
+    n = write(sockfd, &headerLength, sizeof(int32_t) );
 
     if(inLength > 0)
     {
