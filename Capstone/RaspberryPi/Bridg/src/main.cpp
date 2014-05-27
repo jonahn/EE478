@@ -122,6 +122,7 @@ int main(int argc, char **argv)
                     
                     //only read the first ~30000 bytes
                     result = fread (buffer , 1 , EMPTY_MP3_DATA_LENGTH , f);
+                    printf("Sending data from file.");
                     fclose(f);
                     
                     sendOverSPI(buffer, EMPTY_MP3_DATA_LENGTH);
