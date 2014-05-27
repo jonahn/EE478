@@ -102,7 +102,7 @@ void* recieverThread(void* maxNumberOfFiles)
                     break;
                 }
 
-                case 1:
+                case -1:
                 {
                     printf("Done creating file: mp3file%d.mp3 \n", fileCounter);
                     
