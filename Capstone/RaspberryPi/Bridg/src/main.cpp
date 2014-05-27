@@ -53,7 +53,7 @@ void sendOverSPI(const unsigned char * data, const unsigned int inLength)
         
         struct timespec tim, tim2;
         tim.tv_sec = 1;
-        tim.tv_nsec = 500;
+        tim.tv_nsec = 10;
         nanosleep(&tim, &tim2);
         
         //read
