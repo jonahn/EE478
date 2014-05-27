@@ -30,6 +30,20 @@ uint8_t playedHalf = 0;
 uint8_t resetPtr = 0;
 uint8_t tempData;
 
+
+int16_t audio_buffer0[4096];  //CHANGED ANNA  
+int numSamples = 0;
+int16_t audio_buffer1[4096];  //CHANGED ANNA
+
+int offset, err;
+int outOfData = 0;
+char *read_ptr = mp3_data;
+int bytes_left = MP3_SIZE;
+
+uint8_t decodeBuffer = 0;
+
+void decodeMP3();
+
 int main(void) {
 	init();
 	int volume = 0;
@@ -60,14 +74,17 @@ int main(void) {
               
         }
         
-        
 	hMP3Decoder = MP3InitDecoder();
+        
+        decodeMP3();
+        
 	InitializeAudio(Audio44100HzSettings);
 	SetAudioVolume(0xCF);
         PlayAudioWithCallback(AudioCallback, 0);
         
 	while(1) {
-            if (1)
+            decodeMP3();
+            if (playedHalf)
             {
               //mySPI_GetData(0x0);
               for (i = 0; i < MP3_SIZE; i++)
@@ -90,6 +107,7 @@ int main(void) {
               }
               playedHalf = 0;
             }
+              
 		/*
 		 * Check if user button is pressed
 		 
@@ -116,34 +134,78 @@ int main(void) {
 	return 0;
 }
 
+int previousBuffer = 1;
+
+void decodeMP3()
+{
+        if(previousBuffer == decodeBuffer)
+        {
+            return;
+        }
+  
+        previousBuffer = decodeBuffer;
+        
+        int16_t *samplesBuffer;
+        
+        if(decodeBuffer == 0)
+        {
+          samplesBuffer = audio_buffer0;
+        }
+        else
+        {
+          samplesBuffer = audio_buffer1;
+        }
+
+	//err = MP3Decode(hMP3Decoder, (unsigned char**)&read_ptr, &bytes_left, samples, 0);      //had breakpoint
+        
+        err = MP3Decode(hMP3Decoder, (unsigned char**)&read_ptr, &bytes_left, samplesBuffer, 0); 
+        
+	if (err) {
+		/* error occurred */
+		switch (err) {
+		case ERR_MP3_INDATA_UNDERFLOW:
+			outOfData = 1;
+			break;
+		case ERR_MP3_MAINDATA_UNDERFLOW:
+			/* do nothing - next call to decode will provide more mainData */
+			break;
+		case ERR_MP3_FREE_BITRATE_SYNC:
+		default:
+			outOfData = 1;
+			break;
+		}
+	} else {
+		/* no error */
+		MP3GetLastFrameInfo(hMP3Decoder, &mp3FrameInfo);
+                numSamples = mp3FrameInfo.outputSamps;
+	}
+}
+
 /*
  * Called by the audio driver when it is time to provide data to
  * one of the audio buffers (while the other buffer is sent to the
  * CODEC using DMA). One mp3 frame is decoded at a time and
  * provided to the audio driver.
  */
-static void AudioCallback(void *context, int buffer) {
-	static int16_t audio_buffer0[4096];  //CHANGED ANNA  
-	static int16_t audio_buffer1[4096];  //CHANGED ANNA
+static void AudioCallback(void *context, int buffer) 
+{
+        static int16_t *samples;
 
-	int offset, err;
-	int outOfData = 0;
-	static char *read_ptr = mp3_data;
-	static int bytes_left = MP3_SIZE;
-
-	int16_t *samples;
-
-	if (buffer) {
+	if (buffer) 
+        {
+                decodeBuffer = 1;
 		samples = audio_buffer0;
 		GPIO_SetBits(GPIOD, GPIO_Pin_13);
 		GPIO_ResetBits(GPIOD, GPIO_Pin_14);
-	} else {
+	} else 
+        {
+                decodeBuffer = 0;
 		samples = audio_buffer1;
 		GPIO_SetBits(GPIOD, GPIO_Pin_14);
 		GPIO_ResetBits(GPIOD, GPIO_Pin_13);
 	}
-
-	offset = MP3FindSyncWord((unsigned char*)read_ptr, bytes_left);
+        
+        offset = MP3FindSyncWord((unsigned char*)read_ptr, bytes_left);
 	bytes_left -= offset;
 
         //Already played half way, set flag
@@ -167,31 +229,10 @@ static void AudioCallback(void *context, int buffer) {
 	}
 
 	read_ptr += offset;
-	//err = MP3Decode(hMP3Decoder, (unsigned char**)&read_ptr, &bytes_left, samples, 0);      //had breakpoint
-        err = MP3Decode(hMP3Decoder, (unsigned char**)&read_ptr, &bytes_left, samples, 0); 
-	if (err) {
-		/* error occurred */
-		switch (err) {
-		case ERR_MP3_INDATA_UNDERFLOW:
-			outOfData = 1;
-			break;
-		case ERR_MP3_MAINDATA_UNDERFLOW:
-			/* do nothing - next call to decode will provide more mainData */
-			break;
-		case ERR_MP3_FREE_BITRATE_SYNC:
-		default:
-			outOfData = 1;
-			break;
-		}
-	} else {
-		/* no error */
-		MP3GetLastFrameInfo(hMP3Decoder, &mp3FrameInfo);
-	}
-
         
-        
-	if ( !outOfData ) {
-		ProvideAudioBuffer(samples, mp3FrameInfo.outputSamps);
+	if ( !outOfData ) 
+        {
+		ProvideAudioBuffer(samples, numSamples);
 	}
 }
 
