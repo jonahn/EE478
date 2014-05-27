@@ -58,7 +58,7 @@ void sendOverSPI(const void * data, const unsigned int inLength)
 unsigned char isM4Ready()
 {
     unsigned char tempData[] = {0,0};
-    unsigned char readbuffer[1];
+    unsigned char readbuffer[1] = {0x0};
     
     //write
     wiringPiSPIDataRW(channel, tempData, 2);
@@ -131,7 +131,7 @@ int main(int argc, char **argv)
                 }
                 else
                 {
-                    sendOverSPI(emptymp3data, EMPTY_MP3_DATA_LENGTH);
+                    sendOverSPI(actualmp3data, EMPTY_MP3_DATA_LENGTH);
                 }
             }
         }
