@@ -50,10 +50,10 @@ void sendOverSPI(const unsigned char * data, const unsigned int inLength)
         //write
         wiringPiSPIDataRW(channel, &tempData[2*i % frameSize], 2);
         
-        nanosleep((struct timespec[]){{0, 10000}}, NULL);
-        
         //read
         wiringPiSPIDataRW(channel, readbuffer, 1);
+        
+        nanosleep((struct timespec[]){{0, 10000}}, NULL);
     }
 }
 
