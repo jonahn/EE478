@@ -51,6 +51,10 @@
 
 @synthesize conversionProgress;
 
+void resetForNewSong();
+void finishedWithSong();
+void sendDataToServer(void* inData, int inLength);
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -159,6 +163,8 @@ void error(const char *msg)
     
     totalSize = 0;
     
+    resetForNewSong();
+    
     // -- BACKGROUND THREAD --//
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH,
                                              (unsigned long)NULL), ^(void) {
@@ -212,11 +218,11 @@ void error(const char *msg)
                     
                     int encodedBytes = lame_encode_buffer(lame, songWaveL, songWaveR, size/2, mp3Buffer, BUFFER_SIZE);
                     
-                    [self sendDataToServer:mp3Buffer withLength:encodedBytes];
+                    sendDataToServer(mp3Buffer,encodedBytes);
                 }
                 else
                 {
-                    [self sendDataToServer:tempData withLength:audioBufferList.mBuffers[bufferCount].mDataByteSize]; // stereo interleaved data
+                    sendDataToServer(tempData, audioBufferList.mBuffers[bufferCount].mDataByteSize); // stereo interleaved data
                 }
 
                 // SHOULD WE BE STORING ENCODED DATA BEFORE TRANSMITTING??
@@ -234,6 +240,8 @@ void error(const char *msg)
         
         [self updateProgress:[NSNumber numberWithFloat:trackLengthinSeconds]];
 
+        finishedWithSong();
+        
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Done." message:@"Done Decoding.."
                                                        delegate:nil cancelButtonTitle:@"Done" otherButtonTitles:nil];
         
@@ -273,17 +281,29 @@ void sendData(void* inData, unsigned long inLength)
     
 }
 
--(void)sendDataToServer:(void*)inData withLength:(unsigned int)inLength
+void resetForNewSong()
+{
+    sendDataToServer(NULL, 0);
+}
+
+void finishedWithSong()
+{
+    sendDataToServer(NULL, -1);
+}
+
+void sendDataToServer(void* inData, int inLength)
 {
     int sockfd, portno, n;
     struct sockaddr_in serv_addr;
     struct hostent *server;
     
-    unsigned char dataBuffer[inLength + sizeof(uint32_t)];
-    uint32_t headerLength = *dataBuffer;
-    headerLength = inLength;
+    unsigned char dataBuffer[inLength];
+    int32_t headerLength = inLength;
     
-    memcpy(dataBuffer + sizeof(uint32_t), inData, inLength);
+    if(inData != NULL)
+    {
+        memcpy(dataBuffer, inData, inLength);
+    }
     
     portno = PORT_NUMBER;
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -316,10 +336,14 @@ void sendData(void* inData, unsigned long inLength)
         return;
     }
     
-    n = write(sockfd, &headerLength, sizeof(uint32_t) );
+    n = write(sockfd, &headerLength, sizeof(int32_t) );
 
-    n = write(sockfd, dataBuffer + sizeof(uint32_t), inLength );
-    if (n < 0)
+    if(inLength > 0)
+    {
+        n = write(sockfd, dataBuffer, inLength );
+    }
+    
+        if (n < 0)
     {
         error("ERROR writing to socket");
         return;

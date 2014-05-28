@@ -8,6 +8,11 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
+// Private function prototypes
+static void AudioCallback(void *context,int buffer);
+void Delay(volatile uint32_t nCount);
+void init();
+
 // Function prototypes
 void timing_handler();
 

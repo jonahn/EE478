@@ -12,9 +12,9 @@
 #define SCALE 1
 #define BUFFER_SIZE 32768
 
-#define RUNNING_IN_XCODE 0 //1 for XCODE, 0 for Carambola (dont fork or fork)
+//#define RUNNING_IN_XCODE 0 //1 for XCODE, 0 for Carambola (dont fork or fork)
 
-#if RUNNING_IN_XCODE
+#if DEBUG
 #define INDICATOR_FILE "brightnessfile.txt"
 #else
 #define INDICATOR_FILE "/sys/devices/platform/leds-gpio/leds/carambola2:green:wlan/brightness"
