@@ -50,6 +50,8 @@ void sendOverSPI(const unsigned char * data, const unsigned int inLength)
     {
         waitUntilRecieve();
         
+        printf("Sending data: %d \n", i);
+        
         tempData[(2*i) % frameSize] = 0x01;
         tempData[(2*i+1) % frameSize] = data[i];
         
@@ -129,10 +131,6 @@ int main(int argc, char **argv)
 
 		while(1)
 		{
-            if(isM4Ready() == 0x08)
-            {
-                printf("%d \n", reciever.files->size());
-                
                 if(reciever.files->size() > 0)
                 {
                     CompeletedFile currentFile = reciever.files->front();
@@ -153,7 +151,6 @@ int main(int argc, char **argv)
                 {
                     sendOverSPI(actualmp3data, EMPTY_MP3_DATA_LENGTH);
                 }
-            }
         }
         
 		return 0; 
