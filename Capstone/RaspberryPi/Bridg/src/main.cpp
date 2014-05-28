@@ -29,6 +29,8 @@ pthread_t networkThread;
 
 int channel = 0;
 
+unsigned char isM4Ready();
+
 void error(const char *msg)
 {
     perror(msg);
@@ -44,16 +46,23 @@ void sendOverSPI(const unsigned char * data, const unsigned int inLength)
     
     for(i = 0; i < EMPTY_MP3_DATA_LENGTH; i++)
     {
-        tempData[(2*i) % frameSize] = 0x01;
-        tempData[(2*i+1) % frameSize] = data[i];
-        
-        //write
-        wiringPiSPIDataRW(channel, &tempData[2*i % frameSize], 2);
-        
-        //read
-        wiringPiSPIDataRW(channel, readbuffer, 1);
-        
-        nanosleep((struct timespec[]){{0, 10000}}, NULL);
+        if(isM4Ready() == 0x08)
+        {
+            tempData[(2*i) % frameSize] = 0x01;
+            tempData[(2*i+1) % frameSize] = data[i];
+            
+            //write
+            wiringPiSPIDataRW(channel, &tempData[2*i % frameSize], 2);
+            
+            //read
+            wiringPiSPIDataRW(channel, readbuffer, 1);
+            
+            nanosleep((struct timespec[]){{0, 10000}}, NULL);
+        }
+        else
+        {
+            i--;
+        }
     }
 }
 
