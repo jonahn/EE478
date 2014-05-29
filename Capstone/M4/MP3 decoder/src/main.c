@@ -12,7 +12,7 @@
 #include "main.h"
 
 // Some macros
-#define MP3_SIZE	31346//687348
+//#define MP3_SIZE	10000//31346//687348
 #define BUTTON		(GPIOA->IDR & GPIO_Pin_0)
 
 // Private variables
@@ -22,6 +22,8 @@ HMP3Decoder hMP3Decoder;
 
 // External variables
 /*extern*/char mp3_data[MP3_SIZE];
+int rxIndex = 0;
+char dataRxComplete = 0;
 
 unsigned char needMoreData = 0x08;
 
@@ -30,10 +32,9 @@ uint8_t playedHalf = 0;
 uint8_t resetPtr = 0;
 uint8_t tempData;
 
-
-int16_t audio_buffer0[4096];  //CHANGED ANNA  
+int16_t audio_buffer0[4096];   
 int numSamples = 0;
-int16_t audio_buffer1[4096];  //CHANGED ANNA
+int16_t audio_buffer1[4096];
 
 int offset, err;
 int outOfData = 0;
@@ -52,31 +53,37 @@ int main(void) {
         
         mySPI_Init();                           //Init SPI for comm with Pi
         
-        int i;
-        for (i = 0; i < MP3_SIZE; i++)
-        {
-            //temporally store the data sent from Rpi
+        //initialize SPI rx buffer counter
+        rxIndex = 0;
         
-            if (i == 0)
-               tempData = mySPI_GetData(needMoreData);
-            else 
-               tempData = mySPI_GetData(0x0);
-            
-            //store the data if the Rpi confirms it's real data
-            if (isItData)
-            {
-              mp3_data[i] = tempData;
-            }
-            else
-            {
-                i--;
-            }
-              
+        
+        /* Enable the Rx buffer not empty interrupt */
+        SPI_I2S_ITConfig(SPI1, SPI_I2S_IT_RXNE, ENABLE);
+
+        int i;
+        
+        GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
+
+        //DEBUG: wait for interrupt to complete
+        if (SPI_I2S_GetITStatus(SPI1, SPI_I2S_IT_RXNE) != SET)
+        {
+          GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
         }
+        
+        //wait until data buffer loaded first time (change?)
+        while (!dataRxComplete) 
+        {
+            dataRxComplete = dataRxComplete;
+        }
+        //while(SPI_I2S_GetITStatus(SPI1, SPI_I2S_IT_RXNE) == SET);
+        
+        rxIndex = 0;                    //reset rxIndex (do in interrupt?)
         
 	hMP3Decoder = MP3InitDecoder();
         
         decodeMP3();
+        
+        //Send need more data GPIO signal
         
 	InitializeAudio(Audio44100HzSettings);
 	SetAudioVolume(0xCF);
@@ -84,29 +91,19 @@ int main(void) {
         
 	while(1) {
             decodeMP3();
-            if (playedHalf)
+            
+            while (!dataRxComplete) 
             {
-              //mySPI_GetData(0x0);
-              for (i = 0; i < MP3_SIZE; i++)
-              {
-                  //temporally store the data sent from Rpi
-                  if (i == 0)
-                     tempData = mySPI_GetData(needMoreData);
-                  else 
-                     tempData = mySPI_GetData(0x0);
-                  
-                  //store the data if the Rpi confirms it's real data
-                  if (isItData == 1)
-                  {
-                    mp3_data[i] = tempData;
-                  }
-                  else
-                  {
-                      i--;
-                  }
-              }
-              playedHalf = 0;
+                dataRxComplete = dataRxComplete;
+                
+                if (playedHalf)
+                {
+                    GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
+                    GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
+                }
+                rxIndex = 0; 
             }
+           
               
 		/*
 		 * Check if user button is pressed
@@ -244,6 +241,9 @@ void init() {
 		// Capture error
 		while (1){};
 	}
+        
+        /* Configure the SysTick handler priority */
+        NVIC_SetPriority(SysTick_IRQn, 0x0);            //NEW
 
 	// Enable full access to FPU (Should be done automatically in system_stm32f4xx.c):
 	//SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));  // set CP10 and CP11 Full Access

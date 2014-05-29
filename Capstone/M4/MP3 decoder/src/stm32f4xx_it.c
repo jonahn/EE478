@@ -1,6 +1,10 @@
 #include "stm32f4xx_it.h"
 #include "main.h"
 
+extern char mp3_data[MP3_SIZE];
+extern int rxIndex;
+extern char dataRxComplete;
+
 /**
   * @brief   This function handles NMI exception.
   * @param  None
@@ -106,4 +110,48 @@ void SysTick_Handler(void)
 /*  file (startup_stm32f4xx.s).                                               */
 /******************************************************************************/
 
+/**
+* @brief This function handles SPI interrupt request.
+* @param None
+* @retval None
+*/
+void SPI1_IRQHandler(void)
+{
+  /* SPI in Receiver mode */
+  if (SPI_I2S_GetITStatus(SPI1, SPI_I2S_IT_RXNE) == SET)
+  {
+    if (rxIndex < MP3_SIZE)
+    {
+      /* Receive Transaction data */
+      mp3_data[rxIndex] = SPI_I2S_ReceiveData(SPI1);
+      rxIndex++;
+      if (rxIndex == MP3_SIZE)
+      {
+          dataRxComplete = 1;
+      }
+      else
+          dataRxComplete = 0;
+    }
 
+    else
+    {
+      /* Disable the Rx buffer not empty interrupt */
+      SPI_I2S_ITConfig(SPI1, SPI_I2S_IT_RXNE, DISABLE);
+    }
+  }
+  
+//  /* SPI in Tramitter mode */
+//  if (SPI_I2S_GetITStatus(SPIx, SPI_I2S_IT_TXE) == SET)
+//  {
+//    if (ubTxIndex < BUFFERSIZE)
+//    {
+//      /* Send Transaction data */
+//      SPI_I2S_SendData(SPIx, aTxBuffer[ubTxIndex++]);
+//    }
+//    else
+//    {
+//      /* Disable the Tx buffer empty interrupt */
+//      SPI_I2S_ITConfig(SPIx, SPI_I2S_IT_TXE, DISABLE);
+//    }
+//  }
+}
