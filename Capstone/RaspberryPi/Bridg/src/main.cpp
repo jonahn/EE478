@@ -52,7 +52,6 @@ int sendOverSPI(const unsigned char * data, const unsigned int inLength)
     
     for(int i = inLength - 1; i > 0; i--)
     {
-        printf("0x%x \n", data[i - 1]);
         if(data[i] == 0xFB && data[i-1] == 0xFF)
         {
             returnIndex = i - 1;
