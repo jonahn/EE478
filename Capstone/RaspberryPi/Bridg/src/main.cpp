@@ -72,8 +72,12 @@ int main(int argc, char **argv)
     
     wiringPiSetup();
 
-    //uses pin 3 on header (wiringPi pin 8)
-    wiringPiISR (0, INT_EDGE_RISING, &isM4ReadyISR);
+    //uses pin 3 on header (wiringPi pin 8)    
+    if (wiringPiISR (0, INT_EDGE_RISING, &isM4ReadyISR) < 0)
+    {
+        fprintf (stderr, "Unable to setup ISR: %s\n", strerror (errno)) ;
+        return 1 ;
+    }
     
 	if (argc < 2)
     {
