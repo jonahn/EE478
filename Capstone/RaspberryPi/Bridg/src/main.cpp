@@ -64,26 +64,6 @@ void isM4ReadyISR()
 
 int main(int argc, char **argv)
 {
-    if (wiringPiSetup() < 0)
-    {
-        fprintf (stderr, "Unable to setup wiringPi: %s\n", strerror (errno)) ;
-        return 1 ;
-    }
-
-    //uses pin 3 on header (wiringPi pin 8)
-    if (wiringPiISR (0, INT_EDGE_FALLING, &isM4ReadyISR) < 0)
-    {
-        fprintf (stderr, "Unable to setup ISR: %s\n", strerror (errno)) ;
-        return 1 ;
-    }
-    
-    // set output SPI channel to 0 and speed to 8MHz
-    if (wiringPiSPISetup(0,8000000) < 0)
-    {
-        fprintf (stderr, "Unable to open SPI device 0: %s\n", strerror (errno)) ;
-        exit (1) ;
-    }
-    
 	if (argc < 2)
     {
         fprintf(stderr,"ERROR, no port provided\n");
@@ -108,13 +88,33 @@ int main(int argc, char **argv)
 		//Create a session and set the process group id.
 		setsid();
 
+        if (wiringPiSetup() < 0)
+        {
+            fprintf (stderr, "Unable to setup wiringPi: %s\n", strerror (errno)) ;
+            return 1 ;
+        }
+        
+        //uses pin 3 on header (wiringPi pin 8)
+        if (wiringPiISR (0, INT_EDGE_FALLING, &isM4ReadyISR) < 0)
+        {
+            fprintf (stderr, "Unable to setup ISR: %s\n", strerror (errno)) ;
+            return 1 ;
+        }
+        
+        // set output SPI channel to 0 and speed to 8MHz
+        if (wiringPiSPISetup(0,8000000) < 0)
+        {
+            fprintf (stderr, "Unable to open SPI device 0: %s\n", strerror (errno)) ;
+            exit (1) ;
+        }
+        
         NetworkReciever reciever = NetworkReciever(atoi(argv[1]));
         reciever.runReciever(&networkThread);
 
 		while(1)
 		{
-            //if(isM4Ready != 0)
-            //{
+            if(isM4Ready != 0)
+            {
                 isM4Ready = 0;
                 printf("Sending data from file. \n");
 
@@ -138,7 +138,7 @@ int main(int argc, char **argv)
                 {
                     sendOverSPI(actualmp3data, EMPTY_MP3_DATA_LENGTH);
                 }
-            //}
+            }
         }
         
 		return 0; 
