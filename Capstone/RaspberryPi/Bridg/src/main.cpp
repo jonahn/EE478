@@ -131,7 +131,7 @@ int main(int argc, char **argv)
         }
         
         // set output SPI channel to 0 and speed to 8MHz
-        if (wiringPiSPISetup(0,16000000) < 0)
+        if (wiringPiSPISetup(0,14000000) < 0)
         {
             fprintf (stderr, "Unable to open SPI device 0: %s\n", strerror (errno)) ;
             exit (1) ;
@@ -188,7 +188,7 @@ int main(int argc, char **argv)
                     const unsigned char * arr = &mp3_data[currentIndex];
                     
                     int indexesSent = sendOverSPI(arr, EMPTY_MP3_DATA_LENGTH);
-                    currentIndex += indexesSent;
+                    currentIndex += indexesSent; // michael is the best ;)
                     
                     printf("First five bytes: 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", arr[0],arr[1],arr[2],arr[3],arr[4]);
                 }
