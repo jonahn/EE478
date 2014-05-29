@@ -61,6 +61,9 @@ int sendOverSPI(const unsigned char * data, const unsigned int inLength)
     {
         if(i % frameSize == 0 && i != 0)
         {
+            if(i == frameSize)
+                printf("Sending bytes: 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", tempData[0],tempData[1],tempData[2],tempData[3],tempData[4]);
+            
             wiringPiSPIDataRW(channel, tempData, frameSize);
             lastIndex = i;
         }
@@ -76,7 +79,7 @@ int sendOverSPI(const unsigned char * data, const unsigned int inLength)
     for(int i = 0; i < frameSize; i++)
         tempData[i] = 0;
     
-    wiringPiSPIDataRW(channel, tempData, EMPTY_MP3_DATA_LENGTH - returnIndex + 1);
+    wiringPiSPIDataRW(channel, tempData, EMPTY_MP3_DATA_LENGTH - returnIndex);
     
     return returnIndex;
 }
@@ -166,18 +169,21 @@ int main(int argc, char **argv)
                         currentSong++;
                         currentIndex = 0;
                     }
-                    
-                    fseek(f, currentIndex, SEEK_SET);
+                    else
+                    {
+                        fseek(f, currentIndex, SEEK_SET);
+                        
+                        unsigned char arr[EMPTY_MP3_DATA_LENGTH];
+                        
+                        //only read the first ~30000 bytes
+                        unsigned int numberOfBytesRead = (unsigned int) fread(arr , 1 , EMPTY_MP3_DATA_LENGTH , f);
+                        fclose(f);
+                        
+                        int indexesSent = sendOverSPI(arr, numberOfBytesRead);
+                        currentIndex += indexesSent;
 
-                    unsigned char arr[EMPTY_MP3_DATA_LENGTH];
-                    
-                    //only read the first ~30000 bytes
-                    fread (arr , 1 , EMPTY_MP3_DATA_LENGTH , f);
-                    fclose(f);
-                    
-                    int indexesSent = sendOverSPI(arr, EMPTY_MP3_DATA_LENGTH);
-                    
-                    printf("First five bits: 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", arr[0],arr[1],arr[2],arr[3],arr[4]);
+                        printf("First five bits: 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", arr[0],arr[1],arr[2],arr[3],arr[4]);
+                    }
                 }
                 else
                 {
