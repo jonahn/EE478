@@ -104,7 +104,7 @@ int main(int argc, char **argv)
 
 		while(1)
 		{
-            if(isM4Ready)
+            if(isM4Ready != 0)
             {
                 isM4Ready = 0;
                 printf("Sending data from file. \n");
