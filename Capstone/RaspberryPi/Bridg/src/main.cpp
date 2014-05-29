@@ -61,9 +61,6 @@ int sendOverSPI(const unsigned char * data, const unsigned int inLength)
     {
         if(i % frameSize == 0 && i != 0)
         {
-            if(i == frameSize)
-                printf("Sending bytes: 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", tempData[0],tempData[1],tempData[2],tempData[3],tempData[4]);
-            
             wiringPiSPIDataRW(channel, tempData, frameSize);
             lastIndex = i;
         }
@@ -192,7 +189,7 @@ int main(int argc, char **argv)
                     int indexesSent = sendOverSPI(arr, EMPTY_MP3_DATA_LENGTH);
                     currentIndex += indexesSent;
                     
-                    printf("First five bits: 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", arr[0],arr[1],arr[2],arr[3],arr[4]);
+                    printf("First five bytes: 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", arr[0],arr[1],arr[2],arr[3],arr[4]);
                 }
             }
         }
