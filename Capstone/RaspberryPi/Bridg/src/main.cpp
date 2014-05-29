@@ -58,6 +58,7 @@ void sendOverSPI(const unsigned char * data, const unsigned int inLength)
 
 void isM4ReadyISR()
 {
+    fprintf(stdout,"Hit ISR\n");
     isM4Ready = 0x01;
 }
 
@@ -72,7 +73,7 @@ int main(int argc, char **argv)
     
     wiringPiSetup();
 
-    //uses pin 3 on header (wiringPi pin 8)    
+    //uses pin 3 on header (wiringPi pin 8)
     if (wiringPiISR (0, INT_EDGE_RISING, &isM4ReadyISR) < 0)
     {
         fprintf (stderr, "Unable to setup ISR: %s\n", strerror (errno)) ;
