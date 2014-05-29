@@ -67,7 +67,6 @@ void sendOverSPI(const unsigned char * data, const unsigned int inLength)
 
 void isM4ReadyISR()
 {
-    fprintf(stdout,"Hit ISR\n");
     isM4Ready = 0x01;
 }
 
@@ -127,8 +126,6 @@ int main(int argc, char **argv)
             if(isM4Ready != 0)
             {
                 isM4Ready = 0;
-                printf("Sending data from file. \n");
-
                 if(reciever.files->size() > 0)
                 {
                     CompeletedFile currentFile = reciever.files->front();
@@ -152,8 +149,10 @@ int main(int argc, char **argv)
                         currentIndex = 0;
                     }
                     
+                    const unsigned char * arr = &mp3_data[currentIndex * EMPTY_MP3_DATA_LENGTH];
                     
-                    sendOverSPI(&mp3_data[currentIndex * EMPTY_MP3_DATA_LENGTH], EMPTY_MP3_DATA_LENGTH);
+                    sendOverSPI(arr, EMPTY_MP3_DATA_LENGTH);
+                    printf("First five bits: 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", arr[0],arr[1],arr[2],arr[3],arr[4]);
                     currentIndex++;
                 }
             }
