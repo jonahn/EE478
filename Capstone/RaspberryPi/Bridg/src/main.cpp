@@ -131,7 +131,7 @@ int main(int argc, char **argv)
         }
         
         // set output SPI channel to 0 and speed to 8MHz
-        if (wiringPiSPISetup(0,14000000) < 0)
+        if (wiringPiSPISetup(0,1000000) < 0)
         {
             fprintf (stderr, "Unable to open SPI device 0: %s\n", strerror (errno)) ;
             exit (1) ;
