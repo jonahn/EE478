@@ -12,6 +12,7 @@
 #include "../../../Shared/settings.h"
 #include "../../../Shared/emptymp3data.h"
 #include "networkReciever.h"
+#include "mp3_data.h"
 
 extern "C" {
 #if DEBUG
@@ -69,6 +70,8 @@ void isM4ReadyISR()
     fprintf(stdout,"Hit ISR\n");
     isM4Ready = 0x01;
 }
+
+unsigned int currentIndex = 0;
 
 int main(int argc, char **argv)
 {
@@ -144,7 +147,13 @@ int main(int argc, char **argv)
                 }
                 else
                 {
-                    sendOverSPI(actualmp3data, EMPTY_MP3_DATA_LENGTH);
+                    if(currentIndex > 10)
+                    {
+                        currentIndex = 0;
+                    }
+                    
+                    
+                    sendOverSPI(&mp3_data[currentIndex * EMPTY_MP3_DATA_LENGTH], EMPTY_MP3_DATA_LENGTH);
                 }
             }
         }
