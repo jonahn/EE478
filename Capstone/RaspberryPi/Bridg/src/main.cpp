@@ -68,7 +68,7 @@ int sendOverSPI(const unsigned char * data, const unsigned int inLength)
         tempData[i % frameSize] = data[i];
     }
     
-    if(lastIndex != (returnIndex - 1) )
+    if(lastIndex != ( returnIndex - 1 ) )
     {
         wiringPiSPIDataRW(channel, tempData, returnIndex - lastIndex);
     }
@@ -131,7 +131,7 @@ int main(int argc, char **argv)
         }
         
         // set output SPI channel to 0 and speed to 8MHz
-        if (wiringPiSPISetup(0,2000000) < 0)
+        if (wiringPiSPISetup(0,16000000) < 0)
         {
             fprintf (stderr, "Unable to open SPI device 0: %s\n", strerror (errno)) ;
             exit (1) ;
