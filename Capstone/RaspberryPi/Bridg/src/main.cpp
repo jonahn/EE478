@@ -60,7 +60,7 @@ void sendOverSPI(const unsigned char * data, const unsigned int inLength)
     
     if(lastIndex != (EMPTY_MP3_DATA_LENGTH - 1) )
     {
-        wiringPiSPIDataRW(channel, tempData, EMPTY_MP3_DATA_LENGTH - lastIndex - 1);
+        wiringPiSPIDataRW(channel, tempData, EMPTY_MP3_DATA_LENGTH - lastIndex);
     }
 }
 
