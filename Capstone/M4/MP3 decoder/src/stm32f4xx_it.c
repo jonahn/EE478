@@ -128,6 +128,7 @@ void SPI1_IRQHandler(void)
       if (rxIndex == MP3_SIZE)
       {
           dataRxComplete = 1;
+          rxIndex = 0; 
       }
       else
           dataRxComplete = 0;

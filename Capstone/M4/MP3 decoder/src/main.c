@@ -35,12 +35,9 @@ uint8_t resetPtr = 0;
 
 int main(void) {
 	init();
-        
-	int volume = 0;
+
         currentWriteBuffer = mp3_data;
         currentReadBuffer = mp3_data2;
-        
-	// Play mp3
         
         mySPI_Init();                           //Init SPI for comm with Pi
         
@@ -50,12 +47,10 @@ int main(void) {
         
         /* Enable the Rx buffer not empty interrupt */
         SPI_I2S_ITConfig(SPI1, SPI_I2S_IT_RXNE, ENABLE);
-
-        int i;
         
+        /* send initial pulse for RPi to send data*/
         GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
-
-        //DEBUG: wait for interrupt to complete
+        //sending end of pulse
         if (SPI_I2S_GetITStatus(SPI1, SPI_I2S_IT_RXNE) != SET)
         {
           GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
@@ -67,10 +62,10 @@ int main(void) {
             dataRxComplete = dataRxComplete;
         }
         
-        rxIndex = 0;                    //reset rxIndex (do in interrupt?)
+        //rxIndex = 0;                    //reset rxIndex (do in interrupt?)
         dataRxComplete = 0;
         
-        //flip buffers
+        //flip buffers and ask for more data via GPIO pulse
         char *tempBuffer = currentReadBuffer;
         currentReadBuffer = currentWriteBuffer;
         currentWriteBuffer = tempBuffer;
@@ -87,40 +82,27 @@ int main(void) {
         PlayAudioWithCallback(AudioCallback, 0);
         
 	while(1) {                                         
-                if(dataRxComplete) 
-                {
-                    rxIndex = 0; 
-                    dataRxComplete = 0;
-                }
-           
+//                while(!dataRxComplete) 
+//                {
+//                     dataRxComplete = dataRxComplete;        
+//                }
+            if (dataRxComplete)
+            {
+//                  dataRxComplete = 0;
+//                  
+//                  //flip buffers
+//                 
+//                  char *tempBuffer = currentReadBuffer;
+//                  currentReadBuffer = currentWriteBuffer;
+//                  currentWriteBuffer = tempBuffer;
+//                  rxIndex = 0;
+//                  
+//                  GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
+//                  GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
+            }
               
-		/*
-		 * Check if user button is pressed
-		 
-		if (BUTTON) {
-			// Debounce
-			Delay(10);
-			if (BUTTON) {
-
-				// Toggle audio volume
-				if (volume) {
-					volume = 0;
-					SetAudioVolume(0xCF);
-				} else {
-					volume = 1;
-					SetAudioVolume(0xAF);
-				}
-
-
-				while(BUTTON){};
-			}
-		}*/
 	}
-
-	return 0;
 }
-
-int previousBuffer = 1;
 
 /*
  * Called by the audio driver when it is time to provide data to
@@ -168,26 +150,22 @@ static void AudioCallback(void *context, int buffer)
 	bytes_left -= offset;
         
         //Played the entire buffer, loop back to play from the front of the buffer
-        if (bytes_left <= 1000 || resetPtr) {
-                if(resetPtr)
-                {
+        if (bytes_left <= 1000 && dataRxComplete) {
+                
                   //flip buffers
                   char *tempBuffer = currentReadBuffer;
                   currentReadBuffer = currentWriteBuffer;
                   currentWriteBuffer = tempBuffer;
                   read_ptr = currentReadBuffer;
-                  
+                  rxIndex = 0;
+//                 
+//                  
                   GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
                   GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
-                  
+//                  
                   bytes_left = MP3_SIZE;
                   offset = MP3FindSyncWord((unsigned char*)read_ptr, bytes_left);
-                  resetPtr = 0;
-                }
-                else
-                {
-                  resetPtr = 1;
-                }
+                  
 	}
 
 	read_ptr += offset;
