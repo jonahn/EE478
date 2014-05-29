@@ -154,6 +154,7 @@ int main(int argc, char **argv)
                     
                     
                     sendOverSPI(&mp3_data[currentIndex * EMPTY_MP3_DATA_LENGTH], EMPTY_MP3_DATA_LENGTH);
+                    currentIndex++;
                 }
             }
         }
