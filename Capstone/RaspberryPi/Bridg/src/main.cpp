@@ -133,6 +133,8 @@ int main(int argc, char **argv)
 		{
             if(isM4Ready() == 0x08)
             {
+                printf("Sending data from file.");
+
                 if(reciever.files->size() > 0)
                 {
                     CompeletedFile currentFile = reciever.files->front();
