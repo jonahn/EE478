@@ -73,7 +73,7 @@ int main(int argc, char **argv)
     wiringPiSetup();
 
     //uses pin 3 on header (wiringPi pin 8)
-    wiringPiISR (0, INT_EDGE_RISING,  isM4ReadyISR);
+    wiringPiISR (0, INT_EDGE_RISING, &isM4ReadyISR);
     
 	if (argc < 2)
     {
