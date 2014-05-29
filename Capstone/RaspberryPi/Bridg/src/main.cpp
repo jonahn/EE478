@@ -29,7 +29,7 @@ pthread_t networkThread;
 
 int channel = 0;
 
-unsigned char isM4Ready();
+unsigned char isM4Ready = 0;
 
 void waitUntilRecieve();
 
@@ -44,51 +44,21 @@ void sendOverSPI(const unsigned char * data, const unsigned int inLength)
     int frameSize = 256;
     int i;
     unsigned char tempData[inLength];
-    unsigned char readbuffer[1];
     
     for(i = 0; i < EMPTY_MP3_DATA_LENGTH; i++)
     {
-        //waitUntilRecieve();
-        
-        //printf("Sending data: %d \n", i);
-        
-        tempData[(2*i) % frameSize] = 0x01;
-        tempData[(2*i+1) % frameSize] = data[i];
-        
-        //write
-        wiringPiSPIDataRW(channel, &tempData[2*i % frameSize], 2);
-        
-        //read
-        wiringPiSPIDataRW(channel, readbuffer, 1);
-        
-        nanosleep((struct timespec[]){{0, 10000}}, NULL);
-    }
-}
-
-void waitUntilRecieve()
-{
-    while(1)
-    {
-        if(isM4Ready() == 0x08)
+        if(i % frameSize == 0 && i != 0)
         {
-            break;
+            wiringPiSPIDataRW(channel, tempData, frameSize);
         }
+        
+        tempData[i % frameSize] = data[i];
     }
 }
 
-
-unsigned char isM4Ready()
+void isM4ReadyISR()
 {
-    unsigned char tempData[] = {0,0};
-    unsigned char readbuffer[1] = {0x0};
-    
-    //write
-    wiringPiSPIDataRW(channel, tempData, 2);
-    
-    //read
-    wiringPiSPIDataRW(channel, readbuffer, 1);
-    
-    return *readbuffer;
+    isM4Ready = 0x01;
 }
 
 int main(int argc, char **argv)
@@ -100,8 +70,11 @@ int main(int argc, char **argv)
         exit (1) ;
     }
     
-    wiringPiSetupSys();
+    wiringPiSetup();
 
+    //uses pin 3 on header (wiringPi pin 8)
+    wiringPiISR (8, INT_EDGE_RISING,  isM4ReadyISR);
+    
 	if (argc < 2)
     {
         fprintf(stderr,"ERROR, no port provided\n");
@@ -131,9 +104,10 @@ int main(int argc, char **argv)
 
 		while(1)
 		{
-            if(isM4Ready() == 0x08)
+            if(isM4Ready)
             {
-                printf("Sending data from file.");
+                isM4Ready = 0;
+                printf("Sending data from file. \n");
 
                 if(reciever.files->size() > 0)
                 {
