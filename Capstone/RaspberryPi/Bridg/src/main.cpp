@@ -64,20 +64,24 @@ void isM4ReadyISR()
 
 int main(int argc, char **argv)
 {
-    // set output SPI channel to 0 and speed to 8MHz
-    if (wiringPiSPISetup (0,8000000) < 0)
+    if (wiringPiSetup() < 0)
     {
-        fprintf (stderr, "Unable to open SPI device 0: %s\n", strerror (errno)) ;
-        exit (1) ;
+        fprintf (stderr, "Unable to setup wiringPi: %s\n", strerror (errno)) ;
+        return 1 ;
     }
-    
-    wiringPiSetup();
 
     //uses pin 3 on header (wiringPi pin 8)
-    if (wiringPiISR (0, INT_EDGE_RISING, &isM4ReadyISR) < 0)
+    if (wiringPiISR (0, INT_EDGE_FALLING, &isM4ReadyISR) < 0)
     {
         fprintf (stderr, "Unable to setup ISR: %s\n", strerror (errno)) ;
         return 1 ;
+    }
+    
+    // set output SPI channel to 0 and speed to 8MHz
+    if (wiringPiSPISetup(0,8000000) < 0)
+    {
+        fprintf (stderr, "Unable to open SPI device 0: %s\n", strerror (errno)) ;
+        exit (1) ;
     }
     
 	if (argc < 2)
