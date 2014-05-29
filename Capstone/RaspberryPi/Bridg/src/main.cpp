@@ -48,8 +48,6 @@ int sendOverSPI(const unsigned char * data, const unsigned int inLength)
     int returnIndex = EMPTY_MP3_DATA_LENGTH - 1;
     int lastIndex = 0;
     
-    int length;
-    
     for(int i = inLength - 1; i > 0; i--)
     {
         if(data[i] == 0xFB && data[i-1] == 0xFF)
@@ -59,27 +57,20 @@ int sendOverSPI(const unsigned char * data, const unsigned int inLength)
         }
     }
 
-    for(i = 0; i < EMPTY_MP3_DATA_LENGTH; i++)
+    for(i = 0; i < returnIndex; i++)
     {
         if(i % frameSize == 0 && i != 0)
         {
             wiringPiSPIDataRW(channel, tempData, frameSize);
             lastIndex = i;
-            
-            for(int j = 0; j < frameSize; j++)
-            {
-                tempData[j] = 0;
-            }
-            
         }
         
-        if(i < length)
-            tempData[i % frameSize] = data[i];
+        tempData[i % frameSize] = data[i];
     }
     
-    if(lastIndex != (EMPTY_MP3_DATA_LENGTH - 1) )
+    if(lastIndex != (returnIndex - 1) )
     {
-        wiringPiSPIDataRW(channel, tempData, EMPTY_MP3_DATA_LENGTH - lastIndex);
+        wiringPiSPIDataRW(channel, tempData, returnIndex - lastIndex);
     }
     
     return returnIndex;
