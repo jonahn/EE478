@@ -40,29 +40,50 @@ void error(const char *msg)
     exit(1);
 }
 
-void sendOverSPI(const unsigned char * data, const unsigned int inLength)
+int sendOverSPI(const unsigned char * data, const unsigned int inLength)
 {
-    int frameSize = 256;
+    int frameSize = 512;
     int i;
     unsigned char tempData[inLength];
-    
+    int returnIndex = EMPTY_MP3_DATA_LENGTH - 1;
     int lastIndex = 0;
     
+    int length;
+    
+    for(int i = inLength - 1; i > 0; i--)
+    {
+        printf("0x%x \n", data[i - 1]);
+        if(data[i] == 0xFB && data[i-1] == 0xFF)
+        {
+            returnIndex = i - 1;
+            break;
+        }
+    }
+
     for(i = 0; i < EMPTY_MP3_DATA_LENGTH; i++)
     {
         if(i % frameSize == 0 && i != 0)
         {
             wiringPiSPIDataRW(channel, tempData, frameSize);
             lastIndex = i;
+            
+            for(int j = 0; j < frameSize; j++)
+            {
+                tempData[j] = 0;
+            }
+            
         }
         
-        tempData[i % frameSize] = data[i];
+        if(i < length)
+            tempData[i % frameSize] = data[i];
     }
     
     if(lastIndex != (EMPTY_MP3_DATA_LENGTH - 1) )
     {
         wiringPiSPIDataRW(channel, tempData, EMPTY_MP3_DATA_LENGTH - lastIndex);
     }
+    
+    return returnIndex;
 }
 
 void isM4ReadyISR()
@@ -70,7 +91,7 @@ void isM4ReadyISR()
     isM4Ready = 0x01;
 }
 
-unsigned int currentIndex = 0;
+unsigned long currentIndex = 0;
 
 int main(int argc, char **argv)
 {
@@ -123,6 +144,9 @@ int main(int argc, char **argv)
 
 		while(1)
 		{
+#if DEBUG
+            isM4ReadyISR();
+#endif
             if(isM4Ready != 0)
             {
                 isM4Ready = 0;
@@ -144,16 +168,12 @@ int main(int argc, char **argv)
                 }
                 else
                 {
-                    if(currentIndex > 10)
-                    {
-                        currentIndex = 0;
-                    }
+                    const unsigned char * arr = &mp3_data[currentIndex];
                     
-                    const unsigned char * arr = &mp3_data[currentIndex * EMPTY_MP3_DATA_LENGTH];
+                    int indexesSent = sendOverSPI(arr, EMPTY_MP3_DATA_LENGTH);
+                    currentIndex += indexesSent;
                     
-                    sendOverSPI(arr, EMPTY_MP3_DATA_LENGTH);
                     printf("First five bits: 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", arr[0],arr[1],arr[2],arr[3],arr[4]);
-                    currentIndex++;
                 }
             }
         }
