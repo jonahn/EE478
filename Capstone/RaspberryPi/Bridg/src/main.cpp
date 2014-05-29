@@ -48,7 +48,7 @@ void sendOverSPI(const unsigned char * data, const unsigned int inLength)
     
     for(i = 0; i < EMPTY_MP3_DATA_LENGTH; i++)
     {
-        waitUntilRecieve();
+        //waitUntilRecieve();
         
         printf("Sending data: %d \n", i);
         
