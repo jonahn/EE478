@@ -88,6 +88,8 @@ void isM4ReadyISR()
 
 unsigned long currentIndex = 0;
 
+unsigned long currentSong = 0;
+
 int main(int argc, char **argv)
 {
 	if (argc < 2)
@@ -137,6 +139,12 @@ int main(int argc, char **argv)
         NetworkReciever reciever = NetworkReciever(atoi(argv[1]));
         reciever.runReciever(&networkThread);
 
+#if DEBUG
+        CompeletedFile doneFile;
+        doneFile.filePath = "files/mp3file1.mp3";
+        reciever.files->push_back(doneFile);
+#endif
+        
 		while(1)
 		{
 #if DEBUG
@@ -151,15 +159,25 @@ int main(int argc, char **argv)
                     //reciever.files->pop_front();
                     
                     FILE * f = fopen(currentFile.filePath.c_str(), "r");
+                    long fileSize = ftell(f);
                     
-                    unsigned char buffer[EMPTY_MP3_DATA_LENGTH];
+                    if(currentIndex > fileSize)
+                    {
+                        currentSong++;
+                        currentIndex = 0;
+                    }
+                    
+                    fseek(f, currentIndex, SEEK_SET);
+
+                    unsigned char arr[EMPTY_MP3_DATA_LENGTH];
                     
                     //only read the first ~30000 bytes
-                    result = fread (buffer , 1 , EMPTY_MP3_DATA_LENGTH , f);
-                    printf("Sending data from file.");
+                    fread (arr , 1 , EMPTY_MP3_DATA_LENGTH , f);
                     fclose(f);
                     
-                    sendOverSPI(buffer, EMPTY_MP3_DATA_LENGTH);
+                    int indexesSent = sendOverSPI(arr, EMPTY_MP3_DATA_LENGTH);
+                    
+                    printf("First five bits: 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", arr[0],arr[1],arr[2],arr[3],arr[4]);
                 }
                 else
                 {
