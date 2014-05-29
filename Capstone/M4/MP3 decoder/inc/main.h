@@ -18,4 +18,4 @@ void timing_handler();
 
 #endif /* MAIN_H_ */
 
-#define MP3_SIZE	31346//687348
+#define MP3_SIZE	31397//687348

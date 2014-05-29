@@ -22,33 +22,24 @@ HMP3Decoder hMP3Decoder;
 
 // External variables
 /*extern*/char mp3_data[MP3_SIZE];
+char mp3_data2[MP3_SIZE];
+
+char *currentReadBuffer;
+char *currentWriteBuffer;
+
 int rxIndex = 0;
 char dataRxComplete = 0;
 
-unsigned char needMoreData = 0x08;
-
 uint8_t isItData = 0;
-uint8_t playedHalf = 0;
 uint8_t resetPtr = 0;
-uint8_t tempData;
-
-int16_t audio_buffer0[4096];   
-int numSamples = 0;
-int16_t audio_buffer1[4096];
-
-int offset, err;
-int outOfData = 0;
-char *read_ptr = mp3_data;
-int bytes_left = MP3_SIZE;
-
-uint8_t decodeBuffer = 0;
-
-void decodeMP3();
 
 int main(void) {
 	init();
+        
 	int volume = 0;
-
+        currentWriteBuffer = mp3_data;
+        currentReadBuffer = mp3_data2;
+        
 	// Play mp3
         
         mySPI_Init();                           //Init SPI for comm with Pi
@@ -75,34 +66,32 @@ int main(void) {
         {
             dataRxComplete = dataRxComplete;
         }
-        //while(SPI_I2S_GetITStatus(SPI1, SPI_I2S_IT_RXNE) == SET);
         
         rxIndex = 0;                    //reset rxIndex (do in interrupt?)
+        dataRxComplete = 0;
+        
+        //flip buffers
+        char *tempBuffer = currentReadBuffer;
+        currentReadBuffer = currentWriteBuffer;
+        currentWriteBuffer = tempBuffer;
+        
+        GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
+        GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
         
 	hMP3Decoder = MP3InitDecoder();
-        
-        decodeMP3();
-        
+                
         //Send need more data GPIO signal
         
 	InitializeAudio(Audio44100HzSettings);
 	SetAudioVolume(0xCF);
         PlayAudioWithCallback(AudioCallback, 0);
         
-	while(1) {
-            decodeMP3();
-            
-            while (!dataRxComplete) 
-            {
-                dataRxComplete = dataRxComplete;
-                
-                if (playedHalf)
+	while(1) {                                         
+                if(dataRxComplete) 
                 {
-                    GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
-                    GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
+                    rxIndex = 0; 
+                    dataRxComplete = 0;
                 }
-                rxIndex = 0; 
-            }
            
               
 		/*
@@ -133,30 +122,77 @@ int main(void) {
 
 int previousBuffer = 1;
 
-void decodeMP3()
+/*
+ * Called by the audio driver when it is time to provide data to
+ * one of the audio buffers (while the other buffer is sent to the
+ * CODEC using DMA). One mp3 frame is decoded at a time and
+ * provided to the audio driver.
+ */
+static void AudioCallback(void *context, int buffer) 
 {
-        if(previousBuffer == decodeBuffer)
-        {
-            return;
-        }
-  
-        previousBuffer = decodeBuffer;
-        
-        int16_t *samplesBuffer;
-        
-        if(decodeBuffer == 0)
-        {
-          samplesBuffer = audio_buffer0;
-        }
-        else
-        {
-          samplesBuffer = audio_buffer1;
-        }
+        static int16_t audio_buffer0[4096];
+	static int16_t audio_buffer1[4096];
 
-	//err = MP3Decode(hMP3Decoder, (unsigned char**)&read_ptr, &bytes_left, samples, 0);      //had breakpoint
+	int offset, err;
+	int outOfData = 0;
+	static const char *read_ptr = mp3_data;
+	static int bytes_left = MP3_SIZE;
+
+	int16_t *samples;
+
+	if (buffer) {
+		samples = audio_buffer0;
+		GPIO_SetBits(GPIOD, GPIO_Pin_13);
+		GPIO_ResetBits(GPIOD, GPIO_Pin_14);
+	} else {
+		samples = audio_buffer1;
+		GPIO_SetBits(GPIOD, GPIO_Pin_14);
+		GPIO_ResetBits(GPIOD, GPIO_Pin_13);
+	}
+
+	offset = MP3FindSyncWord((unsigned char*)read_ptr, bytes_left);
+
+	bytes_left -= offset;
+
+	if (buffer) 
+        {
+		GPIO_SetBits(GPIOD, GPIO_Pin_13);
+		GPIO_ResetBits(GPIOD, GPIO_Pin_14);
+	} else 
+        {
+		GPIO_SetBits(GPIOD, GPIO_Pin_14);
+		GPIO_ResetBits(GPIOD, GPIO_Pin_13);
+	}
         
-        err = MP3Decode(hMP3Decoder, (unsigned char**)&read_ptr, &bytes_left, samplesBuffer, 0); 
+        offset = MP3FindSyncWord((unsigned char*)read_ptr, bytes_left);
+	bytes_left -= offset;
         
+        //Played the entire buffer, loop back to play from the front of the buffer
+        if (bytes_left <= 1000 || resetPtr) {
+                if(resetPtr)
+                {
+                  //flip buffers
+                  char *tempBuffer = currentReadBuffer;
+                  currentReadBuffer = currentWriteBuffer;
+                  currentWriteBuffer = tempBuffer;
+                  read_ptr = currentReadBuffer;
+                  
+                  GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
+                  GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
+                  
+                  bytes_left = MP3_SIZE;
+                  offset = MP3FindSyncWord((unsigned char*)read_ptr, bytes_left);
+                  resetPtr = 0;
+                }
+                else
+                {
+                  resetPtr = 1;
+                }
+	}
+
+	read_ptr += offset;
+        err = MP3Decode(hMP3Decoder, (unsigned char**)&read_ptr, &bytes_left, samples, 0);
+
 	if (err) {
 		/* error occurred */
 		switch (err) {
@@ -174,62 +210,10 @@ void decodeMP3()
 	} else {
 		/* no error */
 		MP3GetLastFrameInfo(hMP3Decoder, &mp3FrameInfo);
-                numSamples = mp3FrameInfo.outputSamps;
-	}
-}
-
-/*
- * Called by the audio driver when it is time to provide data to
- * one of the audio buffers (while the other buffer is sent to the
- * CODEC using DMA). One mp3 frame is decoded at a time and
- * provided to the audio driver.
- */
-static void AudioCallback(void *context, int buffer) 
-{
-        static int16_t *samples;
-
-	if (buffer) 
-        {
-                decodeBuffer = 1;
-		samples = audio_buffer0;
-		GPIO_SetBits(GPIOD, GPIO_Pin_13);
-		GPIO_ResetBits(GPIOD, GPIO_Pin_14);
-	} else 
-        {
-                decodeBuffer = 0;
-		samples = audio_buffer1;
-		GPIO_SetBits(GPIOD, GPIO_Pin_14);
-		GPIO_ResetBits(GPIOD, GPIO_Pin_13);
-	}
-        
-        offset = MP3FindSyncWord((unsigned char*)read_ptr, bytes_left);
-	bytes_left -= offset;
-
-        //Already played half way, set flag
-	if (bytes_left <= 20000) {
-                playedHalf = 1;
-	}
-        
-        //Played the entire buffer, loop back to play from the front of the buffer
-        if (bytes_left <= 1000 || resetPtr) {
-                if(resetPtr)
-                {
-                  read_ptr = mp3_data;
-                  bytes_left = MP3_SIZE;
-                  offset = MP3FindSyncWord((unsigned char*)read_ptr, bytes_left);
-                  resetPtr = 0;
-                }
-                else
-                {
-                  resetPtr = 1;
-                }
 	}
 
-	read_ptr += offset;
-        
-	if ( !outOfData ) 
-        {
-		ProvideAudioBuffer(samples, numSamples);
+	if (!outOfData) {
+		ProvideAudioBuffer(samples, mp3FrameInfo.outputSamps);
 	}
 }
 

@@ -20,7 +20,7 @@ Stop=1
 Freq=10000000
 MultiCoreRunAll=1
 [DebugChecksum]
-Checksum=-1303923231
+Checksum=-1617722123
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -45,9 +45,6 @@ ITMportsEnable=0
 ITMportsTermIO=0
 ITMportsLogFile=0
 ITMlogFile=$PROJ_DIR$\ITM.log
-[Trace2]
-Enabled=0
-ShowSource=0
 [SWOTraceWindow]
 PcSampling=0
 InterruptLogs=0
@@ -70,23 +67,13 @@ GraphEnabled=0
 ShowTimeLog=1
 ShowTimeSum=1
 SumSortOrder=0
-[Disassemble mode]
-mode=0
-[Breakpoints2]
-Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\..\..\WINDOWS\system32}.18.7" 0 0 1 "" 0 "" 0
-Bp1=_ 1 "EMUL_CODE" "{$PROJ_DIR$\src\main.c}.83.2" 0 0 1 "" 0 "" 0
-Count=2
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
 Category=_ 0
-[Aliases]
-A0=_ "C:\Users\Anna Horstmann\Documents\GitHub\EE478\Capstone\Libraries\CMSIS\ST\STM32F4xx\Source\Templates\iar\startup_stm32f4xx.s" ""
-A1=_ "Z:\Documents\EE 478 (GitHub)\EE478\Capstone\M4\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_spi.c" ""
-A2=_ "Z:\Documents\EE 478 (GitHub)\EE478\Capstone\M4\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_usart.c" ""
-A3=_ "Z:\Documents\EE 478 (GitHub)\EE478\Capstone\M4\MP3 decoder\helix\real\subband.c" ""
-Count=4
-SuppressDialog=1
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
 [CallStackLog]
 Enabled=0
 [DriverProfiling]
@@ -95,6 +82,17 @@ Mode=3
 Graph=0
 Symbiont=0
 Exclusions=
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
+[Disassemble mode]
+mode=0
+[Breakpoints2]
+Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\..\..\WINDOWS\system32}.18.7" 0 0 1 "" 0 "" 0
+Bp1=_ 0 "EMUL_CODE" "{$PROJ_DIR$\src\main.c}.86.2" 0 0 1 "" 0 "" 0
+Count=2
+[Aliases]
+A0=_ "C:\Users\Anna Horstmann\Documents\GitHub\EE478\Capstone\Libraries\CMSIS\ST\STM32F4xx\Source\Templates\iar\startup_stm32f4xx.s" ""
+A1=_ "C:\Users\Anna Horstmann\Documents\GitHub\EE478\Capstone\M4\MP3 decoder\src\main.c" "Z:\Documents\EE 478 (GitHub)\EE478\Capstone\M4\MP3 decoder\src\main.c"
+A2=_ "Z:\Documents\EE 478 (GitHub)\EE478\Capstone\M4\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_spi.c" ""
+A3=_ "Z:\Documents\EE 478 (GitHub)\EE478\Capstone\M4\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_usart.c" ""
+A4=_ "Z:\Documents\EE 478 (GitHub)\EE478\Capstone\M4\MP3 decoder\helix\real\subband.c" ""
+Count=5
+SuppressDialog=1

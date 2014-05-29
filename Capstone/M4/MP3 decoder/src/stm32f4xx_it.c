@@ -1,9 +1,9 @@
 #include "stm32f4xx_it.h"
 #include "main.h"
 
-extern char mp3_data[MP3_SIZE];
 extern int rxIndex;
 extern char dataRxComplete;
+extern char *currentWriteBuffer;
 
 /**
   * @brief   This function handles NMI exception.
@@ -123,7 +123,7 @@ void SPI1_IRQHandler(void)
     if (rxIndex < MP3_SIZE)
     {
       /* Receive Transaction data */
-      mp3_data[rxIndex] = SPI_I2S_ReceiveData(SPI1);
+      currentWriteBuffer[rxIndex] = SPI_I2S_ReceiveData(SPI1);
       rxIndex++;
       if (rxIndex == MP3_SIZE)
       {
