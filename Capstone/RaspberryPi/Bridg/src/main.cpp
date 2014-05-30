@@ -161,7 +161,7 @@ int main(int argc, char **argv)
                     //reciever.files->pop_front();
                     
                     FILE * f = fopen(currentFile.filePath.c_str(), "r");
-                    long fileSize = ftell(f);
+                    unsigned long fileSize = (unsigned long) ftell(f);
                     
                     if(currentIndex > fileSize)
                     {
