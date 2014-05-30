@@ -86,6 +86,7 @@ int sendOverSPI( const unsigned char * data, const unsigned int inLength )
 void isM4ReadyISR()
 {
     isM4Ready = 1;
+    printf("Hit ISR \n");
 }
 
 unsigned long currentIndex = 0;
