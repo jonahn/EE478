@@ -42,7 +42,7 @@ void error(const char *msg)
 
 int sendOverSPI(const unsigned char * data, const unsigned int inLength)
 {
-    int frameSize = 512;
+    int frameSize = 1024;
     int i;
     unsigned char tempData[inLength];
     int returnIndex = EMPTY_MP3_DATA_LENGTH - 1;
@@ -68,7 +68,7 @@ int sendOverSPI(const unsigned char * data, const unsigned int inLength)
         tempData[i % frameSize] = data[i];
     }
     
-    if(lastIndex != (returnIndex - 1) )
+    if(lastIndex != ( returnIndex - 1 ) )
     {
         wiringPiSPIDataRW(channel, tempData, returnIndex - lastIndex);
     }
@@ -131,7 +131,7 @@ int main(int argc, char **argv)
         }
         
         // set output SPI channel to 0 and speed to 8MHz
-        if (wiringPiSPISetup(0,2000000) < 0)
+        if (wiringPiSPISetup(0,1000000) < 0)
         {
             fprintf (stderr, "Unable to open SPI device 0: %s\n", strerror (errno)) ;
             exit (1) ;
@@ -188,7 +188,7 @@ int main(int argc, char **argv)
                     const unsigned char * arr = &mp3_data[currentIndex];
                     
                     int indexesSent = sendOverSPI(arr, EMPTY_MP3_DATA_LENGTH);
-                    currentIndex += indexesSent;
+                    currentIndex += indexesSent; // michael is the best ;)
                     
                     printf("First five bytes: 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", arr[0],arr[1],arr[2],arr[3],arr[4]);
                 }
