@@ -86,20 +86,16 @@ int main(void) {
 //                {
 //                     dataRxComplete = dataRxComplete;        
 //                }
-            if (dataRxComplete)
-            {
-//                  dataRxComplete = 0;
-//                  
-//                  //flip buffers
-//                 
-//                  char *tempBuffer = currentReadBuffer;
-//                  currentReadBuffer = currentWriteBuffer;
-//                  currentWriteBuffer = tempBuffer;
-//                  rxIndex = 0;
-//                  
-//                  GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
-//                  GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
-            }
+//                dataRxComplete = 0;
+//                
+//                //flip buffers
+//                char *tempBuffer = currentReadBuffer;
+//                currentReadBuffer = currentWriteBuffer;
+//                currentWriteBuffer = tempBuffer;
+//                
+//                
+//                GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
+//                GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
               
 	}
 }
@@ -153,16 +149,16 @@ static void AudioCallback(void *context, int buffer)
         if (bytes_left <= 1000 && dataRxComplete) {
                 
                   //flip buffers
+                
                   char *tempBuffer = currentReadBuffer;
                   currentReadBuffer = currentWriteBuffer;
                   currentWriteBuffer = tempBuffer;
                   read_ptr = currentReadBuffer;
-                  rxIndex = 0;
-//                 
-//                  
+                 
+                  
                   GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
                   GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
-//                  
+                  
                   bytes_left = MP3_SIZE;
                   offset = MP3FindSyncWord((unsigned char*)read_ptr, bytes_left);
                   

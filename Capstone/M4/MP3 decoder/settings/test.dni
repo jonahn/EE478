@@ -20,7 +20,7 @@ Stop=1
 Freq=10000000
 MultiCoreRunAll=1
 [DebugChecksum]
-Checksum=-539150210
+Checksum=920430633
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -74,14 +74,13 @@ SumSortOrder=0
 mode=0
 [Breakpoints2]
 Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\..\..\WINDOWS\system32}.18.7" 0 0 1 "" 0 "" 0
-Count=1
+Bp1=_ 1 "EMUL_CODE" "{$PROJ_DIR$\src\main.c}.185.3" 0 0 1 "" 0 "" 0
+Bp2=_ 1 "EMUL_CODE" "{$PROJ_DIR$\src\main.c}.89.19" 0 0 1 "" 0 "" 0
+Count=3
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
 Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
 [Aliases]
 A0=_ "C:\Users\Anna Horstmann\Documents\GitHub\EE478\Capstone\Libraries\CMSIS\ST\STM32F4xx\Source\Templates\iar\startup_stm32f4xx.s" ""
 A1=_ "C:\Users\Anna Horstmann\Documents\GitHub\EE478\Capstone\M4\MP3 decoder\src\main.c" "Z:\Documents\EE 478 (GitHub)\EE478\Capstone\M4\MP3 decoder\src\main.c"
@@ -98,3 +97,6 @@ Mode=3
 Graph=0
 Symbiont=0
 Exclusions=
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
