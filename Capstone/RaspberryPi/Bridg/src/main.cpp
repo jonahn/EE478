@@ -181,7 +181,7 @@ int main(int argc, char **argv)
                         int indexesSent = sendOverSPI(arr, numberOfBytesRead);
                         currentIndex += indexesSent;
 
-                        printf("First five bytes (%s): 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", currentFile.filePath.c_str(), arr[0],arr[1],arr[2],arr[3],arr[4]);
+                        printf("First five bytes(%s) of index:%lu: 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", currentFile.filePath.c_str(), currentIndex, arr[0],arr[1],arr[2],arr[3],arr[4]);
                     }
                 }
                 else
