@@ -148,7 +148,6 @@ static void AudioCallback(void *context, int buffer)
         
         //Played the entire buffer, loop back to play from the front of the buffer
         if (bytes_left <= 1000) {
-                
                   flipBuffers();
                   bytes_left = MP3_SIZE;
                   offset = MP3FindSyncWord((unsigned char*)read_ptr, bytes_left);
@@ -161,7 +160,7 @@ static void AudioCallback(void *context, int buffer)
         err = MP3Decode(hMP3Decoder, (unsigned char**)&read_ptr, &bytes_left, samples, 0);
         
         
-	if (err) {
+	if (err && (err != -9)) {
 		// error occurred
 		switch (err) {
 		case ERR_MP3_INDATA_UNDERFLOW:
@@ -170,17 +169,16 @@ static void AudioCallback(void *context, int buffer)
 		case ERR_MP3_MAINDATA_UNDERFLOW:
 			//do nothing - next call to decode will provide more mainData 
 			break;
-                case -9:
-                        break;
 		case ERR_MP3_FREE_BITRATE_SYNC:
 		default:
 			outOfData = 1;
 			break;
 		}
 	} else {
-		/* no error */
+		// no error 
 		MP3GetLastFrameInfo(hMP3Decoder, &mp3FrameInfo);
 	}
+        //MP3GetLastFrameInfo(hMP3Decoder, &mp3FrameInfo);
 
 	//if (!outOfData) {
         ProvideAudioBuffer(samples, mp3FrameInfo.outputSamps);
