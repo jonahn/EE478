@@ -72,13 +72,13 @@ int sendOverSPI( const unsigned char * data, const unsigned int inLength )
     
     if( lastIndex != ( returnIndex - 1 ) )
     {
-        wiringPiSPIDataRW( channel, tempData, returnIndex - lastIndex + 1);
+        wiringPiSPIDataRW( channel, tempData, returnIndex - lastIndex);
     }
     
     for( int i = 0; i < frameSize; i++ )
         tempData[i] = 0;
     
-    wiringPiSPIDataRW( channel, tempData, EMPTY_MP3_DATA_LENGTH - returnIndex );
+    wiringPiSPIDataRW( channel, tempData, EMPTY_MP3_DATA_LENGTH - returnIndex);
 
     return returnIndex;
 }
