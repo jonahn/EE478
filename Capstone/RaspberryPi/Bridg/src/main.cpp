@@ -42,7 +42,7 @@ void error(const char *msg)
 
 int sendOverSPI(const unsigned char * data, const unsigned int inLength)
 {
-    int frameSize = 512;
+    int frameSize = 1024;
     int i;
     unsigned char tempData[inLength];
     int returnIndex = EMPTY_MP3_DATA_LENGTH - 1;
