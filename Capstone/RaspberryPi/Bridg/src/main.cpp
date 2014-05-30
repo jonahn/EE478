@@ -144,7 +144,7 @@ int main(int argc, char **argv)
 #if DEBUG
         CompeletedFile doneFile;
         doneFile.filePath = "files/mp3file1.mp3";
-        //reciever.files->push_back(doneFile);
+        reciever.files->push_back(doneFile);
 #endif
         
 		while(1)
@@ -168,21 +168,19 @@ int main(int argc, char **argv)
                         currentSong++;
                         currentIndex = 0;
                     }
-                    else
-                    {
-                        fseek(f, currentIndex, SEEK_SET);
-                        
-                        unsigned char arr[EMPTY_MP3_DATA_LENGTH];
-                        
-                        //only read the first ~30000 bytes
-                        unsigned int numberOfBytesRead = (unsigned int) fread(arr , 1 , EMPTY_MP3_DATA_LENGTH , f);
-                        fclose(f);
-                        
-                        int indexesSent = sendOverSPI(arr, numberOfBytesRead);
-                        currentIndex += indexesSent;
+                    
+                    fseek(f, currentIndex, SEEK_SET);
+                    
+                    unsigned char arr[EMPTY_MP3_DATA_LENGTH];
+                    
+                    //only read the first ~30000 bytes
+                    unsigned int numberOfBytesRead = (unsigned int) fread(arr , 1 , EMPTY_MP3_DATA_LENGTH , f);
+                    fclose(f);
+                    
+                    int indexesSent = sendOverSPI(arr, numberOfBytesRead);
+                    currentIndex += indexesSent;
 
-                        printf("First five bytes(%s) of index:%lu: 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", currentFile.filePath.c_str(), currentIndex, arr[0],arr[1],arr[2],arr[3],arr[4]);
-                    }
+                    printf("First five bytes (%s): 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", currentFile.filePath.c_str(), arr[0],arr[1],arr[2],arr[3],arr[4]);
                 }
                 else
                 {
