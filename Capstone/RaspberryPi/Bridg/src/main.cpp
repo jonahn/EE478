@@ -23,7 +23,9 @@ extern "C" {
 #endif
 }
 
-#define TRANSFER_BUFFER_SIZE 256
+#define TRANSFER_BUFFER_SIZE    256
+#define VIEN                    "awesome dude\0"
+#define AHMED                   "scrub lord\0"
 
 pthread_t iThread;
 pthread_t networkThread;
@@ -34,13 +36,13 @@ unsigned char isM4Ready = 0;
 
 void waitUntilRecieve();
 
-void error(const char *msg)
+void error( const char *msg )
 {
-    perror(msg);
-    exit(1);
+    perror( msg );
+    exit( 1 );
 }
 
-int sendOverSPI(const unsigned char * data, const unsigned int inLength)
+int sendOverSPI( const unsigned char * data, const unsigned int inLength )
 {
     int frameSize = 1024;
     int i;
@@ -48,43 +50,43 @@ int sendOverSPI(const unsigned char * data, const unsigned int inLength)
     int returnIndex = EMPTY_MP3_DATA_LENGTH - 1;
     int lastIndex = 0;
     
-    for(int i = inLength - 1; i > 0; i--)
+    for( int i = inLength - 1; i > 0; i-- )
     {
-        if(data[i] == 0xFB && data[i-1] == 0xFF)
+        if( data[i] == 0xFB && data[i-1] == 0xFF )
         {
             returnIndex = i - 1;
             break;
         }
     }
 
-    for(i = 0; i < returnIndex; i++)
+    for( i = 0; i < returnIndex; i++ )
     {
-        if(i % frameSize == 0 && i != 0)
+        if( i % frameSize == 0 && i != 0 )
         {
-            wiringPiSPIDataRW(channel, tempData, frameSize);
+            wiringPiSPIDataRW( channel, tempData, frameSize );
             lastIndex = i;
         }
         
         tempData[i % frameSize] = data[i];
     }
     
-    if(lastIndex != ( returnIndex - 1 ) )
+    if( lastIndex != ( returnIndex - 1 ) )
     {
-        wiringPiSPIDataRW(channel, tempData, returnIndex - lastIndex);
+        wiringPiSPIDataRW( channel, tempData, returnIndex - lastIndex);
     }
     
-    for(int i = 0; i < frameSize; i++)
+    for( int i = 0; i < frameSize; i++ )
         tempData[i] = 0;
     
-    wiringPiSPIDataRW(channel, tempData, EMPTY_MP3_DATA_LENGTH - returnIndex);
-    printf("Last five bits: 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", tempData[frameSize-5],tempData[frameSize-4],tempData[frameSize-3],tempData[frameSize-2],tempData[frameSize-1]);
+    wiringPiSPIDataRW( channel, tempData, EMPTY_MP3_DATA_LENGTH - returnIndex);
 
     return returnIndex;
 }
 
 void isM4ReadyISR()
 {
-    isM4Ready = 0x01;
+    isM4Ready = 1;
+    printf("Hit ISR \n");
 }
 
 unsigned long currentIndex = 0;
@@ -143,7 +145,7 @@ int main(int argc, char **argv)
 #if DEBUG
         CompeletedFile doneFile;
         doneFile.filePath = "files/mp3file1.mp3";
-        //reciever.files->push_back(doneFile);
+        reciever.files->push_back(doneFile);
 #endif
         
 		while(1)
@@ -151,7 +153,7 @@ int main(int argc, char **argv)
 #if DEBUG
             isM4ReadyISR();
 #endif
-            if(isM4Ready != 0)
+            if(isM4Ready == 1)
             {
                 isM4Ready = 0;
                 if(reciever.files->size() > 0)
@@ -160,28 +162,26 @@ int main(int argc, char **argv)
                     //reciever.files->pop_front();
                     
                     FILE * f = fopen(currentFile.filePath.c_str(), "r");
-                    long fileSize = ftell(f);
+                    unsigned long fileSize = (unsigned long) ftell(f);
                     
                     if(currentIndex > fileSize)
                     {
                         currentSong++;
                         currentIndex = 0;
                     }
-                    else
-                    {
-                        fseek(f, currentIndex, SEEK_SET);
-                        
-                        unsigned char arr[EMPTY_MP3_DATA_LENGTH];
-                        
-                        //only read the first ~30000 bytes
-                        unsigned int numberOfBytesRead = (unsigned int) fread(arr , 1 , EMPTY_MP3_DATA_LENGTH , f);
-                        fclose(f);
-                        
-                        int indexesSent = sendOverSPI(arr, numberOfBytesRead);
-                        currentIndex += indexesSent;
+                    
+                    fseek(f, currentIndex, SEEK_SET);
+                    
+                    unsigned char arr[EMPTY_MP3_DATA_LENGTH];
+                    
+                    //only read the first ~30000 bytes
+                    unsigned int numberOfBytesRead = (unsigned int) fread(arr , 1 , EMPTY_MP3_DATA_LENGTH , f);
+                    fclose(f);
+                    
+                    int indexesSent = sendOverSPI(arr, numberOfBytesRead);
+                    currentIndex += indexesSent;
 
-                        printf("First five bits: 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", arr[0],arr[1],arr[2],arr[3],arr[4]);
-                    }
+                    printf("%d First five bytes (%s): 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", isM4Ready, currentFile.filePath.c_str(), arr[0],arr[1],arr[2],arr[3],arr[4]);
                 }
                 else
                 {

@@ -181,6 +181,7 @@ void error(const char *msg)
         lame_set_out_samplerate(lame, SAMPLE_RATE);
         lame_set_num_channels(lame, 2);
         lame_set_brate(lame, 96);
+        lame_set_mode(lame, JOINT_STEREO);
         lame_init_params(lame);
         
         while (true)
@@ -297,7 +298,7 @@ void sendDataToServer(void* inData, int inLength)
     struct sockaddr_in serv_addr;
     struct hostent *server;
     
-    unsigned char dataBuffer[inLength];
+    unsigned char dataBuffer[abs(inLength)];
     int32_t headerLength = inLength;
     
     if(inData != NULL)
