@@ -33,6 +33,22 @@ char dataRxComplete = 0;
 uint8_t isItData = 0;
 uint8_t resetPtr = 0;
 
+char *read_ptr;
+
+void flipBuffers()
+{
+        char *tempBuffer = currentReadBuffer;
+        currentReadBuffer = currentWriteBuffer;
+        currentWriteBuffer = tempBuffer;
+        read_ptr = currentReadBuffer;
+        
+        rxIndex = 0;
+        
+        GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
+        GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
+        
+}
+
 int main(void) {
 	init();
 
@@ -65,13 +81,7 @@ int main(void) {
         //rxIndex = 0;                    //reset rxIndex (do in interrupt?)
         dataRxComplete = 0;
         
-        //flip buffers and ask for more data via GPIO pulse
-        char *tempBuffer = currentReadBuffer;
-        currentReadBuffer = currentWriteBuffer;
-        currentWriteBuffer = tempBuffer;
-        
-        GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
-        GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
+        flipBuffers();
         
 	hMP3Decoder = MP3InitDecoder();
                 
@@ -80,6 +90,7 @@ int main(void) {
 	InitializeAudio(Audio44100HzSettings);
 	SetAudioVolume(0xCF);
         PlayAudioWithCallback(AudioCallback, 0);
+        
         
 	while(1) {                                         
 //                while(!dataRxComplete) 
@@ -106,16 +117,18 @@ int main(void) {
  * CODEC using DMA). One mp3 frame is decoded at a time and
  * provided to the audio driver.
  */
+
+int offset;
+
 static void AudioCallback(void *context, int buffer) 
 {
         static int16_t audio_buffer0[4096];
 	static int16_t audio_buffer1[4096];
 
-	int offset, err;
+	int err;
 	int outOfData = 0;
-	static const char *read_ptr = mp3_data;
 	static int bytes_left = MP3_SIZE;
-
+        
 	int16_t *samples;
 
 	if (buffer) {
@@ -130,52 +143,35 @@ static void AudioCallback(void *context, int buffer)
 
 	offset = MP3FindSyncWord((unsigned char*)read_ptr, bytes_left);
 
-	bytes_left -= offset;
-
-	if (buffer) 
-        {
-		GPIO_SetBits(GPIOD, GPIO_Pin_13);
-		GPIO_ResetBits(GPIOD, GPIO_Pin_14);
-	} else 
-        {
-		GPIO_SetBits(GPIOD, GPIO_Pin_14);
-		GPIO_ResetBits(GPIOD, GPIO_Pin_13);
-	}
-        
-        offset = MP3FindSyncWord((unsigned char*)read_ptr, bytes_left);
-	bytes_left -= offset;
+        if (offset != -1)
+          bytes_left -= offset;
         
         //Played the entire buffer, loop back to play from the front of the buffer
-        if (bytes_left <= 1000 && dataRxComplete) {
+        if (bytes_left <= 1000) {
                 
-                  //flip buffers
-                
-                  char *tempBuffer = currentReadBuffer;
-                  currentReadBuffer = currentWriteBuffer;
-                  currentWriteBuffer = tempBuffer;
-                  read_ptr = currentReadBuffer;
-                 
-                  
-                  GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
-                  GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
-                  
+                  flipBuffers();
                   bytes_left = MP3_SIZE;
                   offset = MP3FindSyncWord((unsigned char*)read_ptr, bytes_left);
-                  
 	}
 
-	read_ptr += offset;
+        if(offset < MP3_SIZE && offset >= 0)
+        {
+             read_ptr += offset;
+        }
         err = MP3Decode(hMP3Decoder, (unsigned char**)&read_ptr, &bytes_left, samples, 0);
-
+        
+        
 	if (err) {
-		/* error occurred */
+		// error occurred
 		switch (err) {
 		case ERR_MP3_INDATA_UNDERFLOW:
 			outOfData = 1;
 			break;
 		case ERR_MP3_MAINDATA_UNDERFLOW:
-			/* do nothing - next call to decode will provide more mainData */
+			//do nothing - next call to decode will provide more mainData 
 			break;
+                case -9:
+                        break;
 		case ERR_MP3_FREE_BITRATE_SYNC:
 		default:
 			outOfData = 1;
@@ -186,9 +182,9 @@ static void AudioCallback(void *context, int buffer)
 		MP3GetLastFrameInfo(hMP3Decoder, &mp3FrameInfo);
 	}
 
-	if (!outOfData) {
-		ProvideAudioBuffer(samples, mp3FrameInfo.outputSamps);
-	}
+	//if (!outOfData) {
+        ProvideAudioBuffer(samples, mp3FrameInfo.outputSamps);
+	//}
 }
 
 void init() {
