@@ -85,7 +85,7 @@ int sendOverSPI( const unsigned char * data, const unsigned int inLength )
 
 void isM4ReadyISR()
 {
-    isM4Ready = 0x01;
+    isM4Ready = 1;
 }
 
 unsigned long currentIndex = 0;
@@ -152,7 +152,7 @@ int main(int argc, char **argv)
 #if DEBUG
             isM4ReadyISR();
 #endif
-            if(isM4Ready != 0)
+            if(isM4Ready == 1)
             {
                 isM4Ready = 0;
                 if(reciever.files->size() > 0)
