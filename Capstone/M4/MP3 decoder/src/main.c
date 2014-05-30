@@ -157,9 +157,11 @@ static void AudioCallback(void *context, int buffer)
         {
              read_ptr += offset;
         }
-        err = MP3Decode(hMP3Decoder, (unsigned char**)&read_ptr, &bytes_left, samples, 0);
         
+        if (*read_ptr == 0xFF)
+          err = MP3Decode(hMP3Decoder, (unsigned char**)&read_ptr, &bytes_left, samples, 0);
         
+        /*
 	if (err && (err != -9)) {
 		// error occurred
 		switch (err) {
@@ -174,10 +176,10 @@ static void AudioCallback(void *context, int buffer)
 			outOfData = 1;
 			break;
 		}
-	} else {
+	} else {*/
 		// no error 
 		MP3GetLastFrameInfo(hMP3Decoder, &mp3FrameInfo);
-	}
+	//}
         //MP3GetLastFrameInfo(hMP3Decoder, &mp3FrameInfo);
 
 	//if (!outOfData) {
