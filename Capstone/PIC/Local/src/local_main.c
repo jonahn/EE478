@@ -37,8 +37,8 @@ unsigned char decBuffer[3];         //buff containing conversions to decimal
 
 #pragma udata userdata
 char headerStr[] = "Bridg Stats\r\n\0";
-char errMax[] = "Number entered exceeds 100 or invalid input.\r\n\0";
-char errMin[] = "Number entered below     0.\r\n\0";
+char numSongsStr[] = "Number of Songs Currently in Playlist:  \r\n\0";
+char perPlayedStr[] = "% Played:  \r\n\0";
 
 unsigned char strLength;
 int i;
@@ -86,8 +86,14 @@ void main(void)
 
 
         if(screenUpdated == )
+        {
+        //receive # of Songs char (if addr = 1)
 
+        //receive %played (if addr = 2)
 
+            puts1USART(numSongsStr);
+            puts1USART(perPlayedStr);
+        }
             
     CloseI2C1();
 }
