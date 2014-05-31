@@ -1,3 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
+        <file>file:/C:/Users/annahors/Documents/GitHub/EE478/Lab2/Remote/src/remote_main.c</file>
+        <file>file:/C:/Users/annahors/Documents/GitHub/EE478/Lab2/Remote/src/i2c_slave.c</file>
+        <file>file:/C:/Users/annahors/Documents/GitHub/EE478/Lab2/Remote/src/ADC_Remote.c</file>
+    </open-files>
 </project-private>
