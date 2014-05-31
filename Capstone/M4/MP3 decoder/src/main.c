@@ -33,6 +33,9 @@ char dataRxComplete = 0;
 uint8_t isItData = 0;
 uint8_t resetPtr = 0;
 
+int countFlips = 0;
+int err;
+
 char *read_ptr;
 
 void flipBuffers()
@@ -43,6 +46,7 @@ void flipBuffers()
         read_ptr = currentReadBuffer;
         
         rxIndex = 0;
+        countFlips += 1;
         
         GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
         GPIO_ToggleBits(GPIOD,  GPIO_Pin_11);
@@ -92,7 +96,8 @@ int main(void) {
         PlayAudioWithCallback(AudioCallback, 0);
         
         
-	while(1) {                                         
+	while(1) { 
+          
 //                while(!dataRxComplete) 
 //                {
 //                     dataRxComplete = dataRxComplete;        
@@ -118,33 +123,41 @@ int main(void) {
  * provided to the audio driver.
  */
 
-int offset;
-
 static void AudioCallback(void *context, int buffer) 
 {
         static int16_t audio_buffer0[4096];
 	static int16_t audio_buffer1[4096];
-
-	int err;
+        
+        int offset;
 	int outOfData = 0;
 	static int bytes_left = MP3_SIZE;
         
 	int16_t *samples;
 
-	if (buffer) {
+	if (buffer) 
+        {
 		samples = audio_buffer0;
 		GPIO_SetBits(GPIOD, GPIO_Pin_13);
 		GPIO_ResetBits(GPIOD, GPIO_Pin_14);
-	} else {
+	} 
+        else 
+        {
 		samples = audio_buffer1;
 		GPIO_SetBits(GPIOD, GPIO_Pin_14);
 		GPIO_ResetBits(GPIOD, GPIO_Pin_13);
 	}
 
 	offset = MP3FindSyncWord((unsigned char*)read_ptr, bytes_left);
-
+        
         if (offset != -1)
+        {
           bytes_left -= offset;
+        }
+        /*
+        else
+        {
+            bytes_left = 0;       //end of buffer, toggle buffers
+        }*/
         
         //Played the entire buffer, loop back to play from the front of the buffer
         if (bytes_left <= 1000) {
@@ -158,33 +171,68 @@ static void AudioCallback(void *context, int buffer)
              read_ptr += offset;
         }
         
-        if (*read_ptr == 0xFF)
+        //if (*read_ptr == 0xFF)
+        //{
           err = MP3Decode(hMP3Decoder, (unsigned char**)&read_ptr, &bytes_left, samples, 0);
+        //}
         
-        /*
-	if (err && (err != -9)) {
+	if (err && (err != -9)) 
+        {
 		// error occurred
-		switch (err) {
+		switch (err) 
+                {
 		case ERR_MP3_INDATA_UNDERFLOW:
 			outOfData = 1;
 			break;
 		case ERR_MP3_MAINDATA_UNDERFLOW:
+                        MP3GetLastFrameInfo(hMP3Decoder, &mp3FrameInfo);
 			//do nothing - next call to decode will provide more mainData 
 			break;
+                        
+                case (-6):
+                        bytes_left -= 5;
+                        read_ptr += 5;
+                        //MP3GetLastFrameInfo(hMP3Decoder, &mp3FrameInfo);
+                        break;
+                
+                case (-8):
+                        break;
+                
 		case ERR_MP3_FREE_BITRATE_SYNC:
+                        break;
+                 
 		default:
 			outOfData = 1;
+                        bytes_left -= 5;
+                        read_ptr += 5;
 			break;
-		}
-	} else {*/
+                }
+          /*
+          StopAudio();
+          
+          rxIndex = 0;                   
+          dataRxComplete = 0;
+          bytes_left = MP3_SIZE;
+          
+          flipBuffers();
+        
+          PlayAudioWithCallback(AudioCallback, 0);*/
+	} 
+        else 
+        {
 		// no error 
 		MP3GetLastFrameInfo(hMP3Decoder, &mp3FrameInfo);
-	//}
+	}
         //MP3GetLastFrameInfo(hMP3Decoder, &mp3FrameInfo);
 
-	//if (!outOfData) {
+	if (mp3FrameInfo.outputSamps > 0) 
+        {
         ProvideAudioBuffer(samples, mp3FrameInfo.outputSamps);
-	//}
+	}
+        else
+        {
+          ProvideAudioBuffer(samples, 4096);
+        }
 }
 
 void init() {
