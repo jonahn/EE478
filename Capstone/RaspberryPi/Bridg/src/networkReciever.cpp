@@ -34,6 +34,13 @@ NetworkReciever::NetworkReciever(int portNumber)
     port = portNumber;
 }
 
+void addFileToQueue(std::string currentPath)
+{
+    CompeletedFile doneFile;
+    doneFile.filePath = currentPath;
+    mp3Files->push_back(doneFile);
+}
+
 void* recieverThread(void* maxNumberOfFiles)
 {
     int sockfd, newsockfd;
@@ -97,8 +104,13 @@ void* recieverThread(void* maxNumberOfFiles)
                     s << "files/mp3file" << fileCounter << ".mp3";
                     currentPath = std::string(s.str());
                     
+                    //delete the file if it exists
                     remove(currentPath.c_str());
+                    
                     currentFile = fopen(currentPath.c_str(), "a");
+                    
+                    addFileToQueue(currentPath);
+                    
                     break;
                 }
 
@@ -109,9 +121,6 @@ void* recieverThread(void* maxNumberOfFiles)
                     if(currentFile != 0)
                         fclose(currentFile);
                     
-                    CompeletedFile doneFile;
-                    doneFile.filePath = currentPath;
-                    mp3Files->push_back(doneFile);
                     break;
                 }
                     

@@ -158,18 +158,9 @@ int main(int argc, char **argv)
                 isM4Ready = 0;
                 if(reciever.files->size() > 0)
                 {
-                    CompeletedFile currentFile = reciever.files->front();
-                    //reciever.files->pop_front();
+                    CompeletedFile currentFile = reciever.files->at(currentSong);
                     
-                    FILE * f = fopen(currentFile.filePath.c_str(), "r");
-                    unsigned long fileSize = (unsigned long) ftell(f);
-                    
-                    if(currentIndex > fileSize)
-                    {
-                        currentSong++;
-                        currentIndex = 0;
-                    }
-                    
+                    FILE * f = fopen(currentFile.filePath.c_str(), "rb");
                     fseek(f, currentIndex, SEEK_SET);
                     
                     unsigned char arr[EMPTY_MP3_DATA_LENGTH];
@@ -181,14 +172,20 @@ int main(int argc, char **argv)
                     int indexesSent = sendOverSPI(arr, numberOfBytesRead);
                     currentIndex += indexesSent;
 
+                    //reached the end of the song
+                    if(indexesSent == 0)
+                    {
+                        currentSong = (currentSong + 1) % reciever.files->size();
+                        currentIndex = 0;
+                    }
+                    
                     printf("%d First five bytes (%s): 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", isM4Ready, currentFile.filePath.c_str(), arr[0],arr[1],arr[2],arr[3],arr[4]);
                 }
                 else
                 {
-                    const unsigned char * arr = &mp3_data[currentIndex];
+                    const unsigned char * arr = emptymp3data;
                     
-                    int indexesSent = sendOverSPI(arr, EMPTY_MP3_DATA_LENGTH);
-                    currentIndex += indexesSent; // michael is the best ;)
+                    sendOverSPI(arr, EMPTY_MP3_DATA_LENGTH);
                     
                     printf("First five bytes: 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", arr[0],arr[1],arr[2],arr[3],arr[4]);
                 }
