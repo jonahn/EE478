@@ -157,7 +157,7 @@ int main(int argc, char **argv)
             if (cycleCount %500000000000 == 0)
             {
                 majCount++;
-                if(majCount%500000)
+                if(majCount%500000 == 0)
                 {
                     //write a char to PIC
                     if(fd >=0)
