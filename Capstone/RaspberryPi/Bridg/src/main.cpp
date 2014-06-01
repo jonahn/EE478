@@ -162,6 +162,7 @@ int main(int argc, char **argv)
                 {
                     wiringPiI2CWrite ( fd, 0xF5 );
                 }
+                printf("fd: %d\n",fd );
             }
 #if DEBUG
             isM4ReadyISR();
