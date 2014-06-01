@@ -89,7 +89,7 @@ void main(void)
     while(1)
     {
         OpenI2C1(SLAVE_7, SLEW_OFF);
-        SSP1ADD = 0xA2;
+        SSP1ADD = 0x76;
         if (toggleLED == 1)
         {
             //temp = ~temp;
