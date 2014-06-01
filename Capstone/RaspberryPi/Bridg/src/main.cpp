@@ -150,16 +150,20 @@ int main(int argc, char **argv)
         //------------I2C Setup ------------------------
         int fd = wiringPiI2CSetup (0x04);    //DOUBLE CHECK device id
         unsigned int cycleCount = 0;
-        
+        unsigned int majCount = 0;
 		while(1)
 		{
             cycleCount++;
-            if (cycleCount %50000 == 0)
+            if (cycleCount %500000000000 == 0)
             {
-                //write a char to PIC
-                if(fd >=0)
+                majCount++;
+                if(majCount%500000)
                 {
-                    wiringPiI2CWrite ( fd, 0xF5 );
+                    //write a char to PIC
+                    if(fd >=0)
+                    {
+                        wiringPiI2CWrite ( fd, 0xF5 );
+                    }
                 }
             }
 #if DEBUG

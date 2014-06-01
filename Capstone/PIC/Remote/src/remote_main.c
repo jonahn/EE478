@@ -46,8 +46,8 @@ void main(void)
 
     setupInterrupts();
 
-    OpenI2C1(SLAVE_7, SLEW_OFF);
-    SSP1ADD = 0xA2;
+    //OpenI2C1(SLAVE_7, SLEW_OFF);
+    //SSP1ADD = 0xA2;
 
     //setup PWM
     TRISCbits.RC2 = 1; // Set TRIS bit
@@ -88,6 +88,8 @@ void main(void)
 
     while(1)
     {
+        OpenI2C1(SLAVE_7, SLEW_OFF);
+        SSP1ADD = 0xA2;
         if (toggleLED == 1)
         {
             //temp = ~temp;
@@ -123,5 +125,6 @@ void main(void)
         checkVolt = voltage;
 
         LATB = voltage;
+        CloseI2C1();
     }
 }
