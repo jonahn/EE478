@@ -86,7 +86,6 @@ int sendOverSPI( const unsigned char * data, const unsigned int inLength )
 void isM4ReadyISR()
 {
     isM4Ready = 1;
-    printf("Hit ISR \n");
 }
 
 unsigned long currentIndex = 0;
@@ -155,14 +154,13 @@ int main(int argc, char **argv)
 		while(1)
 		{
             cycleCount++;
-            if (cycleCount %500 == 0)
+            if (cycleCount %50000 == 0)
             {
                 //write a char to PIC
                 if(fd >=0)
                 {
                     wiringPiI2CWrite ( fd, 0xF5 );
                 }
-                printf("fd: %d\n",fd );
             }
 #if DEBUG
             isM4ReadyISR();
@@ -193,15 +191,12 @@ int main(int argc, char **argv)
                         currentIndex = 0;
                     }
                     
-                    printf("%d First five bytes (%s): 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", isM4Ready, currentFile.filePath.c_str(), arr[0],arr[1],arr[2],arr[3],arr[4]);
                 }
                 else
                 {
                     const unsigned char * arr = emptymp3data;
                     
                     sendOverSPI(arr, EMPTY_MP3_DATA_LENGTH);
-                    
-                    printf("First five bytes: 0x%x, 0x%x, 0x%x, 0x%x, 0x%x \n", arr[0],arr[1],arr[2],arr[3],arr[4]);
                 }
             }
         }
