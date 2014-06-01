@@ -148,7 +148,7 @@ int main(int argc, char **argv)
 #endif
 
         //------------I2C Setup ------------------------
-        //int fd = wiringPiI2CSetup (0x04);    //DOUBLE CHECK device id
+        int fd = wiringPiI2CSetup (0x04);    //DOUBLE CHECK device id
         unsigned int cycleCount = 0;
         unsigned int majCount = 0;
 		while(1)
