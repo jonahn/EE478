@@ -5,17 +5,20 @@
  * Created on April 21, 2014, 5:50 PM
  */
 
-#ifndef UART_INTERRUPTS_H
-#define	UART_INTERRUPTS_H
+#ifndef INTERRUPTS_H
+#define	INTERRUPTS_H
 
 #ifdef	__cplusplus
 extern "C" {
 #endif
 
+#define NOT_RECIEVED 0
+#define RECIEVED 1
+
 void setupInterrupts(void);
 
 void low_isr(void);
-
+void highPriorityISR(void);
 void low_vector(void);
 
 #ifdef	__cplusplus

@@ -20,6 +20,7 @@ extern "C" {
     #include <wiringPi.h>
     #include <wiringPiSPI.h>
 #endif
+    #include <wiringPiI2C.h>
 }
 
 #define TRANSFER_BUFFER_SIZE    256
@@ -146,9 +147,22 @@ int main(int argc, char **argv)
         doneFile.filePath = "files/mp3file1.mp3";
         reciever.files->push_back(doneFile);
 #endif
+
+        //------------I2C Setup ------------------------
+        int fd = wiringPiI2CSetup (0x04);    //DOUBLE CHECK device id
+        unsigned int cycleCount = 0;
         
 		while(1)
 		{
+            cycleCount++;
+            if (cycleCount %500 == 0)
+            {
+                //write a char to PIC
+                if(fd >=0)
+                {
+                    wiringPiI2CWrite ( fd, 0xF5 );
+                }
+            }
 #if DEBUG
             isM4ReadyISR();
 #endif

@@ -9,5 +9,5 @@
 
 void setup();
 void setupUSARTAndI2C();
-
+void setupLED_Pins();
 #endif

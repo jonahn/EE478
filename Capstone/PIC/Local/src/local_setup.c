@@ -53,9 +53,11 @@ void setupUSARTAndI2C()
         USART_EIGHT_BIT & USART_BRGH_HIGH, 129);
 
     //open, se4t device as MASTER, slew on for sharper transitions
-    OpenI2C1(MASTER, SLEW_OFF);
-    SSP1ADD = 0x31;
+    OpenI2C1(SLAVE_7, SLEW_OFF);
+    SSP1ADD = 0x04;
+}
 
-    //Temporary value, will be stored in SRAM later
-    dataToSend = 0;
+void setupLED_Pins()
+{
+
 }
