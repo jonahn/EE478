@@ -53,6 +53,7 @@ void setupUSARTAndI2C()
         USART_EIGHT_BIT & USART_BRGH_HIGH, 129);
 
     //open, se4t device as MASTER, slew on for sharper transitions
+    CloseI2C1();
     OpenI2C1(SLAVE_7, SLEW_OFF);
     SSP1ADD = 0x04;
 }
