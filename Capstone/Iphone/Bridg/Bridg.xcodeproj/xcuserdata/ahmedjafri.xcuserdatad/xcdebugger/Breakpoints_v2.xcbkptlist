@@ -118,15 +118,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Bridg/utils/BridgNetworkClient.cpp"
-            timestampString = "423472516.045455"
+            timestampString = "423473961.563874"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "132"
-            endingLineNumber = "132"
+            startingLineNumber = "122"
+            endingLineNumber = "122"
             landmarkName = "BridgNetworkClient::serialize(char * dataBuffer, BridgData dataToSerialize)"
             landmarkType = "5">
          </BreakpointContent>
@@ -138,11 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Bridg/utils/BridgNetworkClient.cpp"
-            timestampString = "423472516.045455"
+            timestampString = "423473961.563874"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "127"
-            endingLineNumber = "127"
+            startingLineNumber = "117"
+            endingLineNumber = "117"
             landmarkName = "BridgNetworkClient::serialize(char * dataBuffer, BridgData dataToSerialize)"
             landmarkType = "5">
          </BreakpointContent>
@@ -154,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Bridg/utils/BridgNetworkClient.cpp"
-            timestampString = "423472516.045455"
+            timestampString = "423473961.563874"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "126"
-            endingLineNumber = "126"
+            startingLineNumber = "116"
+            endingLineNumber = "116"
             landmarkName = "BridgNetworkClient::serialize(char * dataBuffer, BridgData dataToSerialize)"
             landmarkType = "5">
          </BreakpointContent>

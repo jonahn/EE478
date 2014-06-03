@@ -113,21 +113,8 @@ void BridgNetworkClient::sendDataToServer(BridgData inData)
 int BridgNetworkClient::serialize(char * dataBuffer, BridgData dataToSerialize)
 {
     memcpy(dataBuffer,                                      &dataToSerialize.dataType,      sizeof(char));
+    memcpy(&dataBuffer[TYPE_LENGTH],                        &dataToSerialize.length,        sizeof(uint32_t));
+    memcpy(&dataBuffer[sizeof(uint32_t) + TYPE_LENGTH],     dataToSerialize.data,           dataToSerialize.length);
     
-    uint32_t b0,b1,b2,b3, flippedInt;
-    
-    b0 = (dataToSerialize.length & 0x000000ff) << 24u;
-    b1 = (dataToSerialize.length & 0x0000ff00) << 8u;
-    b2 = (dataToSerialize.length & 0x00ff0000) >> 8u;
-    b3 = (dataToSerialize.length & 0xff000000) >> 24u;
-    
-    flippedInt = b0 | b1 | b2 | b3;
-    
-    memcpy(&dataBuffer[TYPE_LENGTH],                        &flippedInt,                  sizeof(uint32_t));
-    memcpy(&dataBuffer[sizeof(uint32_t) + TYPE_LENGTH],     dataToSerialize.data,         dataToSerialize.length);
-    for(int i = 0; i < 10; i ++)
-        printf("0x%x ",dataBuffer[i]);
-    
-    printf("\n");
     return 0;
 }
