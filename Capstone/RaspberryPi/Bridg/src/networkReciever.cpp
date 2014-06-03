@@ -47,8 +47,8 @@ BridgData parseData(unsigned char * buffer, unsigned int length)
 {
     BridgData data = BridgData();
     data.dataType = (BridgDataType)*buffer;
-    data.length = (unsigned int)buffer[sizeof(BridgDataType)];
-    data.data = (char*)&buffer[sizeof(BridgDataType) + sizeof(data.length)];
+    data.length = (unsigned int)buffer[sizeof(char)];
+    data.data = (char*)&buffer[sizeof(unsigned int) + sizeof(data.length)];
     
     return data;
 }
