@@ -64,7 +64,7 @@ void UARTSend(char *str, unsigned long strLength);
 
 void main(void)
 {
-    //setup();
+    setup();
     setupUSARTAndI2C();
     setupInterrupts();
     

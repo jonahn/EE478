@@ -148,13 +148,13 @@ int main(int argc, char **argv)
 #endif
 
         //------------I2C Setup ------------------------
-        int fd = wiringPiI2CSetup (0x04);    //DOUBLE CHECK device id
+        int fd = wiringPiI2CSetup (0x51);
         unsigned int cycleCount = 0;
         unsigned int majCount = 0;
 		while(1)
 		{
             cycleCount++;
-            if (cycleCount %50000000 == 0)
+            if (cycleCount %50000 == 0)
             {
                 //majCount++;
                 //if(majCount%5000 == 0)
@@ -162,6 +162,7 @@ int main(int argc, char **argv)
                     //write a char to PIC
                     if(fd >=0)
                     {
+                        printf("fd: %d\n", fd);
                         wiringPiI2CWrite ( fd, 0xF5 );
                     }
                 //}
@@ -195,15 +196,16 @@ int main(int argc, char **argv)
                         currentIndex = 0;
                     }
                     
-                    printf("Sending over SPI\n");  
+                    
                 }
                 else
                 {
                     const unsigned char * arr = emptymp3data;
                     
                     sendOverSPI(arr, EMPTY_MP3_DATA_LENGTH);
-                    printf("Sending over SPI\n"); 
-		 }
+                   
+		        }
+                printf("Sending over SPI\n");  
             }
         }
         
