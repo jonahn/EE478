@@ -178,7 +178,7 @@ int main(int argc, char **argv)
                 isM4Ready = 0;
                 if(reciever.files->size() > 0)
                 {
-                    CompeletedFile currentFile = reciever.files->at(currentSong);
+                    CompeletedFile currentFile = reciever.files->at(currentSong % reciever.files->size());
                     
                     FILE * f = fopen(currentFile.filePath.c_str(), "rb");
                     fseek(f, currentIndex, SEEK_SET);

@@ -122,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Bridg/utils/BridgNetworkClient.cpp"
-            timestampString = "423473961.563874"
+            timestampString = "423474577.140371"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "122"
-            endingLineNumber = "122"
+            startingLineNumber = "119"
+            endingLineNumber = "119"
             landmarkName = "BridgNetworkClient::serialize(char * dataBuffer, BridgData dataToSerialize)"
             landmarkType = "5">
          </BreakpointContent>
