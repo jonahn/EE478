@@ -16,6 +16,7 @@ void high_vector(void)
 
 //unsigned char toggleLED;
 extern unsigned char data;
+extern int indexRxData;
 
 // The actual high priority ISR
 #pragma interrupt highPriorityISR
@@ -40,6 +41,7 @@ void highPriorityISR() {
     }
 
     PIR1bits.SSP1IF = 0; // Clear the interrupt flag
+    indexRxData++;
     return;
 }
 

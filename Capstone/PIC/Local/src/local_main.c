@@ -39,18 +39,21 @@
 #pragma udata userdata
 
 //strings to send to USART
-char headerStr[] = "Bridg Stats\r\n\0";
-char numSongsStr[] = "Number of Songs Currently in Playlist:  \r\n\0";
+char headerStr[] = "BRIDG \r\n\0";
+char numSongsStr[] = "Number of Songs Currently in Playlist: \0";
 char perPlayedStr[] = "% Played:  \r\n\0";
+char emptyLine[] = "\r\n\0";
 unsigned char strLength;
-int i;
 
-char clearScreen = 0x1; //always clear the screen except for when waiting for user input
-char lastCommand = 0x0;
+//keep track of data sent from Pi
+int indexRxData;                //0 = # of songs, 1 = %played
 
 //variables for i2c
 unsigned char recievedDataFlag;
 unsigned char data;
+
+unsigned char playlistSize;
+unsigned char percentPlayed;
 
 //external functions
 extern void setup();
@@ -91,8 +94,32 @@ void main(void)
 //
         if(recievedDataFlag)
         {
-            Write1USART(data);
-            delay(50);
+            if(indexRxData == 0)    //rewrite header and write playlist
+            {
+                playlistSize = data;
+                Write1USART(0x0c);   // clear hyperterminal
+                delay(10);
+                puts1USART(headerStr);
+                puts1USART(emptyLine);
+                delay(20);
+                puts1USART(numSongsStr);
+                delay(50);
+                Write1USART(playlistSize);
+                delay(50);
+                Write1USART('\r');
+                delay(10);
+                Write1USART('\n');
+                delay(10);
+            }
+            else if(indexRxData == 1)   //update the LEDs
+            {
+                percentPlayed = data;
+
+
+
+                indexRxData = 0;        //currently only have 2 modes of data
+            }
+            
             recievedDataFlag = 0;
         }
 
