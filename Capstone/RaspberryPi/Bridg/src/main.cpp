@@ -208,7 +208,6 @@ int main(int argc, char **argv)
                     sendOverSPI(arr, EMPTY_MP3_DATA_LENGTH);
                    
 		        }
-                printf("Sending\n");  
             }
         }
         

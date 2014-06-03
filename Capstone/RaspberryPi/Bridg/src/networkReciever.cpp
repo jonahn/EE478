@@ -105,7 +105,7 @@ void handleCommand(BridgCommands command)
         }
             
         default:
-            printf("No command: %c. \n", command);
+            printf("No command: 0x%x. \n", command);
             break;
     }
 }
