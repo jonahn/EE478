@@ -17,6 +17,9 @@
 typedef struct
 {
     std::string filePath;
+    std::string songArtist;
+    std::string songTitle;
+    std::string totalSongLength;
 }CompeletedFile;
 
 class NetworkReciever
