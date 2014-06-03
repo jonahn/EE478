@@ -60,7 +60,7 @@ void handleCommand(BridgCommands command)
 {
     switch (command)
     {
-        case BridgCommands::NEW_SONG_UPLOAD:
+        case NEW_SONG_UPLOAD:
         {
             fileCounter++;
             
@@ -85,7 +85,7 @@ void handleCommand(BridgCommands command)
             break;
         }
             
-        case BridgCommands::UPLOAD_DONE:
+        case UPLOAD_DONE:
         {
             printf("Done creating file: mp3file%d.mp3 \n", fileCounter);
             
@@ -95,7 +95,7 @@ void handleCommand(BridgCommands command)
             break;
         }
             
-        case BridgCommands::SKIP:
+        case SKIP:
         {
             currentSong++;
             
@@ -148,13 +148,13 @@ void* recieverThread(void* maxNumberOfFiles)
         
         switch (data.dataType)
         {
-            case BridgDataType::COMMAND:
+            case COMMAND:
             {
                 handleCommand( (BridgCommands)(*data.data) );
                 break;
             }
 
-            case BridgDataType::MP3_ENCODED_DATA:
+            case MP3_ENCODED_DATA:
             {
                 fwrite(data.data, 1, data.length, currentFile);
                 break;
