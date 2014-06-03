@@ -151,6 +151,7 @@ int main(int argc, char **argv)
         int fd = wiringPiI2CSetup (0x51);
         unsigned int cycleCount = 0;
         unsigned int majCount = 0;
+        unsigned char playListSize;
 		while(1)
 		{
             cycleCount++;
@@ -163,7 +164,9 @@ int main(int argc, char **argv)
                     //write a char to PIC
                     if(fd >=0)
                     {
-                        wiringPiI2CWrite ( fd, 0x45 );
+                        playListSize = reciever.files->size() + '0';
+                        wiringPiI2CWrite ( fd, playListSize);
+                            
                     }
                 }
             }
@@ -192,7 +195,7 @@ int main(int argc, char **argv)
                     //reached the end of the song
                     if(indexesSent == 0)
                     {
-                        currentSong = (currentSong + 1) % reciever.files->size();
+                        currentSong = (currentSong + 1) % reciever.files->size();   //loop over playlist if at end
                         currentIndex = 0;
                     }
                     
@@ -205,7 +208,7 @@ int main(int argc, char **argv)
                     sendOverSPI(arr, EMPTY_MP3_DATA_LENGTH);
                    
 		        }
-                printf("Sending over SPI\n");  
+                printf("Sending\n");  
             }
         }
         
