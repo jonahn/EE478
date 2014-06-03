@@ -37,7 +37,7 @@ enum BridgDataType
     MP3_ENCODED_DATA        = 0x01,
     SONG_TITLE              = 0x02,
     SONG_ARTIST             = 0x03,
-    SONG_PERCENT_PLAYED     = 0x04,
+    TOTAL_SONG_LENGTH_BYTES = 0x04,
     COMMAND                 = 0x05
 };
 
