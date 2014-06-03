@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import "SimplePing.h"
 
-@interface ViewController : UIViewController <MPMediaPickerControllerDelegate>
+@interface ViewController : UIViewController <MPMediaPickerControllerDelegate, SimplePingDelegate>
 {
     IBOutlet UIButton       *pickSongButton;
-    IBOutlet UISwitch       *mp3EncodeSwitch;
 }
 
 @property (nonatomic, retain) IBOutlet UIProgressView *conversionProgress;

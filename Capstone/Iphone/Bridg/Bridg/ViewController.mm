@@ -17,21 +17,10 @@
 #include "Utils.h"
 
 #include "lame.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
+#include "utils/BridgNetworkClient.h"
+
 
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
-
-#define HEADER_LENGTH 32
-
-#define PORT_NUMBER 2000
-#define SERVER_ADDRESS "10.0.0.1"
 
 @interface ViewController ()
 {
@@ -40,6 +29,7 @@
     short *songWaveL, *songWaveR;
     __block long totalSize;
     unsigned char * mp3Buffer;
+    BridgNetworkClient bridgClient;
 }
 
 @end
@@ -72,17 +62,14 @@ void sendDataToServer(void* inData, int inLength);
         pickerController.showsCloudItems = YES;
     }
 	pickerController.delegate = self;
+    
+    bridgClient = BridgNetworkClient();
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-void error(const char *msg)
-{
-    perror(msg);
 }
 
 -(IBAction)pickSong:(id)sender
@@ -163,7 +150,7 @@ void error(const char *msg)
     
     totalSize = 0;
     
-    resetForNewSong();
+    bridgClient.resetForNewSong();
     
     // -- BACKGROUND THREAD --//
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH,
@@ -206,25 +193,18 @@ void error(const char *msg)
                 float * tempData = (float*)audioBufferList.mBuffers[bufferCount].mData; //left and right channels are interleaved
                 
                 // MP3 ENCODING - THIS IS SLOW!!
-                if(mp3EncodeSwitch.on)
+                int size = audioBufferList.mBuffers[bufferCount].mDataByteSize/sizeof(float);
+                for(int i = 0; i < size; i+= 2)
                 {
-                    int size = audioBufferList.mBuffers[bufferCount].mDataByteSize/sizeof(float);
-                    for(int i = 0; i < size; i+= 2)
-                    {
-                        songWaveL[i/2] = (short)(tempData[i] * 32767); // SCALE THESE TO MAX of short
-                        songWaveR[i/2] = (short)(tempData[i + 1] * 32767);
-                    }
-                    
-                    totalSize = size;
-                    
-                    int encodedBytes = lame_encode_buffer(lame, songWaveL, songWaveR, size/2, mp3Buffer, BUFFER_SIZE);
-                    
-                    sendDataToServer(mp3Buffer,encodedBytes);
+                    songWaveL[i/2] = (short)(tempData[i] * 32767); // SCALE THESE TO MAX of short
+                    songWaveR[i/2] = (short)(tempData[i + 1] * 32767);
                 }
-                else
-                {
-                    sendDataToServer(tempData, audioBufferList.mBuffers[bufferCount].mDataByteSize); // stereo interleaved data
-                }
+                
+                totalSize = size;
+                
+                int encodedBytes = lame_encode_buffer(lame, songWaveL, songWaveR, size/2, mp3Buffer, BUFFER_SIZE);
+                
+                bridgClient.sendMusicData(encodedBytes, mp3Buffer);
 
                 // SHOULD WE BE STORING ENCODED DATA BEFORE TRANSMITTING??
                 //[self WriteData:@"song.mp3" data:mp3Buffer length:encodedBytes];
@@ -241,7 +221,7 @@ void error(const char *msg)
         
         [self updateProgress:[NSNumber numberWithFloat:trackLengthinSeconds]];
 
-        finishedWithSong();
+        bridgClient.finishedWithSong();
         
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Done." message:@"Done Decoding.."
                                                        delegate:nil cancelButtonTitle:@"Done" otherButtonTitles:nil];
@@ -261,6 +241,11 @@ void error(const char *msg)
     fclose(fp);
 }
 
+-(IBAction)skipSong:(id)sender
+{
+    bridgClient.skipSong();
+}
+
 -(BOOL)deleteFile:(NSString*)inFilename
 {
     NSError *error;
@@ -275,92 +260,6 @@ void error(const char *msg)
 
 - (void)mediaPickerDidCancel:(MPMediaPickerController *)mediaPicker {
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-void sendData(void* inData, unsigned long inLength)
-{
-    
-}
-
-void resetForNewSong()
-{
-    sendDataToServer(NULL, 0);
-}
-
-void finishedWithSong()
-{
-    sendDataToServer(NULL, -1);
-}
-
-void sendDataToServer(void* inData, int inLength)
-{
-    int sockfd, portno, n;
-    struct sockaddr_in serv_addr;
-    struct hostent *server;
-    
-    unsigned char dataBuffer[abs(inLength)];
-    int32_t headerLength = inLength;
-    
-    if(inData != NULL)
-    {
-        memcpy(dataBuffer, inData, inLength);
-    }
-    
-    portno = PORT_NUMBER;
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    
-    if (sockfd < 0)
-    {
-        error("ERROR opening socket");
-        return;
-    }
-    
-    server = gethostbyname(SERVER_ADDRESS);
-    
-    if (server == NULL)
-    {
-        fprintf(stderr,"ERROR, no such host\n");
-        exit(0);
-    }
-    
-    bzero((char *) &serv_addr, sizeof(serv_addr));
-    
-    serv_addr.sin_family = AF_INET;
-    
-    bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length);
-    
-    serv_addr.sin_port = htons(portno);
-    
-    if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0)
-    {
-        error("ERROR connecting");
-        return;
-    }
-    
-    n = write(sockfd, &headerLength, sizeof(int32_t) );
-
-    if(inLength > 0)
-    {
-        n = write(sockfd, dataBuffer, inLength );
-    }
-    
-        if (n < 0)
-    {
-        error("ERROR writing to socket");
-        return;
-    }
-    
-    //char returnBuffer[256];
-    
-    /*n = read(sockfd,returnBuffer, 1);
-    
-    if (n < 0)
-    {
-        error("ERROR reading from socket");
-        return;
-    }
-    printf("%s\n",returnBuffer);*/
-    close(sockfd);
 }
 
 @end

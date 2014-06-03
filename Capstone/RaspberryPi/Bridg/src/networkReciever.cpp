@@ -25,6 +25,8 @@ unsigned int fileCounter;
 int port;
 
 extern void error(const char *msg);
+extern unsigned long currentSong;
+
 
 NetworkReciever::NetworkReciever(int portNumber)
 {
@@ -39,6 +41,70 @@ void addFileToQueue(std::string currentPath)
     CompeletedFile doneFile;
     doneFile.filePath = currentPath;
     mp3Files->push_back(doneFile);
+}
+
+BridgData parseData(unsigned char * buffer, unsigned int length)
+{
+    BridgData data = BridgData();
+    data.dataType = (BridgDataType)*buffer;
+    data.length = (unsigned int)buffer[sizeof(BridgDataType)];
+    data.data = (char*)&buffer[sizeof(BridgDataType) + sizeof(data.length)];
+    
+    return data;
+}
+
+std::string currentPath;
+FILE * currentFile = 0;
+
+void handleCommand(BridgCommands command)
+{
+    switch (command)
+    {
+        case BridgCommands::NEW_SONG_UPLOAD:
+        {
+            fileCounter++;
+            
+            if(fileCounter > 7)
+            {
+                fileCounter = 7;
+                mp3Files->pop_back();
+            }
+            
+            printf("Creating file: mp3file%d.mp3 \n", fileCounter);
+            std::ostringstream s;
+            s << "files/mp3file" << fileCounter << ".mp3";
+            currentPath = std::string(s.str());
+            
+            //delete the file if it exists
+            remove(currentPath.c_str());
+            
+            currentFile = fopen(currentPath.c_str(), "a");
+            
+            addFileToQueue(currentPath);
+            
+            break;
+        }
+            
+        case BridgCommands::UPLOAD_DONE:
+        {
+            printf("Done creating file: mp3file%d.mp3 \n", fileCounter);
+            
+            if(currentFile != 0)
+                fclose(currentFile);
+            
+            break;
+        }
+            
+        case BridgCommands::SKIP:
+        {
+            currentSong++;
+            
+            break;
+        }
+            
+        default:
+            break;
+    }
 }
 
 void* recieverThread(void* maxNumberOfFiles)
@@ -59,10 +125,7 @@ void* recieverThread(void* maxNumberOfFiles)
     if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
         error("ERROR on binding");
     
-    int32_t bufferSize = 0;
-    
-    std::string currentPath;
-    FILE * currentFile = 0;
+    uint32_t bufferSize = 0;
     
 	while(1)
 	{
@@ -75,58 +138,30 @@ void* recieverThread(void* maxNumberOfFiles)
         
         bzero(buffer,BUFFER_SIZE);
         
-        n = read(newsockfd, &bufferSize, sizeof(int32_t) );
+        n = read(newsockfd, &bufferSize, sizeof(uint32_t) );
         if (n < 0) error("ERROR reading from socket");
 
-        if(bufferSize > 0)
+        n = read(newsockfd, buffer, bufferSize);
+        if (n < 0) error("ERROR reading from socket");
+        
+        BridgData data = parseData(buffer, bufferSize);
+        
+        switch (data.dataType)
         {
-            n = read(newsockfd, buffer, bufferSize );
-            if (n < 0) error("ERROR reading from socket");
-            
-            fwrite(buffer, 1, bufferSize, currentFile);
-        }
-        else
-        {
-            switch (bufferSize)
+            case BridgDataType::COMMAND:
             {
-                case 0:
-                {
-                    fileCounter++;
-                    
-                    if(fileCounter > 7)
-                    {
-                        fileCounter = 7;
-                        mp3Files->pop_back();
-                    }
-                    
-                    printf("Creating file: mp3file%d.mp3 \n", fileCounter);
-                    std::ostringstream s;
-                    s << "files/mp3file" << fileCounter << ".mp3";
-                    currentPath = std::string(s.str());
-                    
-                    //delete the file if it exists
-                    remove(currentPath.c_str());
-                    
-                    currentFile = fopen(currentPath.c_str(), "a");
-                    
-                    addFileToQueue(currentPath);
-                    
-                    break;
-                }
-
-                case -1:
-                {
-                    printf("Done creating file: mp3file%d.mp3 \n", fileCounter);
-                    
-                    if(currentFile != 0)
-                        fclose(currentFile);
-                    
-                    break;
-                }
-                    
-                default:
-                    break;
+                handleCommand( (BridgCommands)(*data.data) );
+                break;
             }
+
+            case BridgDataType::MP3_ENCODED_DATA:
+            {
+                fwrite(data.data, 1, data.length, currentFile);
+                break;
+            }
+                
+            default:
+                break;
         }
         
         close(newsockfd);

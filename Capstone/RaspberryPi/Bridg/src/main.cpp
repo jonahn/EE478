@@ -19,8 +19,8 @@ extern "C" {
 #else
     #include <wiringPi.h>
     #include <wiringPiSPI.h>
-#endif
     #include <wiringPiI2C.h>
+#endif
 }
 
 #define TRANSFER_BUFFER_SIZE    256
@@ -121,14 +121,14 @@ int main(int argc, char **argv)
         if (wiringPiSetup() < 0)
         {
             fprintf (stderr, "Unable to setup wiringPi: %s\n", strerror (errno)) ;
-            return 1 ;
+            return 1;
         }
         
         //uses pin 3 on header (wiringPi pin 8)
         if (wiringPiISR (0, INT_EDGE_FALLING, &isM4ReadyISR) < 0)
         {
             fprintf (stderr, "Unable to setup ISR: %s\n", strerror (errno)) ;
-            return 1 ;
+            return 1;
         }
         
         // set output SPI channel to 0 and speed to 8MHz
@@ -148,7 +148,7 @@ int main(int argc, char **argv)
 #endif
 
         //------------I2C Setup ------------------------
-        int fd = wiringPiI2CSetup (0x51);
+        int fd = wiringPiI2CSetup(0x51);
         unsigned int cycleCount = 0;
         unsigned int majCount = 0;
         unsigned char playListSize;
@@ -165,7 +165,7 @@ int main(int argc, char **argv)
                     if(fd >=0)
                     {
                         playListSize = reciever.files->size() + '0';
-                        wiringPiI2CWrite ( fd, playListSize);
+                        wiringPiI2CWrite (fd, playListSize);
                             
                     }
                 }

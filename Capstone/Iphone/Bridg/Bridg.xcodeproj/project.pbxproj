@@ -31,6 +31,7 @@
 		C8CB6593192C373D004A465C /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = C8CB6592192C373D004A465C /* Utils.m */; };
 		C8CB65AC192F2B61004A465C /* lame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8CB65AB192F2B61004A465C /* lame.framework */; };
 		C8CB65B0192FC8AD004A465C /* SimplePing.m in Sources */ = {isa = PBXBuildFile; fileRef = C8CB65AF192FC8AD004A465C /* SimplePing.m */; };
+		C8EB5924193D8B1A00E78177 /* BridgNetworkClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8EB5922193D8B1A00E78177 /* BridgNetworkClient.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +79,8 @@
 		C8CB65AD192F329B004A465C /* settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = settings.h; path = ../../../Shared/settings.h; sourceTree = "<group>"; };
 		C8CB65AE192FC8AD004A465C /* SimplePing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimplePing.h; sourceTree = "<group>"; };
 		C8CB65AF192FC8AD004A465C /* SimplePing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimplePing.m; sourceTree = "<group>"; };
+		C8EB5922193D8B1A00E78177 /* BridgNetworkClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BridgNetworkClient.cpp; path = utils/BridgNetworkClient.cpp; sourceTree = "<group>"; };
+		C8EB5923193D8B1A00E78177 /* BridgNetworkClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BridgNetworkClient.h; path = utils/BridgNetworkClient.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -204,6 +207,8 @@
 			children = (
 				C8CB65AE192FC8AD004A465C /* SimplePing.h */,
 				C8CB65AF192FC8AD004A465C /* SimplePing.m */,
+				C8EB5922193D8B1A00E78177 /* BridgNetworkClient.cpp */,
+				C8EB5923193D8B1A00E78177 /* BridgNetworkClient.h */,
 			);
 			name = utils;
 			sourceTree = "<group>";
@@ -307,6 +312,7 @@
 			files = (
 				C89F7AFD1919AF7C00ADBF87 /* ViewController.mm in Sources */,
 				C89F7AF71919AF7C00ADBF87 /* AppDelegate.m in Sources */,
+				C8EB5924193D8B1A00E78177 /* BridgNetworkClient.cpp in Sources */,
 				C89F7AF31919AF7C00ADBF87 /* main.m in Sources */,
 				C8CB65B0192FC8AD004A465C /* SimplePing.m in Sources */,
 				C8CB6593192C373D004A465C /* Utils.m in Sources */,
