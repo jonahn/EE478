@@ -152,24 +152,30 @@ int main(int argc, char **argv)
         unsigned int cycleCount = 0;
         unsigned int majCount = 0;
         unsigned char playListSize;
+        unsigned char percentPlayed;
 		while(1)
 		{
-            cycleCount++;
-            if (cycleCount %50000 == 0)
-            {
+            // cycleCount++;
+            // if (cycleCount %50000 == 0)
+            // {
 
-                majCount++;
-                if(majCount%1000 == 0)
-                {
-                    //write a char to PIC
-                    if(fd >=0)
-                    {
-                        playListSize = reciever.files->size() + '0';
-                        wiringPiI2CWrite (fd, playListSize);
+            //     majCount++;
+            //     if(majCount%1000 == 0)
+            //     {
+            //         //write a char to PIC
+            //         if(fd >=0)
+            //         {
+            //             playListSize = reciever.files->size() + '0';
+            //             wiringPiI2CWrite (fd, playListSize);
+
+            //             percentPlayed = ( currentIndex / currentFile.totalSongLength) + '0';
+            //             wiringPiI2CWrite (fd, percentPlayed);
+
+            //             for (currentFile.songArtist)
                             
-                    }
-                }
-            }
+            //         }
+            //     }
+            // }
 #if DEBUG
             isM4ReadyISR();
 #endif
@@ -199,6 +205,39 @@ int main(int argc, char **argv)
                         currentIndex = 0;
                     }
                     
+                    //Send song info over i2c
+                    cycleCount++;
+                    if (cycleCount %50000 == 0)
+                    {
+
+                        majCount++;
+                        if(majCount%1000 == 0)
+                        {
+                            //write a char to PIC
+                            if(fd >=0)
+                            {
+                                playListSize = reciever.files->size() + '0';
+                                wiringPiI2CWrite (fd, playListSize);
+
+                                percentPlayed = ( currentIndex / currentFile.totalSongLength ) + '0';
+                                wiringPiI2CWrite (fd, percentPlayed);
+
+                                // //send song artist
+                                // for (int i = 0; i < 20; i++)
+                                // {
+                                //       //if artist name size < index, send char
+                                //       //else, send ' ' char
+                                // }
+
+                                // //send song name 
+                                // for (int i = 0; i < 50; i++)
+                                // {
+                                //       //if song name size < index, send char
+                                //       //else, send ' ' char
+                                // }
+                            }
+                        }
+                    }
                     
                 }
                 else
@@ -206,6 +245,8 @@ int main(int argc, char **argv)
                     const unsigned char * arr = emptymp3data;
                     
                     sendOverSPI(arr, EMPTY_MP3_DATA_LENGTH);
+
+
                    
 		        }
             }
