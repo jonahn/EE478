@@ -156,17 +156,17 @@ int main(int argc, char **argv)
             cycleCount++;
             if (cycleCount %50000 == 0)
             {
-                printf("test");
-                //majCount++;
-                //if(majCount%5000 == 0)
-                //{
+
+                majCount++;
+                if(majCount%50000 == 0)
+                {
                     //write a char to PIC
                     if(fd >=0)
                     {
                         printf("fd: %d\n", fd);
                         wiringPiI2CWrite ( fd, 0xF5 );
                     }
-                //}
+                }
             }
 #if DEBUG
             isM4ReadyISR();
