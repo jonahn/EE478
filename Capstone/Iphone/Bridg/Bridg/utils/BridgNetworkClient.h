@@ -18,6 +18,8 @@ public:
     void resetForNewSong();
     void finishedWithSong();
     void skipSong();
+    void sendTitle(const char * songTitle);
+    void sendArtist(const char * artist);
     void sendMusicData(int length, unsigned char * inData);
 private:
     void sendDataToServer(BridgData inData);

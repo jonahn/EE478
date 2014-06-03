@@ -41,10 +41,6 @@
 
 @synthesize conversionProgress;
 
-void resetForNewSong();
-void finishedWithSong();
-void sendDataToServer(void* inData, int inLength);
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -104,11 +100,11 @@ void sendDataToServer(void* inData, int inLength);
     NSNumber *trackLength = [inSong valueForProperty:MPMediaItemPropertyPlaybackDuration];
     trackLengthinSeconds = [trackLength floatValue];
     
-    //NSNumber* persistentID = [inSong valueForProperty:MPMediaItemPropertyPersistentID];
-    //persistentId = [persistentID longLongValue];
-	//songLabel.text = [inSong valueForProperty:MPMediaItemPropertyTitle];
-	//artistLabel.text = [inSong valueForProperty:MPMediaItemPropertyArtist];
-    
+    NSNumber* persistentID = [inSong valueForProperty:MPMediaItemPropertyPersistentID];
+    long long persistentId = [persistentID longLongValue];
+	NSString *songTitle = [inSong valueForProperty:MPMediaItemPropertyTitle];
+	NSString *artist = [inSong valueForProperty:MPMediaItemPropertyArtist];
+        
     [self dismissViewControllerAnimated:YES completion:nil];
     
     [self performSelector:@selector(convertTapped:) withObject:inSong afterDelay:0.2];
