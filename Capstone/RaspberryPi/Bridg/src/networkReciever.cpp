@@ -145,6 +145,12 @@ void* recieverThread(void* maxNumberOfFiles)
         if (n < 0) error("ERROR reading from socket");
 
         n = read(newsockfd, buffer, bufferSize);
+        
+        for(int i = 0; i < 10; i ++)
+            printf("0x%x ",buffer[i]);
+        
+        printf("\n");
+        
         if (n < 0) error("ERROR reading from socket");
         
         BridgData data = parseData(buffer, bufferSize);

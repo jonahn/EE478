@@ -53,7 +53,7 @@ enum BridgCommands
 struct BridgData
 {
     char            dataType;
-    unsigned int    length; // in bytes
+    uint32_t        length; // in bytes
     char *          data;
 };
 
