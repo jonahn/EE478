@@ -163,7 +163,7 @@ int main(int argc, char **argv)
                     //write a char to PIC
                     if(fd >=0)
                     {
-                        wiringPiI2CWrite ( fd, 0xF5 );
+                        wiringPiI2CWrite ( fd, 0x45 );
                     }
                 }
             }
