@@ -26,7 +26,7 @@ int port;
 
 extern void error(const char *msg);
 extern unsigned long currentSong;
-
+extern unsigned long currentIndex;
 
 NetworkReciever::NetworkReciever(int portNumber)
 {
@@ -100,6 +100,7 @@ void handleCommand(char command)
             printf("Skipping song. \n");
 
             currentSong++;
+            currentIndex = 0;
             
             break;
         }
