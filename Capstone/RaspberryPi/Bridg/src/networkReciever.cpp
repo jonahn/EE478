@@ -56,7 +56,7 @@ BridgData parseData(unsigned char * buffer, unsigned int length)
 std::string currentPath;
 FILE * currentFile = 0;
 
-void handleCommand(BridgCommands command)
+void handleCommand(char command)
 {
     switch (command)
     {
@@ -153,7 +153,7 @@ void* recieverThread(void* maxNumberOfFiles)
         {
             case COMMAND:
             {
-                handleCommand( (BridgCommands)(*data.data) );
+                handleCommand( *data.data );
                 break;
             }
 

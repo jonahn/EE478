@@ -25,7 +25,9 @@
 #define SAMPLE_RATE 44100*SCALE
 #define TIME_INTERVAL 8192.0f / SAMPLE_RATE
 
-#define HEADER_LENGTH 4 //in bytes
+#define HEADER_LENGTH   4 //in bytes
+#define COMMAND_LENGTH  4
+#define TYPE_LENGTH     1
 
 #define PORT_NUMBER 2000
 #define SERVER_ADDRESS "10.0.0.1"
@@ -50,7 +52,7 @@ enum BridgCommands
 
 struct BridgData
 {
-    BridgDataType dataType;
+    char            dataType;
     unsigned int    length; // in bytes
     char *          data;
 };

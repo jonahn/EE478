@@ -38,8 +38,8 @@ void BridgNetworkClient::sendCommand(BridgCommands command)
     BridgData data = BridgData();
     data.length = sizeof(char);
     data.dataType = BridgDataType::COMMAND;
-    data.data = tempBuffer;
-    tempBuffer[0] = command;
+    data.data = (char*)tempBuffer;
+    tempBuffer[0] = (char)command;
     
     sendDataToServer(data);
 }
@@ -61,7 +61,7 @@ void BridgNetworkClient::sendDataToServer(BridgData inData)
     struct sockaddr_in serv_addr;
     struct hostent *server;
     
-    uint32_t headerLength = inData.length + HEADER_LENGTH + sizeof(char);
+    uint32_t headerLength = inData.length + HEADER_LENGTH + TYPE_LENGTH;
     char dataBuffer[headerLength];
     
     serialize(dataBuffer, inData);
@@ -112,9 +112,9 @@ void BridgNetworkClient::sendDataToServer(BridgData inData)
 
 int BridgNetworkClient::serialize(char * dataBuffer, BridgData dataToSerialize)
 {
-    memcpy(dataBuffer,                                  &dataToSerialize.dataType,  sizeof(char));
-    memcpy(&dataBuffer[sizeof(char)],                   &dataToSerialize.length,    sizeof(uint32_t));
-    memcpy(&dataBuffer[HEADER_LENGTH + sizeof(char)],   dataToSerialize.data,       dataToSerialize.length);
+    memcpy(dataBuffer,                                  &dataToSerialize.dataType,      sizeof(char));
+    memcpy(&dataBuffer[TYPE_LENGTH],                   &dataToSerialize.length,         sizeof(uint32_t));
+    memcpy(&dataBuffer[sizeof(uint32_t) + TYPE_LENGTH],   dataToSerialize.data,         dataToSerialize.length);
     
     return 0;
 }
