@@ -156,6 +156,7 @@ int main(int argc, char **argv)
             cycleCount++;
             if (cycleCount %50000 == 0)
             {
+                printf("test");
                 //majCount++;
                 //if(majCount%5000 == 0)
                 //{
