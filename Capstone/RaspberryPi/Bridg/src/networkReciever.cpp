@@ -97,6 +97,8 @@ void handleCommand(BridgCommands command)
             
         case SKIP:
         {
+            printf("Skipping song. \n");
+
             currentSong++;
             
             break;
@@ -157,6 +159,7 @@ void* recieverThread(void* maxNumberOfFiles)
             case MP3_ENCODED_DATA:
             {
                 fwrite(data.data, 1, data.length, currentFile);
+                printf("Getting encoded data. \n");
                 break;
             }
                 
