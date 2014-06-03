@@ -159,8 +159,11 @@ void* recieverThread(void* maxNumberOfFiles)
         {
             case COMMAND:
             {
+                printf("dataType: 0x%x. \n", data.dataType);
+                printf("length: %i. \n", data.length);
+                printf("data: 0x%x. \n", *data.data);
+
                 handleCommand( *data.data );
-                printf("No command: 0x%x. \n", *data.data);
                 
                 break;
             }
