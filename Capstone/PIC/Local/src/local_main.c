@@ -64,12 +64,14 @@ void UARTSend(char *str, unsigned long strLength);
 
 void main(void)
 {
-    setup();
-
-    setupInterrupts();
+    //setup();
     setupUSARTAndI2C();
-
+    setupInterrupts();
+    
     setupLED_Pins();
+
+    OpenI2C1(SLAVE_7, SLEW_OFF);
+    SSP1ADD = 0xA2;
 
     Write1USART(0x0c);   // clear hyperterminal
     delay(10);
@@ -110,9 +112,8 @@ void main(void)
 
         //send to LEDs percent played of song (0 - 9)
         }
-            
-    CloseI2C1();
     }
+    CloseI2C1();
 }
 
 
