@@ -158,7 +158,7 @@ int main(int argc, char **argv)
             {
 
                 majCount++;
-                if(majCount%500 == 0)
+                if(majCount%10000 == 0)
                 {
                     //write a char to PIC
                     if(fd >=0)
