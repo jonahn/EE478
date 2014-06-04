@@ -41,7 +41,9 @@
 //strings to send to USART
 char headerStr[] = "BRIDG \r\n\0";
 char numSongsStr[] = "Number of Songs Currently in Playlist: \0";
-char perPlayedStr[] = "% Played:  \r\n\0";
+char perPlayedStr[] = "% Played: \0";
+char artistNameStr[] = "Artist: \0";
+char songNameStr[] = "Song: \0";
 char emptyLine[] = "\r\n\0";
 unsigned char strLength;
 
@@ -115,30 +117,49 @@ void main(void)
             {
                 percentPlayed = data;
 
+                puts1USART(perPlayedStr);
+                delay(50);
+                Write1USART(percentPlayed);
+                delay(50);
+                Write1USART('\r');
+                delay(10);
+                Write1USART('\n');
+                delay(10);
 
 
                 indexRxData = 0;        //currently only have 2 modes of data
             }
-            
+//            else if (indexRxData == 2)
+//            {
+//                //write artist name header to usart
+//                puts1USART(artistNameStr);
+//                delay(50);
+//
+//                //1st char
+//                Write1USART(data);
+//            }
+//            else if( indexRxData < 22)
+//            {
+//                Write1USART(data);
+//            }
+//            else if (indexRxData == 22)
+//            {
+//                //write song name header to usart
+//                puts1USART(songNameStr);
+//                delay(50);
+//                Write1USART(data);
+//            }
+//            else if (indexRxData < 72)
+//            {
+//                Write1USART(data);
+//
+//                indexRxData = 0;
+//            }
+
             recievedDataFlag = 0;
         }
 
-        if(0)
-        {
-            Write1USART(0x0c);   // clear hyperterminal
-            delay(50);
-
-            //send # of Songs (1 char = 0-255)
-
-            //send name of song (CHAR_LENGTH)
-
-            puts1USART(numSongsStr);
-            delay(50);
-            puts1USART(perPlayedStr);
-            delay(5000);
-
-        //send to LEDs percent played of song (0 - 9)
-        }
+ 
     }
     CloseI2C1();
 }

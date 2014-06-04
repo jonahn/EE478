@@ -219,13 +219,14 @@ int main(int argc, char **argv)
                                 playListSize = reciever.files->size() + '0';
                                 wiringPiI2CWrite (fd, playListSize);
 
-                                percentPlayed = ( currentIndex / currentFile.totalSongLength ) + '0';
+                                percentPlayed = (/* currentIndex / */ currentFile.totalSongLength ) + '0';
                                 wiringPiI2CWrite (fd, percentPlayed);
 
                                 // //send song artist
                                 // for (int i = 0; i < 20; i++)
                                 // {
                                 //       //if artist name size < index, send char
+                                //              currentFile.songArtist.at(0) 
                                 //       //else, send ' ' char
                                 // }
 

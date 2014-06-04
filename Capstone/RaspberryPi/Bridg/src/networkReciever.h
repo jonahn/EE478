@@ -19,7 +19,7 @@ typedef struct
     std::string filePath;
     std::string songArtist;
     std::string songTitle;
-    std::string totalSongLength;
+    unsigned char totalSongLength;
 }CompeletedFile;
 
 class NetworkReciever
