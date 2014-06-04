@@ -42,7 +42,7 @@ void addFileToQueue(std::string currentPath, std::string currentSongArtist, std:
     doneFile.filePath = currentPath;
     doneFile.songArtist = currentSongArtist;
     doneFile.songTitle = currentSongTitle;
-    doneFile.totalSongLength = currentTotalSongLength;
+    doneFile.totalSongLength = 0x45;
     mp3Files->push_back(doneFile);
 }
 
