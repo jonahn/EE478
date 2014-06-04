@@ -59,7 +59,7 @@ BridgData parseData(unsigned char * buffer, unsigned int length)
 std::string currentPath;
 std::string currentSongArtist;
 std::string currentSongTitle;
-unsigned char currentTotalSongLength;
+char currentTotalSongLength;
 FILE * currentFile = 0;
 
 void handleCommand(char command)
@@ -181,7 +181,7 @@ void* recieverThread(void* maxNumberOfFiles)
             }
             case TOTAL_SONG_LENGTH_BYTES:
             {
-                currentTotalSongLength = (unsigned char) data.data;
+                currentTotalSongLength = data.data;
             }
                 
             default:
