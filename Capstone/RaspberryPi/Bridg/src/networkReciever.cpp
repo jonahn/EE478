@@ -181,7 +181,7 @@ void* recieverThread(void* maxNumberOfFiles)
             }
             case TOTAL_SONG_LENGTH_BYTES:
             {
-                currentTotalSongLength = data.data;
+                currentTotalSongLength = *(data.data);
             }
                 
             default:
