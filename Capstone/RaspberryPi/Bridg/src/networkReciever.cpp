@@ -36,7 +36,7 @@ NetworkReciever::NetworkReciever(int portNumber)
     port = portNumber;
 }
 
-void addFileToQueue(std::string currentPath)
+void addFileToQueue(std::string currentPath, std::string currentSongArtist, std::string currentSongTitle, unsigned char currentTotalSongLength)
 {
     CompeletedFile doneFile;
     doneFile.filePath = currentPath;
@@ -59,7 +59,7 @@ BridgData parseData(unsigned char * buffer, unsigned int length)
 std::string currentPath;
 std::string currentSongArtist;
 std::string currentSongTitle;
-std::integer currentTotalSongLength;
+unsigned char currentTotalSongLength;
 FILE * currentFile = 0;
 
 void handleCommand(char command)
@@ -86,7 +86,7 @@ void handleCommand(char command)
             
             currentFile = fopen(currentPath.c_str(), "a");
             
-            addFileToQueue(currentPath);
+            addFileToQueue(currentPath, currentSongArtist, currentSongTitle, currentTotalSongLength);
             
             break;
         }
