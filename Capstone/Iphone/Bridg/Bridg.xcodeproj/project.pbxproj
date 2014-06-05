@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C804BCE9193FF3790029EC42 /* BigLogo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C804BCE4193FF3790029EC42 /* BigLogo.jpg */; };
+		C804BCEA193FF3790029EC42 /* BigLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = C804BCE5193FF3790029EC42 /* BigLogo.png */; };
+		C804BCEB193FF3790029EC42 /* BigLogo.psd in Resources */ = {isa = PBXBuildFile; fileRef = C804BCE6193FF3790029EC42 /* BigLogo.psd */; };
+		C804BCEC193FF3790029EC42 /* LittleLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = C804BCE7193FF3790029EC42 /* LittleLogo.png */; };
+		C804BCED193FF3790029EC42 /* LittleLogo.psd in Resources */ = {isa = PBXBuildFile; fileRef = C804BCE8193FF3790029EC42 /* LittleLogo.psd */; };
+		C804BCEF193FF6AA0029EC42 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = C804BCEE193FF6AA0029EC42 /* icon.png */; };
 		C89F7AE71919AF7C00ADBF87 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C89F7AE61919AF7C00ADBF87 /* Foundation.framework */; };
 		C89F7AE91919AF7C00ADBF87 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C89F7AE81919AF7C00ADBF87 /* CoreGraphics.framework */; };
 		C89F7AEB1919AF7C00ADBF87 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C89F7AEA1919AF7C00ADBF87 /* UIKit.framework */; };
@@ -45,6 +51,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C804BCE4193FF3790029EC42 /* BigLogo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = BigLogo.jpg; sourceTree = "<group>"; };
+		C804BCE5193FF3790029EC42 /* BigLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BigLogo.png; sourceTree = "<group>"; };
+		C804BCE6193FF3790029EC42 /* BigLogo.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = BigLogo.psd; sourceTree = "<group>"; };
+		C804BCE7193FF3790029EC42 /* LittleLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LittleLogo.png; sourceTree = "<group>"; };
+		C804BCE8193FF3790029EC42 /* LittleLogo.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = LittleLogo.psd; sourceTree = "<group>"; };
+		C804BCEE193FF6AA0029EC42 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		C89F7AE31919AF7C00ADBF87 /* Bridg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bridg.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C89F7AE61919AF7C00ADBF87 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C89F7AE81919AF7C00ADBF87 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -115,6 +127,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C804BCE3193FF3790029EC42 /* Logo */ = {
+			isa = PBXGroup;
+			children = (
+				C804BCEE193FF6AA0029EC42 /* icon.png */,
+				C804BCE4193FF3790029EC42 /* BigLogo.jpg */,
+				C804BCE5193FF3790029EC42 /* BigLogo.png */,
+				C804BCE6193FF3790029EC42 /* BigLogo.psd */,
+				C804BCE7193FF3790029EC42 /* LittleLogo.png */,
+				C804BCE8193FF3790029EC42 /* LittleLogo.psd */,
+			);
+			path = Logo;
+			sourceTree = "<group>";
+		};
 		C89F7ADA1919AF7C00ADBF87 = {
 			isa = PBXGroup;
 			children = (
@@ -157,6 +182,7 @@
 		C89F7AEC1919AF7C00ADBF87 /* Bridg */ = {
 			isa = PBXGroup;
 			children = (
+				C804BCE3193FF3790029EC42 /* Logo */,
 				C8CB65B1192FC8D4004A465C /* utils */,
 				C8CB65AD192F329B004A465C /* settings.h */,
 				C8CB65A6192D592E004A465C /* lame.h */,
@@ -290,8 +316,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				C89F7AFF1919AF7C00ADBF87 /* Images.xcassets in Resources */,
+				C804BCE9193FF3790029EC42 /* BigLogo.jpg in Resources */,
+				C804BCEF193FF6AA0029EC42 /* icon.png in Resources */,
+				C804BCED193FF3790029EC42 /* LittleLogo.psd in Resources */,
 				C89F7AF11919AF7C00ADBF87 /* InfoPlist.strings in Resources */,
+				C804BCEA193FF3790029EC42 /* BigLogo.png in Resources */,
 				C89F7AFA1919AF7C00ADBF87 /* Main.storyboard in Resources */,
+				C804BCEB193FF3790029EC42 /* BigLogo.psd in Resources */,
+				C804BCEC193FF3790029EC42 /* LittleLogo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,7 +470,6 @@
 		C89F7B161919AF7D00ADBF87 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ahmed Jafri (DY4SCYVY56)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -454,7 +485,7 @@
 					"$(PROJECT_DIR)/lame-3.99.5/build",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "746F9463-FDA6-493E-86EB-200BBCE49D14";
+				PROVISIONING_PROFILE = "689F7BF4-3902-4F75-B665-AA5287651EC3";
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -463,7 +494,6 @@
 		C89F7B171919AF7D00ADBF87 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ahmed Jafri (DY4SCYVY56)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -479,7 +509,7 @@
 					"$(PROJECT_DIR)/lame-3.99.5/build",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "746F9463-FDA6-493E-86EB-200BBCE49D14";
+				PROVISIONING_PROFILE = "689F7BF4-3902-4F75-B665-AA5287651EC3";
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

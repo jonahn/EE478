@@ -21,6 +21,7 @@ public:
     void sendTitle(const char * songTitle);
     void sendArtist(const char * artist);
     void sendMusicData(int length, unsigned char * inData);
+    void sendSongLengthinBytes(float songLengthInSeconds);
 private:
     void sendDataToServer(BridgData inData);
     int serialize(char * dataBuffer, BridgData dataToSerialize);

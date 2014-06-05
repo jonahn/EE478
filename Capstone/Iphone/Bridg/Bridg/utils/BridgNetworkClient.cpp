@@ -31,6 +31,37 @@ void BridgNetworkClient::skipSong()
     sendCommand(BridgCommands::SKIP);
 }
 
+void BridgNetworkClient::sendTitle(const char *songTitle)
+{
+    BridgData data = BridgData();
+    data.length = (uint32_t)strlen(songTitle);
+    data.dataType = BridgDataType::SONG_TITLE;
+    data.data = (char*)songTitle;
+    
+    sendDataToServer(data);
+}
+
+void BridgNetworkClient::sendArtist(const char *artist)
+{
+    BridgData data = BridgData();
+    data.length = (uint32_t)strlen(artist);
+    data.dataType = BridgDataType::SONG_ARTIST;
+    data.data = (char*)artist;
+    
+    sendDataToServer(data);
+}
+
+void BridgNetworkClient::sendSongLengthinBytes(float songLengthInSeconds)
+{
+    uint32_t songLengthInBytes = songLengthInSeconds * BIT_RATE * 1000;
+    BridgData data = BridgData();
+    data.length = sizeof(uint32_t);
+    data.dataType = BridgDataType::TOTAL_SONG_LENGTH_BYTES;
+    data.data = (char*)&songLengthInBytes;
+    
+    sendDataToServer(data);
+}
+
 void BridgNetworkClient::sendCommand(BridgCommands command)
 {
     char tempBuffer[1];

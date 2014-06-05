@@ -101,10 +101,14 @@
     trackLengthinSeconds = [trackLength floatValue];
     
     NSNumber* persistentID = [inSong valueForProperty:MPMediaItemPropertyPersistentID];
-    long long persistentId = [persistentID longLongValue];
+    //long long persistentId = [persistentID longLongValue];
 	NSString *songTitle = [inSong valueForProperty:MPMediaItemPropertyTitle];
 	NSString *artist = [inSong valueForProperty:MPMediaItemPropertyArtist];
-        
+    
+    bridgClient.sendArtist([artist cStringUsingEncoding:NSUTF8StringEncoding]);
+    bridgClient.sendTitle([songTitle cStringUsingEncoding:NSUTF8StringEncoding]);
+    bridgClient.sendSongLengthinBytes(trackLengthinSeconds);
+
     [self dismissViewControllerAnimated:YES completion:nil];
     
     [self performSelector:@selector(convertTapped:) withObject:inSong afterDelay:0.2];
@@ -163,7 +167,7 @@
         lame_set_in_samplerate(lame, SAMPLE_RATE);
         lame_set_out_samplerate(lame, SAMPLE_RATE);
         lame_set_num_channels(lame, 2);
-        lame_set_brate(lame, 96);
+        lame_set_brate(lame, BIT_RATE);
         lame_set_mode(lame, JOINT_STEREO);
         lame_init_params(lame);
         
