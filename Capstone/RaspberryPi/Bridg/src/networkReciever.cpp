@@ -17,6 +17,14 @@
 #include <pthread.h>
 #include <sstream>
 
+extern "C" {
+#if DEBUG
+#include "wiringPi.h"
+#else
+#include <wiringPi.h>
+#endif
+}
+
 #include "networkReciever.h"
 #include "../../../Shared/settings.h"
 
@@ -86,6 +94,8 @@ void handleCommand(char command)
             
             currentFile = fopen(currentPath.c_str(), "a");
             
+            digitalWrite (3, LOW);
+            
             addFileToQueue(currentPath, currentSongArtist, currentSongTitle, currentTotalSongLength);
             
             break;
@@ -97,6 +107,8 @@ void handleCommand(char command)
             
             if(currentFile != 0)
                 fclose(currentFile);
+            
+            digitalWrite (3, HIGH);
             
             break;
         }
