@@ -213,17 +213,18 @@ int main(int argc, char **argv)
                     //write a char to PIC
                     if(fd >=0)
                     {
-                        cycleCount != cycleCount;
+
                         if (cycleCount == 0)
                         {
                             playListSize = reciever.files->size() + '0';
                             wiringPiI2CWrite (fd, playListSize);
-
+                            cycleCount = 1;
                         }
                         else
                         {
                             percentPlayed = 0x89;//(/* currentIndex / */ currentFile.totalSongLength ) + '0';
                             wiringPiI2CWrite (fd, percentPlayed);
+                            cycleCount = 0;
                         }
                         // //send song artist
                         // for (int i = 0; i < 20; i++)
