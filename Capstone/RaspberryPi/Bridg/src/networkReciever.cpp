@@ -94,7 +94,7 @@ void handleCommand(char command)
             
             currentFile = fopen(currentPath.c_str(), "a");
             
-            digitalWrite (3, LOW);
+            digitalWrite (1, LOW);
             
             addFileToQueue(currentPath, currentSongArtist, currentSongTitle, currentTotalSongLength);
             
@@ -108,7 +108,7 @@ void handleCommand(char command)
             if(currentFile != 0)
                 fclose(currentFile);
             
-            digitalWrite (3, HIGH);
+            digitalWrite (1, HIGH);
             
             break;
         }

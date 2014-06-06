@@ -138,8 +138,8 @@ int main(int argc, char **argv)
             exit (1) ;
         }
         
-        pinMode(3, OUTPUT);
-        digitalWrite (3, HIGH);
+        pinMode(1, OUTPUT);
+        digitalWrite (1, HIGH);
         
         NetworkReciever reciever = NetworkReciever(atoi(argv[1]));
         reciever.runReciever(&networkThread);
