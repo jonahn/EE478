@@ -12,7 +12,12 @@
 #define SCALE 1
 #define BUFFER_SIZE 32768
 
-//#define RUNNING_IN_XCODE 0 //1 for XCODE, 0 for Carambola (dont fork or fork)
+// -- PIN ASSIGNMENTS -- //
+#define PIN_LED_INDICATOR 1
+#define PIN_NEEDS_MORE_DATA 7
+#define PIN_PLAYLIST_NUMBER_CLK 2
+#define PIN_PLAYLIST_NUMBER_DATA 3
+#define PIN_NEED_NEW_PLAYLIST_NUMBER 0
 
 #if DEBUG
 #define INDICATOR_FILE "brightnessfile.txt"

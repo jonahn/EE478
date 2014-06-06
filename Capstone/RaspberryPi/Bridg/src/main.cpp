@@ -83,14 +83,34 @@ int sendOverSPI( const unsigned char * data, const unsigned int inLength )
     return returnIndex;
 }
 
+unsigned char playlistBitPosition = 0;
+unsigned char playlistNumber = 0;
+unsigned char playlistNumberComplete = 0;
+
+
+unsigned long currentIndex = 0;
+
+unsigned char currentSong = 0;
+
 void isM4ReadyISR()
 {
     isM4Ready = 1;
 }
 
-unsigned long currentIndex = 0;
-
-unsigned long currentSong = 0;
+void playlistNumberISR()
+{
+    char bit = (char) digitalRead(PIN_PLAYLIST_NUMBER_DATA);
+    playlistNumber = playlistNumber || (bit << playlistBitPosition);
+    playlistBitPosition++;
+    
+    if(playlistBitPosition >= 7)
+    {
+        playlistNumberComplete = 1;
+        playlistBitPosition = 0;
+        currentSong = playlistNumber;
+        digitalWrite(PIN_NEED_NEW_PLAYLIST_NUMBER, LOW);
+    }
+}
 
 int main(int argc, char **argv)
 {
@@ -124,8 +144,8 @@ int main(int argc, char **argv)
             return 1;
         }
         
-        //uses pin 3 on header (wiringPi pin 8)
-        if (wiringPiISR (0, INT_EDGE_FALLING, &isM4ReadyISR) < 0)
+        //uses wiringPi pin 7 to ask for new data
+        if (wiringPiISR (PIN_NEEDS_MORE_DATA, INT_EDGE_FALLING, &isM4ReadyISR) < 0)
         {
             fprintf (stderr, "Unable to setup ISR: %s\n", strerror (errno)) ;
             return 1;
@@ -138,8 +158,20 @@ int main(int argc, char **argv)
             exit (1) ;
         }
         
-        pinMode(1, OUTPUT);
-        digitalWrite (1, HIGH);
+        pinMode(PIN_LED_INDICATOR, OUTPUT); //INDICATOR LED
+        digitalWrite (PIN_LED_INDICATOR, HIGH);
+        
+        pinMode(PIN_NEED_NEW_PLAYLIST_NUMBER, OUTPUT); //GPIO TO GET NEW PLAYLIST NUMBER
+        digitalWrite (PIN_NEED_NEW_PLAYLIST_NUMBER, LOW);
+        
+        pinMode(PIN_PLAYLIST_NUMBER_DATA, INPUT);  //DATA
+        
+        //uses wiringPi pin 2 to ask for new playlist number
+        if (wiringPiISR (PIN_PLAYLIST_NUMBER_CLK, INT_EDGE_RISING, &playlistNumberISR) < 0)
+        {
+            fprintf (stderr, "Unable to setup ISR: %s\n", strerror (errno)) ;
+            return 1;
+        }
         
         NetworkReciever reciever = NetworkReciever(atoi(argv[1]));
         reciever.runReciever(&networkThread);
@@ -204,8 +236,10 @@ int main(int argc, char **argv)
                     //reached the end of the song
                     if(indexesSent == 0)
                     {
-                        currentSong = (currentSong + 1) % reciever.files->size();   //loop over playlist if at end
+                        //currentSong = (currentSong + 1) % reciever.files->size();   //loop over playlist if at end
                         currentIndex = 0;
+                        playlistBitPosition = 0;
+                        digitalWrite(PIN_NEED_NEW_PLAYLIST_NUMBER, HIGH);
                     }
                     
                     //Send song info over i2c
