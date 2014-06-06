@@ -105,6 +105,7 @@ void playlistNumberISR()
     
     if(playlistBitPosition >= 7)
     {
+        printf("Got new playlist number %d. \n", playlistNumber);
         playlistNumberComplete = 1;
         playlistBitPosition = 0;
         currentSong = playlistNumber;
@@ -240,6 +241,7 @@ int main(int argc, char **argv)
                         currentIndex = 0;
                         playlistBitPosition = 0;
                         digitalWrite(PIN_NEED_NEW_PLAYLIST_NUMBER, HIGH);
+                        printf("Asking for new playlist number. \n");
                     }
                     
                     //Send song info over i2c
