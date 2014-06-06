@@ -158,27 +158,27 @@ int main(int argc, char **argv)
         unsigned char percentPlayed;
 		while(1)
 		{
-            cycleCount++;
-            if (cycleCount %50000 == 0)
-            {
+            // cycleCount++;
+            // if (cycleCount %50000 == 0)
+            // {
 
-                majCount++;
-                if(majCount%1000 == 0)
-                {
-                    //write a char to PIC
-                    if(fd >=0)
-                    {
-                        playListSize = reciever.files->size() + '0';
-                        wiringPiI2CWrite (fd, playListSize);
+            //     majCount++;
+            //     if(majCount%1000 == 0)
+            //     {
+            //         //write a char to PIC
+            //         if(fd >=0)
+            //         {
+            //             playListSize = reciever.files->size() + '0';
+            //             wiringPiI2CWrite (fd, playListSize);
 
-                       // percentPlayed = ( /*currentIndex / */currentFile.totalSongLength) + '0';
-                       // wiringPiI2CWrite (fd, percentPlayed);
+            //            // percentPlayed = ( /*currentIndex / */currentFile.totalSongLength) + '0';
+            //            // wiringPiI2CWrite (fd, percentPlayed);
 
-                        //for (currentFile.songArtist)
+            //             //for (currentFile.songArtist)
                             
-                    }
-                }
-            }
+            //         }
+            //     }
+            // }
 #if DEBUG
             isM4ReadyISR();
 #endif
