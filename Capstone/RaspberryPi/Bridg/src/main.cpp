@@ -171,8 +171,8 @@ int main(int argc, char **argv)
                         playListSize = reciever.files->size() + '0';
                         wiringPiI2CWrite (fd, playListSize);
 
-                        percentPlayed = ( /*currentIndex / */currentFile.totalSongLength) + '0';
-                        wiringPiI2CWrite (fd, percentPlayed);
+                       // percentPlayed = ( /*currentIndex / */currentFile.totalSongLength) + '0';
+                       // wiringPiI2CWrite (fd, percentPlayed);
 
                         //for (currentFile.songArtist)
                             
