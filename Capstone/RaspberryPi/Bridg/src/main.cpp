@@ -222,7 +222,7 @@ int main(int argc, char **argv)
                         }
                         else
                         {
-                            percentPlayed = 0x89;//(/* currentIndex / */ currentFile.totalSongLength ) + '0';
+                            percentPlayed = (/* currentIndex / */ currentFile.totalSongLength ) + '0';
                             wiringPiI2CWrite (fd, percentPlayed);
                             cycleCount = 0;
                         }
