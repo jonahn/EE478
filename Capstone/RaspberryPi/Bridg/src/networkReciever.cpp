@@ -50,7 +50,7 @@ void addFileToQueue(std::string currentPath, std::string currentSongArtist, std:
     doneFile.filePath = currentPath;
     doneFile.songArtist = currentSongArtist;
     doneFile.songTitle = currentSongTitle;
-    doneFile.totalSongLength = 0x45;//currentTotalSongLength;
+    doneFile.totalSongLength = (unsigned char)(currentTotalSongLength/1000000);
     mp3Files->push_back(doneFile);
 }
 
@@ -67,7 +67,7 @@ BridgData parseData(unsigned char * buffer, unsigned int length)
 std::string currentPath;
 std::string currentSongArtist;
 std::string currentSongTitle;
-char currentTotalSongLength;
+float currentTotalSongLength;
 FILE * currentFile = 0;
 
 void handleCommand(char command)
@@ -193,7 +193,7 @@ void* recieverThread(void* maxNumberOfFiles)
             }
             case TOTAL_SONG_LENGTH_BYTES:
             {
-                currentTotalSongLength = *(data.data);
+                currentTotalSongLength = (float)*(data.data);
             }
                 
             default:

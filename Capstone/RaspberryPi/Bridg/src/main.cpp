@@ -216,13 +216,13 @@ int main(int argc, char **argv)
 
                         if (cycleCount == 0)
                         {
-                            playListSize = reciever.files->size() + '0';
+                            playListSize = *(currentFile.songTitle.c_str());//reciever.files->size() + '0';
                             wiringPiI2CWrite (fd, playListSize);
                             cycleCount = 1;
                         }
                         else
                         {
-                            percentPlayed = (/* currentIndex / */ currentFile.totalSongLength ) + '0';
+                            percentPlayed = (/* currentIndex / */ currentFile.totalSongLength );
                             wiringPiI2CWrite (fd, percentPlayed);
                             cycleCount = 0;
                         }
