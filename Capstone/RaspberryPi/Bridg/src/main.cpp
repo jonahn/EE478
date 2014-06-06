@@ -209,40 +209,31 @@ int main(int argc, char **argv)
                     }
                     
                     //Send song info over i2c
-                    cycleCount++;
-                    if (cycleCount %50000 == 0)
-                    {
-
-                        majCount++;
-                        if(majCount%1000 == 0)
-                        {
-                            //write a char to PIC
-                            if(fd >=0)
-                            {
-                                playListSize = reciever.files->size() + '0';
-                                wiringPiI2CWrite (fd, playListSize);
-
-                                percentPlayed = (/* currentIndex / */ currentFile.totalSongLength ) + '0';
-                                wiringPiI2CWrite (fd, percentPlayed);
-
-                                // //send song artist
-                                // for (int i = 0; i < 20; i++)
-                                // {
-                                //       //if artist name size < index, send char
-                                //              currentFile.songArtist.at(0) 
-                                //       //else, send ' ' char
-                                // }
-
-                                // //send song name 
-                                // for (int i = 0; i < 50; i++)
-                                // {
-                                //       //if song name size < index, send char
-                                //       //else, send ' ' char
-                                // }
-                            }
-                        }
-                    }
                     
+                    //write a char to PIC
+                    if(fd >=0)
+                    {
+                        playListSize = reciever.files->size() + '0';
+                        wiringPiI2CWrite (fd, playListSize);
+
+                        percentPlayed = (/* currentIndex / */ currentFile.totalSongLength ) + '0';
+                        wiringPiI2CWrite (fd, percentPlayed);
+
+                        // //send song artist
+                        // for (int i = 0; i < 20; i++)
+                        // {
+                        //       //if artist name size < index, send char
+                        //              currentFile.songArtist.at(0) 
+                        //       //else, send ' ' char
+                        // }
+
+                        // //send song name 
+                        // for (int i = 0; i < 50; i++)
+                        // {
+                        //       //if song name size < index, send char
+                        //       //else, send ' ' char
+                        // }
+                    }   
                 }
                 else
                 {
