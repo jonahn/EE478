@@ -117,7 +117,9 @@ void handleCommand(char command)
         {
             printf("Skipping song. \n");
 
-            currentSong++;
+            digitalWrite(PIN_NEED_NEW_PLAYLIST_NUMBER, HIGH);
+            printf("Asking for new playlist number. \n");
+            
             currentIndex = 0;
             
             break;
