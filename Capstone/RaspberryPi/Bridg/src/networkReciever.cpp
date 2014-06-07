@@ -44,7 +44,7 @@ NetworkReciever::NetworkReciever(int portNumber)
     port = portNumber;
 }
 
-void addFileToQueue(std::string currentPath, std::string currentSongArtist, std::string currentSongTitle, unsigned char currentTotalSongLength)
+void addFileToQueue(std::string currentPath, std::string currentSongArtist, std::string currentSongTitle, uint32_t currentTotalSongLength)
 {
     CompeletedFile doneFile;
     doneFile.filePath = currentPath;
