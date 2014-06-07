@@ -97,6 +97,7 @@ void main(void)
 
     while(1)
     {
+        PORTA = 0x01;
 //        //CHANGE TO Update screen every 5 sec
 //        minCycle++;             //increment cycle
 //        if(minCycle % 10 == 0)

@@ -46,6 +46,10 @@ void setupUSARTAndI2C()
     ANSELCbits.ANSC3 = 0;   //SDA
     ANSELCbits.ANSC4 = 0;   //SCL
 
+    TRISAbits.RA0 = 0; //LED Output
+
+    ANSELAbits.ANSA0 = 0;
+
     SPBRG = 129;
     SPBRGH = 129;
 
