@@ -190,7 +190,7 @@ int main(int argc, char **argv)
         unsigned int majCount = 0;
         unsigned char playListSize;
         unsigned char percentPlayed;
-        string test = "abcdefghijk";
+        std::string test = "abcdefghijk";
         // struct timespec tim;
         // tim.tv_sec = 0;
         // tim.tv_nsec = 50000;
