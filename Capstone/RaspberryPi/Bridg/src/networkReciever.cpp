@@ -67,7 +67,7 @@ BridgData parseData(unsigned char * buffer, unsigned int length)
 std::string currentPath;
 std::string currentSongArtist;
 std::string currentSongTitle;
-float currentTotalSongLength;
+uint32_t currentTotalSongLength;
 FILE * currentFile = 0;
 
 void handleCommand(char command)
