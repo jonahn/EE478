@@ -193,7 +193,7 @@ int main(int argc, char **argv)
 
         struct timespec tim;
         tim.tv_sec = 0;
-        tim.tv_nsec = 500;
+        tim.tv_nsec = 50000;
 		
         while(1)
 		{
