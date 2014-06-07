@@ -57,8 +57,8 @@ unsigned char recievedDataFlag;
 #pragma udata userdata
 unsigned char data[MAX_CHAR_SENT ];
 #pragma udata
-unsigned char dataTxUART[MAX_CHAR_SENT /2 +1];
-
+unsigned char songTxUART[MAX_CHAR_SENT /2 +1];
+unsigned char artistTxUART[MAX_CHAR_SENT /2 +1];
 
 unsigned char playlistSize;
 unsigned char percentPlayed;
@@ -111,20 +111,45 @@ void main(void)
            
             PIE1bits.SSP1IE = 0;      // disable SSP Interrupt
 
+            //Store song name
             index = 0;
-            for (i = 0; i < MAX_CHAR_SENT; i++)
+            for (i = 0; i < MAX_CHAR_SENT/2; i++)
             {
                 if( i % 2 == 1)
                 {
-                    dataTxUART[index] = data[i];
+                    songTxUART[index] = data[i];
                     index++;
                 }
             }
-            dataTxUART[MAX_CHAR_SENT/2] = '\0';
+            songTxUART[MAX_CHAR_SENT/2] = '\0';
 
+            //Store song name
+            index = 0;
+            for (i = MAX_CHAR_SENT/2; i < MAX_CHAR_SENT; i++)
+            {
+                if( i % 2 == 1)
+                {
+                    artistTxUART[index] = data[i];
+                    index++;
+                }
+            }
+            artistTxUART[MAX_CHAR_SENT/2] = '\0';
+
+
+            //Write to UART
             Write1USART(0x0c);   // clear hyperterminal
             delay(10);
-            puts1USART(dataTxUART);
+            puts1USART(headerStr);
+            puts1USART(emptyLine);
+            
+            puts1USART(headerStr);
+            puts1USART(artistTxUART);
+            Write1USART('\r');
+            delay(10);
+            Write1USART('\n');
+            delay(10);
+
+            puts1USART(songTxUART);
 
             PIE1bits.SSP1IE = 1;      // Enable SSP Interrupt
 
