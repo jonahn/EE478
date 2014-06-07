@@ -15,6 +15,8 @@ extern "C" {
 #define NOT_RECIEVED 0
 #define RECIEVED 1
 
+#define MAX_CHAR_SENT   8
+
 void setupInterrupts(void);
 
 void low_isr(void);

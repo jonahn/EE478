@@ -21,6 +21,7 @@
 
 
 
+
 //extern unsigned char temp, commandBuffer, charReceived, screenUpdated;
 //
 //unsigned char bufferIndex, mode, PORTCtemp, SRAMDataBus, address;    //mode: 0 = null, 1 = Setpoint
@@ -52,12 +53,17 @@ int indexRxData;                //0 = # of songs, 1 = %played
 
 //variables for i2c
 unsigned char recievedDataFlag;
-unsigned char data[12];
+unsigned char data[MAX_CHAR_SENT ];
+unsigned char dataTxUART[MAX_CHAR_SENT /2];
 
 unsigned char playlistSize;
 unsigned char percentPlayed;
 
-//external functions
+
+ int i;
+ int index;
+
+ //external functions
 extern void setup();
 extern void setupUSARTAndI2C();
 extern void storeData();
@@ -96,13 +102,24 @@ void main(void)
 //                //screenUpdated = NOT_UPDATED;
 //            }
 //
-        if(recievedDataFlag == 10)
+        if(recievedDataFlag == MAX_CHAR_SENT)
         {
-            data[11] = '\0';
+           
             PIE1bits.SSP1IE = 0;      // disable SSP Interrupt
+
+            index = 0;
+            for (i = 0; i < MAX_CHAR_SENT; i++)
+            {
+                if( i % 2 == 1)
+                {
+                    dataTxUART[index] = data[i];
+                    index++;
+                }
+            }
+
             Write1USART(0x0c);   // clear hyperterminal
             delay(10);
-            puts1USART(data);
+            puts1USART(dataTxUART);
 
             PIE1bits.SSP1IE = 1;      // Enable SSP Interrupt
 

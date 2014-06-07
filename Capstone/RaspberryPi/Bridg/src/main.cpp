@@ -214,14 +214,15 @@ int main(int argc, char **argv)
                         // percentPlayed =  0x45;//(/* currentIndex / */ currentFile.totalSongLength );
                         // wiringPiI2CWrite (fd, percentPlayed);
                             
-                        // for (int i = 0; i < test.size(); i++)
-                        // {
-                        //     wiringPiI2CWrite (fd, test[i]);
-                        // }
-                        wiringPiI2CWrite (fd, 0x61 );
-                        wiringPiI2CWrite (fd, 0x62 );
-                        wiringPiI2CWrite (fd, 0x63 );
-                        wiringPiI2CWrite (fd, 0x64 );
+                        for (int i = 0; i < test.size(); i++)
+                        {
+                            wiringPiI2CWrite (fd, test[i]);
+                        }
+                        
+                        // wiringPiI2CWrite (fd, 0x61 );
+                        // wiringPiI2CWrite (fd, 0x62 );
+                        // wiringPiI2CWrite (fd, 0x63 );
+                        // wiringPiI2CWrite (fd, 0x64 );
                     }
                 }
             }
