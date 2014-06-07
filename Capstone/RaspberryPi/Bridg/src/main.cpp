@@ -262,12 +262,6 @@ int main(int argc, char **argv)
                     
                      if(fd >=0)
                     {
-                        // playListSize = reciever.files->size() + '0';
-                        // wiringPiI2CWrite (fd, playListSize);
-                        // cycleCount = 1;
-                        
-                        // percentPlayed =  0x45;//(/* currentIndex / */ currentFile.totalSongLength );
-                        // wiringPiI2CWrite (fd, percentPlayed);
                         
                         //send song name  
                         for (int i = 0; i < 50; i++)
@@ -294,10 +288,20 @@ int main(int argc, char **argv)
                                 wiringPiI2CWrite(fd, '\0');
                             }
                         }
-#if DEBUG
+
+                        playListSize = reciever.files->size() + '0';
+                        wiringPiI2CWrite (fd, playListSize);
+                        cycleCount = 1;
+                        
+                        #if DEBUG
                         currentFile.totalSongLength = 2000000;
-#endif
+                        #endif
                         unsigned char songPercentPlayed = (unsigned char)(  ( (float)currentIndex / (float)currentFile.totalSongLength ) * 100 );
+                    
+
+                        percentPlayed = songPercentPlayed;
+                        wiringPiI2CWrite (fd, percentPlayed);
+                    
                     //write a char to PIC
                     // if(fd >=0)
                     // {

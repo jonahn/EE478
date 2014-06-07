@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Main.c
  * Author: Ahmed Jafri, Jake Yang, Anna Horstmann
  *
@@ -93,7 +93,7 @@ void main(void)
     Write1USART(0x0c);   // clear hyperterminal
     delay(10);
     puts1USART(headerStr);
-    
+
     while(1)
     {
 //        //CHANGE TO Update screen every 5 sec
@@ -108,7 +108,7 @@ void main(void)
 //
         if(recievedDataFlag == MAX_CHAR_SENT)
         {
-           
+
             PIE1bits.SSP1IE = 0;      // disable SSP Interrupt
 
             //Store song name
@@ -141,15 +141,20 @@ void main(void)
             delay(10);
             puts1USART(headerStr);
             puts1USART(emptyLine);
-            
-            puts1USART(headerStr);
+
+            puts1USART(artistNameStr);
             puts1USART(artistTxUART);
             Write1USART('\r');
             delay(10);
             Write1USART('\n');
             delay(10);
 
+            puts1USART(songNameStr);
             puts1USART(songTxUART);
+            Write1USART('\r');
+            delay(10);
+            Write1USART('\n');
+            delay(10);
 
             PIE1bits.SSP1IE = 1;      // Enable SSP Interrupt
 
@@ -158,7 +163,7 @@ void main(void)
                PIE1bits.SSP1IE = 0;      // disable SSP Interrupt
                 playlistSize = data[0];
                percentPlayed = data[1];
-  
+
                 //clear terminal and write paylist size to USART
                 Write1USART(0x0c);   // clear hyperterminal
                 delay(10);
@@ -188,12 +193,12 @@ void main(void)
 
             }
 
-               
+
 
             recievedDataFlag = 0;
         }
 
- 
+
     }
     CloseI2C1();
 }
