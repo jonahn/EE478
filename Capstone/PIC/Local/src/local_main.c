@@ -53,6 +53,7 @@ int indexRxData;                //0 = # of songs, 1 = %played
 
 //variables for i2c
 unsigned char recievedDataFlag;
+
 #pragma udata userdata
 unsigned char data[MAX_CHAR_SENT ];
 #pragma udata
