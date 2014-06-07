@@ -192,30 +192,34 @@ int main(int argc, char **argv)
         unsigned char percentPlayed;
 
         struct timespec tim;
-
-		while(1)
+        tim.tv_sec = 0;
+        tim.tv_nsec = 500;
+		
+        while(1)
 		{
-            // cycleCount++;
-            // if (cycleCount %50000 == 0)
-            // {
+            cycleCount++;
+            if (cycleCount %50000 == 0)
+            {
 
-            //     majCount++;
-            //     if(majCount%1000 == 0)
-            //     {
-            //         //write a char to PIC
-            //         if(fd >=0)
-            //         {
-            //             playListSize = reciever.files->size() + '0';
-            //             wiringPiI2CWrite (fd, playListSize);
-
-            //            // percentPlayed = ( /*currentIndex / */currentFile.totalSongLength) + '0';
-            //            // wiringPiI2CWrite (fd, percentPlayed);
-
-            //             //for (currentFile.songArtist)
+                majCount++;
+                if(majCount%1000 == 0)
+                {
+                    //write a char to PIC
+                    if(fd >=0)
+                    {
+                        playListSize = reciever.files->size() + '0';
+                        wiringPiI2CWrite (fd, playListSize);
+                        cycleCount = 1;
+                        
+                        //delay
+                        nanosleep(&tim, &tim);  //wait to transmit i2c
+                  
+                        percentPlayed =  0x45;//(/* currentIndex / */ currentFile.totalSongLength );
+                        wiringPiI2CWrite (fd, percentPlayed);
                             
-            //         }
-            //     }
-            // }
+                    }
+                }
+            }
 #if DEBUG
             isM4ReadyISR();
 #endif
@@ -292,8 +296,6 @@ int main(int argc, char **argv)
                     const unsigned char * arr = emptymp3data;
                     
                     sendOverSPI(arr, EMPTY_MP3_DATA_LENGTH);
-
-
                    
 		        }
             }
