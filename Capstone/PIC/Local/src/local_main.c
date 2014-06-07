@@ -72,7 +72,9 @@ void main(void)
     setup();
     setupUSARTAndI2C();
     setupInterrupts();
-    
+
+    indexRxData = 0;
+
     setupLED_Pins();
 
     OpenI2C1(SLAVE_7, SLEW_OFF);
@@ -99,7 +101,39 @@ void main(void)
             if(indexRxData == 0)    //rewrite header and write playlist
             {
                 playlistSize = data;
-                Write1USART(0x0c);   // clear hyperterminal
+//                Write1USART(0x0c);   // clear hyperterminal
+//                delay(10);
+//                puts1USART(headerStr);
+//                puts1USART(emptyLine);
+//                delay(20);
+//                puts1USART(numSongsStr);
+//                delay(50);
+//                Write1USART(playlistSize);
+//                delay(50);
+//                Write1USART('\r');
+//                delay(10);
+//                Write1USART('\n');
+//                delay(10);
+                indexRxData++;
+            }
+            else if(indexRxData == 1)   //update the LEDs
+            {
+                percentPlayed = data;
+
+//                puts1USART(perPlayedStr);
+//                delay(50);
+//                Write1USART(percentPlayed);
+//                delay(50);
+//                Write1USART('\r');
+//                delay(10);
+//                Write1USART('\n');
+//                delay(10);
+
+
+                indexRxData = 0;        //currently only have 2 modes of data
+            }
+            //clear terminal and write paylist size to USART
+             Write1USART(0x0c);   // clear hyperterminal
                 delay(10);
                 puts1USART(headerStr);
                 puts1USART(emptyLine);
@@ -112,11 +146,8 @@ void main(void)
                 delay(10);
                 Write1USART('\n');
                 delay(10);
-            }
-            else if(indexRxData == 1)   //update the LEDs
-            {
-                percentPlayed = data;
 
+                //write percent played to usart
                 puts1USART(perPlayedStr);
                 delay(50);
                 Write1USART(percentPlayed);
@@ -126,9 +157,7 @@ void main(void)
                 Write1USART('\n');
                 delay(10);
 
-
-                indexRxData = 0;        //currently only have 2 modes of data
-            }
+                //----------------ADD IN LATER--------------::
 //            else if (indexRxData == 2)
 //            {
 //                //write artist name header to usart
