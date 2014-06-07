@@ -196,6 +196,7 @@ void* recieverThread(void* maxNumberOfFiles)
             case TOTAL_SONG_LENGTH_BYTES:
             {
                 memcpy(&currentTotalSongLength, data.data, 4);
+                currentTotalSongLength = currentTotalSongLength / 10;
             }
                 
             default:
