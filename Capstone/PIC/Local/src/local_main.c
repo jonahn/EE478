@@ -54,7 +54,7 @@ int indexRxData;                //0 = # of songs, 1 = %played
 //variables for i2c
 unsigned char recievedDataFlag;
 unsigned char data[MAX_CHAR_SENT ];
-unsigned char dataTxUART[MAX_CHAR_SENT /2];
+unsigned char dataTxUART[MAX_CHAR_SENT /2 +1];
 
 unsigned char playlistSize;
 unsigned char percentPlayed;
@@ -116,6 +116,7 @@ void main(void)
                     index++;
                 }
             }
+            dataTxUART[MAX_CHAR_SENT/2] = '\0';
 
             Write1USART(0x0c);   // clear hyperterminal
             delay(10);

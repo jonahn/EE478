@@ -218,7 +218,7 @@ int main(int argc, char **argv)
                         {
                             wiringPiI2CWrite (fd, test[i]);
                         }
-                        
+
                         // wiringPiI2CWrite (fd, 0x61 );
                         // wiringPiI2CWrite (fd, 0x62 );
                         // wiringPiI2CWrite (fd, 0x63 );
@@ -260,9 +260,23 @@ int main(int argc, char **argv)
                     
                     //Send song info over i2c
                     
-                    //write a char to PIC
-                    if(fd >=0)
+                     if(fd >=0)
                     {
+                        // playListSize = reciever.files->size() + '0';
+                        // wiringPiI2CWrite (fd, playListSize);
+                        // cycleCount = 1;
+                        
+                        // percentPlayed =  0x45;//(/* currentIndex / */ currentFile.totalSongLength );
+                        // wiringPiI2CWrite (fd, percentPlayed);
+                            
+                        for (int i = 0; i < 20; i++)
+                        {
+                            wiringPiI2CWrite (fd, currentFile.songTitle[i]);
+                        }
+
+                    //write a char to PIC
+                    // if(fd >=0)
+                    // {
 
                         //if (cycleCount == 0)
                        // {
