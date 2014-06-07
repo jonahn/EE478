@@ -100,27 +100,18 @@ void main(void)
     i = 0;
     while(1)
     {
-        testerCycle++;
-        if (testerCycle%500 == 0)
-        {
-            i++;
-        }
-        if(i == 102)
-        {
-            i = 0;
-        }
-        PORTA = ((i > 10) & 0x01 )| (i > 20)<< 1 | (i > 30)<< 2| (i > 40)<< 3;
-        PORTB =  (i > 50) & 0x01| (i > 60)<< 1 |(i > 70)<< 2 | (i > 80)<< 3 | (i > 90)<< 4 | (i == 100)<< 5;
-//        //CHANGE TO Update screen every 5 sec
-//        minCycle++;             //increment cycle
-//        if(minCycle % 10 == 0)
+//        testerCycle++;
+//        if (testerCycle%500 == 0)
 //        {
-//            majorCycle++;
-//            if(majorCycle % 50 == 0)
-//            {
-//                //screenUpdated = NOT_UPDATED;
-//            }
-//
+//            i++;
+//        }
+//        if(i == 102)
+//        {
+//            i = 0;
+//        }
+//        PORTA = ((i > 10) & 0x01 )| (i > 20)<< 1 | (i > 30)<< 2| (i > 40)<< 3;
+//        PORTB =  (i > 50) & 0x01| (i > 60)<< 1 |(i > 70)<< 2 | (i > 80)<< 3 | (i > 90)<< 4 | (i == 100)<< 5;
+
         if(recievedDataFlag == MAX_CHAR_SENT)
         {
 
@@ -167,6 +158,12 @@ void main(void)
             delay(10);
             Write1USART('\n');
             delay(10);
+
+            //Light up LEDs
+            data[203] = (unsigned char)((float)data[203]/124 *100);
+            i = data[203];
+            PORTA = ((i > 5) & 0x01 )| (i > 15)<< 1 | (i > 25)<< 2| (i > 35)<< 3;
+            PORTB =  (i >45) & 0x01| (i > 55)<< 1 |(i > 65)<< 2 | (i > 75)<< 3 | (i > 85)<< 4 | (i > 95)<< 5;
 
             //send Percent played
             puts1USART(perPlayedStr);
