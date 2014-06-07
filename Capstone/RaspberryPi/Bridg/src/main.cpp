@@ -8,6 +8,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <pthread.h>
+#include <time.h>
 
 #include "../../../Shared/settings.h"
 #include "../../../Shared/emptymp3data.h"
@@ -189,6 +190,9 @@ int main(int argc, char **argv)
         unsigned int majCount = 0;
         unsigned char playListSize;
         unsigned char percentPlayed;
+
+        struct timespec tim;
+
 		while(1)
 		{
             // cycleCount++;
@@ -255,8 +259,11 @@ int main(int argc, char **argv)
                             playListSize = *(currentFile.songTitle.c_str());//reciever.files->size() + '0';
                             wiringPiI2CWrite (fd, playListSize);
                             cycleCount = 1;
-
-                            nanosleep(0, 900);  //wait to transmit i2c
+                            
+                            //delay
+                            tim.tv_sec = 0;
+                            tim.tv_nsec = 500;
+                            nanosleep(&tim, &tim);  //wait to transmit i2c
                        // }
                        // else
                        // {
