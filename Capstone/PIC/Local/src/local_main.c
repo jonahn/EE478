@@ -39,7 +39,7 @@
 #pragma udata userdata
 
 //strings to send to USART
-char headerStr[] = "BRIDG \r\n\0";
+char headerStr[] = "bridgd \r\n\0";
 char numSongsStr[] = "Number of Songs Currently in Playlist: \0";
 char perPlayedStr[] = "% Played: \0";
 char artistNameStr[] = "Artist: \0";
@@ -52,7 +52,7 @@ int indexRxData;                //0 = # of songs, 1 = %played
 
 //variables for i2c
 unsigned char recievedDataFlag;
-unsigned char data[2];
+unsigned char data[11];
 
 unsigned char playlistSize;
 unsigned char percentPlayed;
@@ -96,39 +96,20 @@ void main(void)
 //                //screenUpdated = NOT_UPDATED;
 //            }
 //
-        if(recievedDataFlag == 2)
+        if(recievedDataFlag == 11)
         {
-            //if(indexRxData == 0)    //rewrite header and write playlist
-            //{
+            Write1USART(0x0c);   // clear hyperterminal
+            delay(10);
+            puts1USART(data);
+
+
+
+            if (0)      //ADD BACK IN LATER
+            {
                PIE1bits.SSP1IE = 0;      // disable SSP Interrupt
                 playlistSize = data[0];
-//                Write1USART(0x0c);   // clear hyperterminal
-//                delay(10);
-//                puts1USART(headerStr);
-//                puts1USART(emptyLine);
-//                delay(20);
-//                puts1USART(numSongsStr);
-//                delay(50);
-//                Write1USART(playlistSize);
-//                delay(50);
-//                Write1USART('\r');
-//                delay(10);
-//                Write1USART('\n');
-//                delay(10);
-                //indexRxData++;
-            //}
-            //else if(indexRxData == 1)   //update the LEDs
-            //{
-                percentPlayed = data[1];
+               percentPlayed = data[1];
   
-//                puts1USART(perPlayedStr);
-//                delay(50);
-//                Write1USART(percentPlayed);
-//                delay(50);
-//                Write1USART('\r');
-//                delay(10);
-//                Write1USART('\n');
-//                delay(10);
                 //clear terminal and write paylist size to USART
                 Write1USART(0x0c);   // clear hyperterminal
                 delay(10);
@@ -155,37 +136,10 @@ void main(void)
                 delay(10);
 
                 PIE1bits.SSP1IE = 1;      // Enable SSP Interrupt
-               // indexRxData = 0;        //currently only have 2 modes of data
-            //}
-            
 
-                //----------------ADD IN LATER--------------::
-//            else if (indexRxData == 2)
-//            {
-//                //write artist name header to usart
-//                puts1USART(artistNameStr);
-//                delay(50);
-//
-//                //1st char
-//                Write1USART(data);
-//            }
-//            else if( indexRxData < 22)
-//            {
-//                Write1USART(data);
-//            }
-//            else if (indexRxData == 22)
-//            {
-//                //write song name header to usart
-//                puts1USART(songNameStr);
-//                delay(50);
-//                Write1USART(data);
-//            }
-//            else if (indexRxData < 72)
-//            {
-//                Write1USART(data);
-//
-//                indexRxData = 0;
-//            }
+            }
+
+               
 
             recievedDataFlag = 0;
         }
