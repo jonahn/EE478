@@ -212,7 +212,7 @@ int main(int argc, char **argv)
                         cycleCount = 1;
                         
                         //delay
-                        nanosleep(&tim, &tim);  //wait to transmit i2c
+                        //nanosleep(&tim, &tim);  //wait to transmit i2c
                   
                         percentPlayed =  0x45;//(/* currentIndex / */ currentFile.totalSongLength );
                         wiringPiI2CWrite (fd, percentPlayed);
@@ -260,19 +260,16 @@ int main(int argc, char **argv)
 
                         //if (cycleCount == 0)
                        // {
-                            playListSize = *(currentFile.songTitle.c_str());//reciever.files->size() + '0';
-                            wiringPiI2CWrite (fd, playListSize);
-                            cycleCount = 1;
+                       //      playListSize = *(currentFile.songTitle.c_str());//reciever.files->size() + '0';
+                       //      wiringPiI2CWrite (fd, playListSize);
+                       //      cycleCount = 1;
                             
-                            //delay
-                           //tim.tv_sec = 0;
-                            //tim.tv_nsec = 500;
-                            //nanosleep(&tim, &tim);  //wait to transmit i2c
-                       // }
-                       // else
-                       // {
-                            percentPlayed = (/* currentIndex / */ currentFile.totalSongLength );
-                            wiringPiI2CWrite (fd, percentPlayed);
+                           
+                       // // }
+                       // // else
+                       // // {
+                       //      percentPlayed = (/* currentIndex / */ currentFile.totalSongLength );
+                       //      wiringPiI2CWrite (fd, percentPlayed);
                         //    cycleCount = 0;
                        // }
                         // //send song artist
