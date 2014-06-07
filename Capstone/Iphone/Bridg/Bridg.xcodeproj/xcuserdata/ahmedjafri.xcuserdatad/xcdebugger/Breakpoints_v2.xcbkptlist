@@ -47,7 +47,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "69"
             endingLineNumber = "69"
-            landmarkName = "BridgNetworkClient::sendDataToServer(BridgData inData)"
+            landmarkName = "BridgNetworkClient::sendCommand(BridgCommands command)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -78,9 +78,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "43"
-            endingLineNumber = "43"
-            landmarkName = "BridgNetworkClient::sendCommand(BridgCommands command)"
-            landmarkType = "5">
+            endingLineNumber = "43">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -94,9 +92,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "44"
-            endingLineNumber = "44"
-            landmarkName = "BridgNetworkClient::sendCommand(BridgCommands command)"
-            landmarkType = "5">
+            endingLineNumber = "44">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -110,9 +106,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "54"
-            endingLineNumber = "54"
-            landmarkName = "BridgNetworkClient::sendMusicData(int length, unsigned char * inData)"
-            landmarkType = "5">
+            endingLineNumber = "54">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -127,7 +121,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "119"
             endingLineNumber = "119"
-            landmarkName = "BridgNetworkClient::serialize(char * dataBuffer, BridgData dataToSerialize)"
+            landmarkName = "BridgNetworkClient::sendDataToServer(BridgData inData)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -143,7 +137,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "117"
             endingLineNumber = "117"
-            landmarkName = "BridgNetworkClient::serialize(char * dataBuffer, BridgData dataToSerialize)"
+            landmarkName = "BridgNetworkClient::sendDataToServer(BridgData inData)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -159,7 +153,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "116"
             endingLineNumber = "116"
-            landmarkName = "BridgNetworkClient::serialize(char * dataBuffer, BridgData dataToSerialize)"
+            landmarkName = "BridgNetworkClient::sendDataToServer(BridgData inData)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

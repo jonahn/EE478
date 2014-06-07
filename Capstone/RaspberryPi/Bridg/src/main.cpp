@@ -294,7 +294,10 @@ int main(int argc, char **argv)
                                 wiringPiI2CWrite(fd, '\0');
                             }
                         }
-
+#if DEBUG
+                        currentFile.totalSongLength = 2000000;
+#endif
+                        unsigned char songPercentPlayed = (unsigned char)(  ( (float)currentIndex / (float)currentFile.totalSongLength ) * 100 );
                     //write a char to PIC
                     // if(fd >=0)
                     // {

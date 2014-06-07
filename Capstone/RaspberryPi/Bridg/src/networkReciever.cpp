@@ -50,7 +50,7 @@ void addFileToQueue(std::string currentPath, std::string currentSongArtist, std:
     doneFile.filePath = currentPath;
     doneFile.songArtist = currentSongArtist;
     doneFile.songTitle = currentSongTitle;
-    doneFile.totalSongLength = (unsigned char)(currentTotalSongLength/1000000);
+    doneFile.totalSongLength = currentTotalSongLength;
     mp3Files->push_back(doneFile);
 }
 
@@ -195,7 +195,7 @@ void* recieverThread(void* maxNumberOfFiles)
             }
             case TOTAL_SONG_LENGTH_BYTES:
             {
-                currentTotalSongLength = (float)*(data.data);
+                currentTotalSongLength = (uint32_t)*(data.data);
             }
                 
             default:
