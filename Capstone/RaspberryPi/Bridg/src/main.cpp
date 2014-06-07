@@ -272,7 +272,7 @@ int main(int argc, char **argv)
                             }
                             else 
                             {
-                                wiringPiI2CWrite(fd, ' ');
+                                wiringPiI2CWrite(fd, '\0');
                             }
                         }
 
@@ -297,7 +297,8 @@ int main(int argc, char **argv)
                         currentFile.totalSongLength = 2000000;
                         #endif
                         unsigned char songPercentPlayed = (unsigned char)(  ( (float)currentIndex / (float)currentFile.totalSongLength ) * 100 );
-                    
+                        
+                        printf("Percent played: %d", songPercentPlayed);
 
                         percentPlayed = songPercentPlayed;
                         wiringPiI2CWrite (fd, percentPlayed);

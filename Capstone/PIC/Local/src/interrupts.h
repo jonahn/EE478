@@ -15,7 +15,8 @@ extern "C" {
 #define NOT_RECIEVED 0
 #define RECIEVED 1
 
-#define MAX_CHAR_SENT   200
+#define MAX_CHAR_SENT       204
+#define SONG_BUFF_LENGTH    50
 
 void setupInterrupts(void);
 

@@ -57,8 +57,8 @@ unsigned char recievedDataFlag;
 #pragma udata userdata
 unsigned char data[MAX_CHAR_SENT ];
 #pragma udata
-unsigned char songTxUART[MAX_CHAR_SENT /2 +1];
-unsigned char artistTxUART[MAX_CHAR_SENT /2 +1];
+unsigned char songTxUART[SONG_BUFF_LENGTH +1];
+unsigned char artistTxUART[SONG_BUFF_LENGTH +1];
 
 unsigned char playlistSize;
 unsigned char percentPlayed;
@@ -66,6 +66,7 @@ unsigned char percentPlayed;
 
  int i;
  int index;
+ unsigned char temp1, temp2;
 
  //external functions
 extern void setup();
@@ -113,7 +114,7 @@ void main(void)
 
             //Store song name
             index = 0;
-            for (i = 0; i < MAX_CHAR_SENT/2; i++)
+            for (i = 0; i < SONG_BUFF_LENGTH*2; i++)
             {
                 if( i % 2 == 1)
                 {
@@ -121,11 +122,11 @@ void main(void)
                     index++;
                 }
             }
-            songTxUART[MAX_CHAR_SENT/2] = '\0';
+            songTxUART[SONG_BUFF_LENGTH] = '\0';
 
             //Store song name
             index = 0;
-            for (i = MAX_CHAR_SENT/2; i < MAX_CHAR_SENT; i++)
+            for (i = 100 ; i < 200; i++)
             {
                 if( i % 2 == 1)
                 {
@@ -133,24 +134,58 @@ void main(void)
                     index++;
                 }
             }
-            artistTxUART[MAX_CHAR_SENT/2] = '\0';
+            artistTxUART[SONG_BUFF_LENGTH] = '\0';
 
 
             //Write to UART
             Write1USART(0x0c);   // clear hyperterminal
             delay(10);
             puts1USART(headerStr);
+
             puts1USART(emptyLine);
 
+            //send Playlist size
+            puts1USART(numSongsStr);
+            delay(50);
+            Write1USART(data[201]);
+            delay(50);
+            Write1USART('\r');
+            delay(10);
+            Write1USART('\n');
+            delay(10);
+
+            //send Percent played
+            puts1USART(perPlayedStr);
+            delay(50);
+            //convert dec buffer to single character
+            temp1 = (unsigned char) (data[203]/100);
+            Write1USART(temp1 + '0');
+            delay(50);
+            temp2 = (unsigned char) ((data[203]/10) - temp1*10);
+            Write1USART(temp2 + '0');
+            delay(50);
+            temp1 = (unsigned char) (data[203] - temp1*100 - temp2*10);
+            Write1USART(temp1 + '0');
+           
+            Write1USART('\r');
+            delay(10);
+            Write1USART('\n');
+            delay(10);
+
+            //Send Artist Name
             puts1USART(artistNameStr);
+            delay(50);
             puts1USART(artistTxUART);
+            delay(50);
             Write1USART('\r');
             delay(10);
             Write1USART('\n');
             delay(10);
 
             puts1USART(songNameStr);
+            delay(50);
             puts1USART(songTxUART);
+            delay(50);
             Write1USART('\r');
             delay(10);
             Write1USART('\n');
