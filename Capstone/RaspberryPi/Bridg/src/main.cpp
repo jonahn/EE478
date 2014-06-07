@@ -268,12 +268,26 @@ int main(int argc, char **argv)
                         
                         // percentPlayed =  0x45;//(/* currentIndex / */ currentFile.totalSongLength );
                         // wiringPiI2CWrite (fd, percentPlayed);
-                            
-                        for (int i = 0; i < 20; i++)
+                        
+                        //send song name  
+                        for (int i = 0; i < 50; i++)
                         {
                             if(currentFile.songTitle[i])
                             {
                                 wiringPiI2CWrite (fd, currentFile.songTitle[i]);
+                            }
+                            else 
+                            {
+                                wiringPiI2CWrite(fd, '\0');
+                            }
+                        }
+
+                        //send artist
+                        for (int i = 0; i < 50; i++)
+                        {
+                            if(currentFile.songArtist[i])
+                            {
+                                wiringPiI2CWrite (fd, currentFile.songArtist[i]);
                             }
                             else 
                             {

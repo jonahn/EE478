@@ -15,14 +15,14 @@ void high_vector(void)
 #pragma code
 
 //unsigned char toggleLED;
-extern unsigned char data;
+extern unsigned char data[2];
 extern int indexRxData;
 
 // The actual high priority ISR
 #pragma interrupt highPriorityISR
 void highPriorityISR() {
+    
     // Check for SSP interrupt, reading address
-    recievedDataFlag = RECIEVED;
     if (PIR1bits.SSP1IF == 1 && SSP1STATbits.BF == 1 && SSP1STATbits.D_A == 0) {
 
         tempAddr = SSP1BUF;  //read addr from buffer
@@ -30,18 +30,22 @@ void highPriorityISR() {
         if (SSP1STATbits.R_NOT_W == 1)      //master is waiting for a read
         {
             SSP1STATbits.R_NOT_W = 0;
-            WriteI2C1(data);
+            WriteI2C1(data[0]);
         }
     }
     //Check for SSP interrupt, reading data // this works
     else if (PIR1bits.SSP1IF == 1 && SSP1STATbits.BF == 1 && SSP1STATbits.R_NOT_W == 0 && SSP1STATbits.D_A == 1 )
     {
-        data = SSP1BUF;
+        data[recievedDataFlag] = SSP1BUF;
 
     }
-
+    
+    recievedDataFlag++;
+    if(recievedDataFlag > MAX_CHAR_SENT)
+    {
+        recievedDataFlag = 0;
+    }
     PIR1bits.SSP1IF = 0; // Clear the interrupt flag
-    indexRxData++;
     return;
 }
 
