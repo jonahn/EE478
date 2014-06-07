@@ -195,7 +195,8 @@ void* recieverThread(void* maxNumberOfFiles)
             }
             case TOTAL_SONG_LENGTH_BYTES:
             {
-                currentTotalSongLength = (uint32_t)*(data.data);
+                currentTotalSongLength = (uint32_t)(*data.data);
+                printf("Recieved bytes: 0x%x 0x%x 0x%x 0x%x",data.data[0], data.data[1], data.data[2], data.data[3]);
             }
                 
             default:
