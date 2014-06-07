@@ -67,6 +67,7 @@ unsigned char percentPlayed;
  int i;
  int index;
  unsigned char temp1, temp2;
+int testerCycle = 0;
 
  //external functions
 extern void setup();
@@ -95,9 +96,21 @@ void main(void)
     delay(10);
     puts1USART(headerStr);
 
+    
+    i = 0;
     while(1)
     {
-        PORTA = 0x01;
+        testerCycle++;
+        if (testerCycle%500 == 0)
+        {
+            i++;
+        }
+        if(i == 102)
+        {
+            i = 0;
+        }
+        PORTA = ((i > 10) & 0x01 )| (i > 20)<< 1 | (i > 30)<< 2| (i > 40)<< 3;
+        PORTB =  (i > 50) & 0x01| (i > 60)<< 1 |(i > 70)<< 2 | (i > 80)<< 3 | (i > 90)<< 4 | (i == 100)<< 5;
 //        //CHANGE TO Update screen every 5 sec
 //        minCycle++;             //increment cycle
 //        if(minCycle % 10 == 0)
