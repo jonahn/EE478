@@ -190,7 +190,7 @@ int main(int argc, char **argv)
         unsigned int majCount = 0;
         unsigned char playListSize;
         unsigned char percentPlayed;
-        std::string test = "abcdefghijk";
+        std::string test = "abcdefghij";
         // struct timespec tim;
         // tim.tv_sec = 0;
         // tim.tv_nsec = 50000;
@@ -214,10 +214,14 @@ int main(int argc, char **argv)
                         // percentPlayed =  0x45;//(/* currentIndex / */ currentFile.totalSongLength );
                         // wiringPiI2CWrite (fd, percentPlayed);
                             
-                        for (int i = 0; i < test.size() -1; i++)
-                        {
-                            wiringPiI2CWrite (fd, test[i]);
-                        }
+                        // for (int i = 0; i < test.size(); i++)
+                        // {
+                        //     wiringPiI2CWrite (fd, test[i]);
+                        // }
+                        wiringPiI2CWrite (fd, 0x61 );
+                        wiringPiI2CWrite (fd, 0x62 );
+                        wiringPiI2CWrite (fd, 0x63 );
+                        wiringPiI2CWrite (fd, 0x64 );
                     }
                 }
             }

@@ -96,9 +96,9 @@ void main(void)
 //                //screenUpdated = NOT_UPDATED;
 //            }
 //
-        if(recievedDataFlag == 11)
+        if(recievedDataFlag == 10)
         {
-            data[12] = '\0';
+            data[11] = '\0';
             PIE1bits.SSP1IE = 0;      // disable SSP Interrupt
             Write1USART(0x0c);   // clear hyperterminal
             delay(10);
