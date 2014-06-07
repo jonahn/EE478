@@ -197,35 +197,35 @@ int main(int argc, char **argv)
 		
         while(1)
 		{
-            cycleCount++;
-            if (cycleCount %50000 == 0)
-            {
+            // cycleCount++;
+            // if (cycleCount %50000 == 0)
+            // {
 
-                majCount++;
-                if(majCount%1000 == 0)
-                {
-                    //write a char to PIC
-                    if(fd >=0)
-                    {
-                        // playListSize = reciever.files->size() + '0';
-                        // wiringPiI2CWrite (fd, playListSize);
-                        // cycleCount = 1;
+            //     majCount++;
+            //     if(majCount%1000 == 0)
+            //     {
+            //         //write a char to PIC
+            //         if(fd >=0)
+            //         {
+            //             // playListSize = reciever.files->size() + '0';
+            //             // wiringPiI2CWrite (fd, playListSize);
+            //             // cycleCount = 1;
                         
-                        // percentPlayed =  0x45;//(/* currentIndex / */ currentFile.totalSongLength );
-                        // wiringPiI2CWrite (fd, percentPlayed);
+            //             // percentPlayed =  0x45;//(/* currentIndex / */ currentFile.totalSongLength );
+            //             // wiringPiI2CWrite (fd, percentPlayed);
                             
-                        for (int i = 0; i < test.size(); i++)
-                        {
-                            wiringPiI2CWrite (fd, test[i]);
-                        }
+            //             for (int i = 0; i < test.size(); i++)
+            //             {
+            //                 wiringPiI2CWrite (fd, test[i]);
+            //             }
 
                         // wiringPiI2CWrite (fd, 0x61 );
                         // wiringPiI2CWrite (fd, 0x62 );
                         // wiringPiI2CWrite (fd, 0x63 );
                         // wiringPiI2CWrite (fd, 0x64 );
-                    }
-                }
-            }
+            //         }
+            //     }
+            // }
 #if DEBUG
             isM4ReadyISR();
 #endif
@@ -271,7 +271,14 @@ int main(int argc, char **argv)
                             
                         for (int i = 0; i < 20; i++)
                         {
-                            wiringPiI2CWrite (fd, currentFile.songTitle[i]);
+                            if(currentFile.songTitle[i])
+                            {
+                                wiringPiI2CWrite (fd, currentFile.songTitle[i]);
+                            }
+                            else 
+                            {
+                                wiringPiI2CWrite(fd, '\0');
+                            }
                         }
 
                     //write a char to PIC
