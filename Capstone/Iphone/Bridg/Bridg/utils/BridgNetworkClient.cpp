@@ -55,7 +55,7 @@ void BridgNetworkClient::sendSongLengthinBytes(float songLengthInSeconds)
 {
     uint32_t songLengthInBytes = songLengthInSeconds * BIT_RATE * 1000;
     BridgData data = BridgData();
-    data.length = sizeof(uint32_t);
+    data.length = (uint32_t)sizeof(uint32_t);
     data.dataType = BridgDataType::TOTAL_SONG_LENGTH_BYTES;
     data.data = (char*)&songLengthInBytes;
     
