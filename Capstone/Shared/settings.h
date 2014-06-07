@@ -34,7 +34,7 @@
 #define COMMAND_LENGTH  4
 #define TYPE_LENGTH     1
 
-#define BIT_RATE 96000
+#define BIT_RATE 96
 
 #define PORT_NUMBER 2000
 #define SERVER_ADDRESS "10.0.0.1"
