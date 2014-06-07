@@ -52,7 +52,7 @@ int indexRxData;                //0 = # of songs, 1 = %played
 
 //variables for i2c
 unsigned char recievedDataFlag;
-unsigned char data[11];
+unsigned char data[12];
 
 unsigned char playlistSize;
 unsigned char percentPlayed;
@@ -98,11 +98,13 @@ void main(void)
 //
         if(recievedDataFlag == 11)
         {
+            data[12] = '\0';
+            PIE1bits.SSP1IE = 0;      // disable SSP Interrupt
             Write1USART(0x0c);   // clear hyperterminal
             delay(10);
             puts1USART(data);
 
-
+            PIE1bits.SSP1IE = 1;      // Enable SSP Interrupt
 
             if (0)      //ADD BACK IN LATER
             {

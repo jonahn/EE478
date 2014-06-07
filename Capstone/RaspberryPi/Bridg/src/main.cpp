@@ -190,10 +190,10 @@ int main(int argc, char **argv)
         unsigned int majCount = 0;
         unsigned char playListSize;
         unsigned char percentPlayed;
-
-        struct timespec tim;
-        tim.tv_sec = 0;
-        tim.tv_nsec = 50000;
+        string test = "abcdefghijk";
+        // struct timespec tim;
+        // tim.tv_sec = 0;
+        // tim.tv_nsec = 50000;
 		
         while(1)
 		{
@@ -207,16 +207,17 @@ int main(int argc, char **argv)
                     //write a char to PIC
                     if(fd >=0)
                     {
-                        playListSize = reciever.files->size() + '0';
-                        wiringPiI2CWrite (fd, playListSize);
-                        cycleCount = 1;
+                        // playListSize = reciever.files->size() + '0';
+                        // wiringPiI2CWrite (fd, playListSize);
+                        // cycleCount = 1;
                         
-                        //delay
-                        //nanosleep(&tim, &tim);  //wait to transmit i2c
-                  
-                        percentPlayed =  0x45;//(/* currentIndex / */ currentFile.totalSongLength );
-                        wiringPiI2CWrite (fd, percentPlayed);
+                        // percentPlayed =  0x45;//(/* currentIndex / */ currentFile.totalSongLength );
+                        // wiringPiI2CWrite (fd, percentPlayed);
                             
+                        for (int i = 0; i < test.size() -1; i++)
+                        {
+                            wiringPiI2CWrite (fd, test[i]);
+                        }
                     }
                 }
             }
