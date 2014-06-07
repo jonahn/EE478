@@ -50,7 +50,7 @@ void addFileToQueue(std::string currentPath, std::string currentSongArtist, std:
     doneFile.filePath = currentPath;
     doneFile.songArtist = currentSongArtist;
     doneFile.songTitle = currentSongTitle;
-    doneFile.totalSongLength = 0x45;
+    doneFile.totalSongLength = (unsigned char)(currentTotalSongLength/1000000);
     mp3Files->push_back(doneFile);
 }
 
@@ -67,7 +67,7 @@ BridgData parseData(unsigned char * buffer, unsigned int length)
 std::string currentPath;
 std::string currentSongArtist;
 std::string currentSongTitle;
-char currentTotalSongLength;
+float currentTotalSongLength;
 FILE * currentFile = 0;
 
 void handleCommand(char command)
@@ -94,7 +94,7 @@ void handleCommand(char command)
             
             currentFile = fopen(currentPath.c_str(), "a");
             
-            digitalWrite (3, LOW);
+            digitalWrite (PIN_LED_INDICATOR, LOW);
             
             addFileToQueue(currentPath, currentSongArtist, currentSongTitle, currentTotalSongLength);
             
@@ -108,7 +108,7 @@ void handleCommand(char command)
             if(currentFile != 0)
                 fclose(currentFile);
             
-            digitalWrite (3, HIGH);
+            digitalWrite (PIN_LED_INDICATOR, HIGH);
             
             break;
         }
@@ -117,7 +117,9 @@ void handleCommand(char command)
         {
             printf("Skipping song. \n");
 
-            currentSong++;
+            digitalWrite(PIN_NEED_NEW_PLAYLIST_NUMBER, HIGH);
+            printf("Asking for new playlist number. \n");
+            
             currentIndex = 0;
             
             break;
@@ -193,7 +195,7 @@ void* recieverThread(void* maxNumberOfFiles)
             }
             case TOTAL_SONG_LENGTH_BYTES:
             {
-                currentTotalSongLength = *(data.data);
+                currentTotalSongLength = (float)*(data.data);
             }
                 
             default:
