@@ -298,7 +298,7 @@ int main(int argc, char **argv)
                         #endif
                         unsigned char songPercentPlayed = (unsigned char)(  ( (float)currentIndex / (float)currentFile.totalSongLength ) * 100.0f );
                         
-                        printf("Percent played: %d\n", songPercentPlayed);
+                        printf("Percent played: %d, i: %d\n", songPercentPlayed, currentIndex);
 
                         percentPlayed = songPercentPlayed;
                         wiringPiI2CWrite (fd, percentPlayed);
