@@ -37,7 +37,6 @@
 //unsigned char uartBuffer[3];        //buff containing char inputs from usart
 //unsigned char decBuffer[3];         //buff containing conversions to decimal
 
-#pragma udata userdata
 
 //strings to send to USART
 char headerStr[] = "bridgd \r\n\0";
@@ -48,13 +47,17 @@ char songNameStr[] = "Song: \0";
 char emptyLine[] = "\r\n\0";
 unsigned char strLength;
 
+
 //keep track of data sent from Pi
 int indexRxData;                //0 = # of songs, 1 = %played
 
 //variables for i2c
 unsigned char recievedDataFlag;
+#pragma udata userdata
 unsigned char data[MAX_CHAR_SENT ];
+#pragma udata
 unsigned char dataTxUART[MAX_CHAR_SENT /2 +1];
+
 
 unsigned char playlistSize;
 unsigned char percentPlayed;

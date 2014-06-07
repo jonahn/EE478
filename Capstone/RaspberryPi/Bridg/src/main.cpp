@@ -278,7 +278,7 @@ int main(int argc, char **argv)
                             }
                             else 
                             {
-                                wiringPiI2CWrite(fd, '\0');
+                                wiringPiI2CWrite(fd, ' ');
                             }
                         }
 
