@@ -265,9 +265,9 @@ int main(int argc, char **argv)
                             cycleCount = 1;
                             
                             //delay
-                            tim.tv_sec = 0;
-                            tim.tv_nsec = 500;
-                            nanosleep(&tim, &tim);  //wait to transmit i2c
+                           //tim.tv_sec = 0;
+                            //tim.tv_nsec = 500;
+                            //nanosleep(&tim, &tim);  //wait to transmit i2c
                        // }
                        // else
                        // {

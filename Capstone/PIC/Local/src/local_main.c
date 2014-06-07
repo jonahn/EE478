@@ -52,7 +52,7 @@ int indexRxData;                //0 = # of songs, 1 = %played
 
 //variables for i2c
 unsigned char recievedDataFlag;
-unsigned char data;
+unsigned char data[2];
 
 unsigned char playlistSize;
 unsigned char percentPlayed;
@@ -74,7 +74,7 @@ void main(void)
     setupInterrupts();
 
     indexRxData = 0;
-
+    recievedDataFlag = 0;
     setupLED_Pins();
 
     OpenI2C1(SLAVE_7, SLEW_OFF);
@@ -96,11 +96,12 @@ void main(void)
 //                //screenUpdated = NOT_UPDATED;
 //            }
 //
-        if(recievedDataFlag)
+        if(recievedDataFlag == 2)
         {
-            if(indexRxData == 0)    //rewrite header and write playlist
-            {
-                playlistSize = data;
+            //if(indexRxData == 0)    //rewrite header and write playlist
+            //{
+               PIE1bits.SSP1IE = 0;      // disable SSP Interrupt
+                playlistSize = data[0];
 //                Write1USART(0x0c);   // clear hyperterminal
 //                delay(10);
 //                puts1USART(headerStr);
@@ -114,12 +115,12 @@ void main(void)
 //                delay(10);
 //                Write1USART('\n');
 //                delay(10);
-                indexRxData++;
-            }
-            else if(indexRxData == 1)   //update the LEDs
-            {
-                percentPlayed = data;
-
+                //indexRxData++;
+            //}
+            //else if(indexRxData == 1)   //update the LEDs
+            //{
+                percentPlayed = data[1];
+  
 //                puts1USART(perPlayedStr);
 //                delay(50);
 //                Write1USART(percentPlayed);
@@ -128,12 +129,8 @@ void main(void)
 //                delay(10);
 //                Write1USART('\n');
 //                delay(10);
-
-
-                indexRxData = 0;        //currently only have 2 modes of data
-            }
-            //clear terminal and write paylist size to USART
-             Write1USART(0x0c);   // clear hyperterminal
+                //clear terminal and write paylist size to USART
+                Write1USART(0x0c);   // clear hyperterminal
                 delay(10);
                 puts1USART(headerStr);
                 puts1USART(emptyLine);
@@ -156,6 +153,11 @@ void main(void)
                 delay(10);
                 Write1USART('\n');
                 delay(10);
+
+                PIE1bits.SSP1IE = 1;      // Enable SSP Interrupt
+               // indexRxData = 0;        //currently only have 2 modes of data
+            //}
+            
 
                 //----------------ADD IN LATER--------------::
 //            else if (indexRxData == 2)
