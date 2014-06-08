@@ -114,6 +114,16 @@ void playlistNumberISR()
     }
 }
 
+void askForNewPlaylistNumber()
+{
+    currentIndex = 0;
+    playlistBitPosition = 0;
+    digitalWrite(PIN_NEED_NEW_PLAYLIST_NUMBER, HIGH);
+    digitalWrite(PIN_NEED_NEW_PLAYLIST_NUMBER, LOW);
+    printf("Asking for new playlist number. \n");
+
+}
+
 int main(int argc, char **argv)
 {
 	if (argc < 2)
@@ -252,10 +262,7 @@ int main(int argc, char **argv)
                     if(indexesSent == 0)
                     {
                         //currentSong = (currentSong + 1) % reciever.files->size();   //loop over playlist if at end
-                        currentIndex = 0;
-                        playlistBitPosition = 0;
-                        digitalWrite(PIN_NEED_NEW_PLAYLIST_NUMBER, HIGH);
-                        printf("Asking for new playlist number. \n");
+                        askForNewPlaylistNumber();
                     }
                     
                     //Send song info over i2c

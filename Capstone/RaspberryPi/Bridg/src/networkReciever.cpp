@@ -36,6 +36,8 @@ extern void error(const char *msg);
 extern unsigned long currentSong;
 extern unsigned long currentIndex;
 
+extern void askForNewPlaylistNumber();
+
 NetworkReciever::NetworkReciever(int portNumber)
 {
     mp3Files = new std::deque<CompeletedFile>();
@@ -117,10 +119,7 @@ void handleCommand(char command)
         {
             printf("Skipping song. \n");
 
-            digitalWrite(PIN_NEED_NEW_PLAYLIST_NUMBER, HIGH);
-            printf("Asking for new playlist number. \n");
-            
-            currentIndex = 0;
+            askForNewPlaylistNumber();
             
             break;
         }
