@@ -101,9 +101,9 @@ void isM4ReadyISR()
 void playlistNumberISR()
 {
     char bit = (char) digitalRead(PIN_PLAYLIST_NUMBER_DATA);
-    playlistNumber = playlistNumber || (bit << playlistBitPosition);
+    playlistNumber = playlistNumber | (bit << playlistBitPosition);
     
-    printf("interrupted at bit position:%d withBit: %d! \n", playlistBitPosition, bit);
+    //printf("interrupted at bit position:%d withBit: %d! \n", playlistBitPosition, bit);
     
     if(playlistBitPosition >= 7)
     {
