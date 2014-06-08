@@ -139,12 +139,15 @@ void* recieverThread(void* maxNumberOfFiles)
 	long n;
     
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    
     if (sockfd < 0)
 		error("ERROR opening socket");
+    
     bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = INADDR_ANY;
     serv_addr.sin_port = htons(port);
+    
     if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
         error("ERROR on binding");
     
@@ -181,7 +184,10 @@ void* recieverThread(void* maxNumberOfFiles)
 
             case MP3_ENCODED_DATA:
             {
-                fwrite(data.data, 1, data.length, currentFile);
+                if(currentFile != 0)
+                    fwrite(data.data, 1, data.length, currentFile);
+                else
+                    printf("Cannot write to a closed file!");
                 break;
             }
             case SONG_ARTIST:
