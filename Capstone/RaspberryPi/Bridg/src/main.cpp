@@ -165,6 +165,13 @@ int main(int argc, char **argv)
             return 1;
         }
         
+        //uses wiringPi pin 2 to ask for new playlist number
+        if (wiringPiISR (PIN_PLAYLIST_NUMBER_CLK, INT_EDGE_RISING, &playlistNumberISR) < 0)
+        {
+            fprintf (stderr, "Unable to setup ISR: %s\n", strerror (errno)) ;
+            return 1;
+        }
+        
         // set output SPI channel to 0 and speed to 8MHz
         if (wiringPiSPISetup(0,1000000) < 0)
         {
@@ -179,13 +186,6 @@ int main(int argc, char **argv)
         digitalWrite (PIN_NEED_NEW_PLAYLIST_NUMBER, LOW);
         
         pinMode(PIN_PLAYLIST_NUMBER_DATA, INPUT);  //DATA
-        
-        //uses wiringPi pin 2 to ask for new playlist number
-        if (wiringPiISR (PIN_PLAYLIST_NUMBER_CLK, INT_EDGE_RISING, &playlistNumberISR) < 0)
-        {
-            fprintf (stderr, "Unable to setup ISR: %s\n", strerror (errno)) ;
-            return 1;
-        }
         
         NetworkReciever reciever = NetworkReciever(atoi(argv[1]));
         reciever.runReciever(&networkThread);
