@@ -102,7 +102,6 @@ void playlistNumberISR()
 {
     char bit = (char) digitalRead(PIN_PLAYLIST_NUMBER_DATA);
     playlistNumber = playlistNumber || (bit << playlistBitPosition);
-    playlistBitPosition++;
     
     printf("interrupted at bit position:%d withBit: %d! \n", playlistBitPosition, bit);
     
@@ -115,6 +114,8 @@ void playlistNumberISR()
         currentSong = playlistNumber;
         digitalWrite(PIN_NEED_NEW_PLAYLIST_NUMBER, LOW);
     }
+    
+    playlistBitPosition++;
 }
 
 void askForNewPlaylistNumber()
