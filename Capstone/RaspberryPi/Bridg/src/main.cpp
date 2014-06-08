@@ -98,8 +98,15 @@ void isM4ReadyISR()
     isM4Ready = 1;
 }
 
+unsigned char needNewPlaylistNumber = 0;
+
 void playlistNumberISR()
 {
+    if(needNewPlaylistNumber == 0)
+    {
+        return;
+    }
+    
     char bit = (char) digitalRead(PIN_PLAYLIST_NUMBER_DATA);
     playlistNumber = playlistNumber | (bit << playlistBitPosition);
     
@@ -111,6 +118,7 @@ void playlistNumberISR()
         playlistNumberComplete = 1;
         playlistBitPosition = 0;
         playlistNumber = 0;
+        needNewPlaylistNumber = 0;
         currentSong = playlistNumber;
         digitalWrite(PIN_NEED_NEW_PLAYLIST_NUMBER, LOW);
     }
@@ -120,6 +128,7 @@ void playlistNumberISR()
 
 void askForNewPlaylistNumber()
 {
+    needNewPlaylistNumber = 1;
     currentIndex = 0;
     playlistBitPosition = 0;
     playlistNumber = 0;
