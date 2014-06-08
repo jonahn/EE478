@@ -117,7 +117,6 @@ void playlistNumberISR()
         printf("Got new playlist number %d. \n", playlistNumber);
         playlistNumberComplete = 1;
         playlistBitPosition = 0;
-        playlistNumber = 0;
         needNewPlaylistNumber = 0;
         currentSong = playlistNumber;
         digitalWrite(PIN_NEED_NEW_PLAYLIST_NUMBER, LOW);
