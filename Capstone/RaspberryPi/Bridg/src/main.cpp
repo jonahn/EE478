@@ -104,7 +104,7 @@ void playlistNumberISR()
     playlistNumber = playlistNumber || (bit << playlistBitPosition);
     playlistBitPosition++;
     
-    printf("interrupted: %d!", playlistBitPosition);
+    printf("interrupted at bit position:%d withBit: %d! \n", playlistBitPosition, bit);
     
     if(playlistBitPosition >= 7)
     {
