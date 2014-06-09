@@ -26,6 +26,7 @@ class NetworkReciever
 {
 public:
     NetworkReciever(int portNumber);
+    NetworkReciever();
     void runReciever(pthread_t *threadHandle);
     std::deque<CompeletedFile> *files;
 };

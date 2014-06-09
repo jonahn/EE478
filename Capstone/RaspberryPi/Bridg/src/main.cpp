@@ -100,6 +100,8 @@ void isM4ReadyISR()
 
 unsigned char needNewPlaylistNumber = 0;
 
+NetworkReciever reciever;
+
 void playlistNumberISR()
 {
     if(needNewPlaylistNumber == 0)
@@ -118,7 +120,7 @@ void playlistNumberISR()
         playlistNumberComplete = 1;
         playlistBitPosition = 0;
         needNewPlaylistNumber = 0;
-        currentSong = playlistNumber;
+        currentSong = playlistNumber % reciever.files->size();
         digitalWrite(PIN_NEED_NEW_PLAYLIST_NUMBER, LOW);
     }
     
@@ -198,7 +200,7 @@ int main(int argc, char **argv)
         
         pinMode(PIN_PLAYLIST_NUMBER_DATA, INPUT);  //DATA
         
-        NetworkReciever reciever = NetworkReciever(atoi(argv[1]));
+        reciever = NetworkReciever(atoi(argv[1]));
         reciever.runReciever(&networkThread);
 
 #if DEBUG
@@ -257,7 +259,7 @@ int main(int argc, char **argv)
                 isM4Ready = 0;
                 if(reciever.files->size() > 0)
                 {
-                    CompeletedFile currentFile = reciever.files->at(currentSong % reciever.files->size());
+                    CompeletedFile currentFile = reciever.files->at(currentSong);
                     
                     FILE * f = fopen(currentFile.filePath.c_str(), "rb");
                     fseek(f, currentIndex, SEEK_SET);
@@ -362,7 +364,39 @@ int main(int argc, char **argv)
                     const unsigned char * arr = emptymp3data;
                     
                     sendOverSPI(arr, EMPTY_MP3_DATA_LENGTH);
-                   
+                    
+                    CompeletedFile currentFile = reciever.files->at(currentSong);
+                    
+                    if(fd >=0)
+                    {
+                        
+                        //send song name
+                        for (int i = 0; i < 50; i++)
+                        {
+                            wiringPiI2CWrite (fd, '\0');
+                        }
+                        
+                        //send artist
+                        for (int i = 0; i < 50; i++)
+                        {
+                            wiringPiI2CWrite(fd, '\0');
+                        }
+                        
+                        playListSize = reciever.files->size() + '0';
+                        wiringPiI2CWrite (fd, playListSize);
+                        cycleCount = 1;
+                        
+#if DEBUG
+                        currentFile.totalSongLength = 2000000;
+#endif
+                        unsigned char songPercentPlayed = 0;
+                        
+                        //printf("Percent played: %d, i: %lu, totalSong: %d\n", songPercentPlayed, currentIndex, currentFile.totalSongLength );
+                        
+                        percentPlayed = songPercentPlayed;
+                        wiringPiI2CWrite (fd, percentPlayed);
+                    }
+                    
 		        }
             }
         }

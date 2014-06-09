@@ -46,6 +46,14 @@ NetworkReciever::NetworkReciever(int portNumber)
     port = portNumber;
 }
 
+NetworkReciever::NetworkReciever()
+{
+    port = PORT_NUMBER;
+    mp3Files = new std::deque<CompeletedFile>();
+    files = mp3Files;
+    fileCounter = 0;
+}
+
 void addFileToQueue(std::string currentPath, std::string currentSongArtist, std::string currentSongTitle, uint32_t currentTotalSongLength)
 {
     CompeletedFile doneFile;
