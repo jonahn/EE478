@@ -365,30 +365,25 @@ int main(int argc, char **argv)
                     
                     sendOverSPI(arr, EMPTY_MP3_DATA_LENGTH);
                     
-                    CompeletedFile currentFile = reciever.files->at(currentSong);
-                    
                     if(fd >=0)
                     {
                         
                         //send song name
                         for (int i = 0; i < 50; i++)
                         {
-                            wiringPiI2CWrite (fd, '\0');
+                            wiringPiI2CWrite (fd, ' ');
                         }
                         
                         //send artist
                         for (int i = 0; i < 50; i++)
                         {
-                            wiringPiI2CWrite(fd, '\0');
+                            wiringPiI2CWrite(fd, ' ');
                         }
                         
                         playListSize = reciever.files->size() + '0';
                         wiringPiI2CWrite (fd, playListSize);
                         cycleCount = 1;
                         
-#if DEBUG
-                        currentFile.totalSongLength = 2000000;
-#endif
                         unsigned char songPercentPlayed = 0;
                         
                         //printf("Percent played: %d, i: %lu, totalSong: %d\n", songPercentPlayed, currentIndex, currentFile.totalSongLength );
