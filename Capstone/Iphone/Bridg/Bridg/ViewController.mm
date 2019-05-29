@@ -151,7 +151,7 @@
     totalSize = 0;
     
     bridgClient.resetForNewSong();
-    
+    //一边录制一边编码成mp3
     // -- BACKGROUND THREAD --//
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH,
                                              (unsigned long)NULL), ^(void) {
